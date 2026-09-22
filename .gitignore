@@ -1,0 +1,21 @@
+node_modules
+dist
+.DS_Store
+.env
+
+# Scratch sandbox for onboarding/UX test runs - never meant to be committed.
+testing/
+
+# Ignore the output video from Git but not videos you import into src/.
+out
+
+# Per-assistant directories. Everything under .claude/ is local settings and
+# caches, except skills.
+#
+# .agents/skills/ holds every skill, once. .claude/skills/ holds a generated
+# stub per skill - frontmatter and a pointer - because Claude Code only
+# discovers skills under its own directory, and a skill it cannot discover
+# never fires on its own. The stubs are tracked so they arrive with a clone;
+# regenerate them with `node scripts/sync-skills.mjs`.
+.claude/*
+!.claude/skills/

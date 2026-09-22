@@ -1,0 +1,2352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A practical guide to making a film with people, coding agents, Remotion, and a live filesystem."
+    />
+    <meta name="theme-color" content="#8c1d40" />
+    <title>LIVE | Learners Intelligent Video Engineer</title>
+    <style>
+      :root {
+        --maroon: #8c1d40;
+        --gold: #ffc627;
+        --black: #000;
+        --gray-1: #191919;
+        --gray-2: #484848;
+        --gray-3: #747474;
+        --gray-4: #bfbfbf;
+        --gray-5: #d0d0d0;
+        --gray-6: #e8e8e8;
+        --gray-7: #fafafa;
+        --white: #fff;
+        --green: #78be20;
+        --content: 1180px;
+        --narrow: 820px;
+        --shadow: 0 18px 48px rgba(25, 25, 25, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        max-width: 100%;
+        scroll-behavior: smooth;
+        scroll-padding-top: 90px;
+        overflow-x: hidden;
+      }
+
+      body {
+        max-width: 100%;
+        margin: 0;
+        color: var(--gray-1);
+        background: var(--white);
+        font-family:
+          Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans,
+          sans-serif;
+        line-height: 1.55;
+        overflow-x: hidden;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--gold);
+        outline-offset: 4px;
+      }
+
+      .skip-link {
+        position: fixed;
+        z-index: 100;
+        top: 12px;
+        left: 12px;
+        padding: 10px 14px;
+        color: var(--white);
+        background: var(--black);
+        transform: translateY(-180%);
+      }
+
+      .skip-link:focus {
+        transform: translateY(0);
+      }
+
+      .brand-line {
+        height: 8px;
+        background: var(--gold);
+      }
+
+      .site-header {
+        position: sticky;
+        z-index: 50;
+        top: 0;
+        border-bottom: 1px solid var(--gray-5);
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(12px);
+      }
+
+      .header-inner {
+        display: flex;
+        min-height: 72px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        width: min(var(--content), calc(100% - 48px));
+        margin-inline: auto;
+      }
+
+      .header-inner > *,
+      .hero-grid > *,
+      .section-head > *,
+      .setup-row > *,
+      .experience-track > * {
+        min-width: 0;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+      }
+
+      .brand-live {
+        padding: 6px 9px 5px;
+        color: var(--white);
+        background: var(--black);
+        box-shadow: inset 0 -4px 0 var(--maroon);
+        font-size: 14px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+      }
+
+      .brand-copy {
+        display: grid;
+        line-height: 1.1;
+      }
+
+      .brand-copy strong {
+        font-size: 15px;
+      }
+
+      .brand-copy span {
+        color: var(--gray-3);
+        font-size: 11px;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      nav a {
+        padding: 10px 12px;
+        border-bottom: 3px solid transparent;
+        color: var(--gray-2);
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      nav a:hover,
+      nav a[aria-current="true"] {
+        color: var(--black);
+        border-color: var(--maroon);
+      }
+
+      .progress {
+        position: fixed;
+        z-index: 60;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--maroon);
+        transform: scaleX(0);
+        transform-origin: left;
+      }
+
+      .wrap {
+        width: min(var(--content), calc(100% - 48px));
+        margin-inline: auto;
+      }
+
+      .narrow {
+        width: min(var(--narrow), calc(100% - 48px));
+        margin-inline: auto;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        background: var(--gray-7);
+      }
+
+      .hero::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 32%;
+        height: 100%;
+        background: var(--gold);
+        content: "";
+      }
+
+      .hero-grid {
+        position: relative;
+        display: grid;
+        min-height: 680px;
+        grid-template-columns: minmax(0, 1.15fr) minmax(400px, 0.85fr);
+        gap: clamp(50px, 7vw, 100px);
+        align-items: center;
+        padding-block: clamp(80px, 9vw, 124px);
+      }
+
+      .kicker {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 22px;
+        color: var(--maroon);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      .kicker::before {
+        width: 32px;
+        height: 7px;
+        background: var(--gold);
+        content: "";
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin-bottom: 25px;
+        font-size: clamp(54px, 5.9vw, 84px);
+        font-weight: 900;
+        letter-spacing: -0.055em;
+        line-height: 0.95;
+      }
+
+      .highlight {
+        display: inline;
+        padding-inline: 0.08em;
+        background: linear-gradient(transparent 60%, var(--gold) 60%);
+      }
+
+      .hero-copy {
+        max-width: 650px;
+        margin-bottom: 31px;
+        color: var(--gray-2);
+        font-size: clamp(18px, 1.7vw, 22px);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 20px;
+        border: 2px solid var(--maroon);
+        color: var(--white);
+        background: var(--maroon);
+        font-size: 15px;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      .button:hover {
+        color: var(--black);
+        background: var(--gold);
+        border-color: var(--gold);
+      }
+
+      .button.secondary {
+        color: var(--gray-1);
+        background: transparent;
+        border-color: var(--gray-1);
+      }
+
+      .button.secondary:hover {
+        color: var(--white);
+        background: var(--gray-1);
+      }
+
+      .hero-visual {
+        position: relative;
+        z-index: 2;
+        min-height: 440px;
+      }
+
+      .slate {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: min(520px, 96%);
+        transform: translate(-50%, -48%) rotate(-2deg);
+        filter: drop-shadow(0 25px 24px rgba(0, 0, 0, 0.22));
+      }
+
+      .slate-clapper {
+        position: relative;
+        z-index: 2;
+        height: clamp(48px, 5.6vw, 70px);
+        margin: 0 2.5% -2px;
+        border: 4px solid var(--gray-1);
+        border-radius: 12px 12px 3px 3px;
+        background: repeating-linear-gradient(
+          118deg,
+          var(--gray-1) 0 70px,
+          #f5f1e8 70px 126px
+        );
+        box-shadow: 0 7px 11px rgba(0, 0, 0, 0.18);
+      }
+
+      .slate-clapper::before {
+        position: absolute;
+        top: 50%;
+        left: 17px;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        background: var(--maroon);
+        transform: translateY(-50%);
+        content: "";
+      }
+
+      .slate-body {
+        width: 100%;
+        margin-top: -17px;
+      }
+
+      .slate-note {
+        position: absolute;
+        right: 1%;
+        bottom: 8%;
+        width: 225px;
+        padding: 15px 18px;
+        border-left: 6px solid var(--maroon);
+        background: var(--white);
+        box-shadow: var(--shadow);
+        transform: rotate(2deg);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      section {
+        min-width: 0;
+        padding-block: clamp(105px, 12vw, 168px);
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: clamp(38px, 7vw, 92px);
+        align-items: end;
+        margin-bottom: clamp(55px, 8vw, 90px);
+      }
+
+      .section-head h2 {
+        margin-bottom: 0;
+        font-size: clamp(43px, 5vw, 70px);
+        font-weight: 900;
+        letter-spacing: -0.045em;
+        line-height: 0.98;
+      }
+
+      .section-head > p {
+        max-width: 650px;
+        margin-bottom: 0;
+        color: var(--gray-2);
+        font-size: clamp(17px, 1.6vw, 21px);
+      }
+
+      .setup {
+        background: var(--white);
+      }
+
+      .setup-list {
+        display: grid;
+        border-top: 1px solid var(--gray-5);
+      }
+
+      .setup-row {
+        display: grid;
+        grid-template-columns: 76px minmax(180px, 0.75fr) minmax(0, 1.25fr);
+        gap: clamp(22px, 4vw, 55px);
+        align-items: start;
+        padding-block: 37px;
+        border-bottom: 1px solid var(--gray-5);
+      }
+
+      .setup-number {
+        color: var(--maroon);
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .setup-row h3 {
+        margin-bottom: 0;
+        font-size: 27px;
+        letter-spacing: -0.035em;
+      }
+
+      .setup-body p {
+        max-width: 700px;
+        margin-bottom: 16px;
+        color: var(--gray-2);
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px 0;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 0;
+        color: var(--gray-2);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .tag + .tag::before {
+        margin-inline: 9px;
+        color: var(--maroon);
+        content: "•";
+      }
+
+      .principle {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 19px;
+        align-items: start;
+        max-width: 860px;
+        margin-top: 52px;
+        padding: 24px 27px;
+        color: var(--white);
+        background: var(--maroon);
+      }
+
+      .principle-mark {
+        display: grid;
+        width: 31px;
+        height: 31px;
+        place-items: center;
+        color: var(--black);
+        background: var(--gold);
+        font-weight: 900;
+      }
+
+      .principle p {
+        margin-bottom: 0;
+      }
+
+      .workflow {
+        background: var(--gray-7);
+      }
+
+      .steps {
+        display: grid;
+      }
+
+      .step {
+        display: grid;
+        min-height: 550px;
+        grid-template-columns: minmax(0, 0.92fr) minmax(380px, 1.08fr);
+        gap: clamp(50px, 8vw, 110px);
+        align-items: center;
+        padding-block: clamp(82px, 10vw, 125px);
+        border-top: 1px solid var(--gray-5);
+      }
+
+      .step:last-child {
+        border-bottom: 1px solid var(--gray-5);
+      }
+
+      .step:nth-child(even) .step-copy {
+        order: 2;
+      }
+
+      .step:nth-child(even) .step-visual {
+        order: 1;
+      }
+
+      .step-label {
+        margin-bottom: 21px;
+        color: var(--maroon);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .step h3 {
+        margin-bottom: 18px;
+        font-size: clamp(37px, 4.2vw, 57px);
+        font-weight: 900;
+        letter-spacing: -0.045em;
+        line-height: 1;
+      }
+
+      .step-copy > p:not(.step-label) {
+        max-width: 570px;
+        margin-bottom: 23px;
+        color: var(--gray-2);
+        font-size: 18px;
+      }
+
+      .output {
+        display: inline-block;
+        max-width: 100%;
+        padding-top: 12px;
+        border-top: 4px solid var(--gold);
+        color: var(--gray-2);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .step-visual {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        min-height: 360px;
+      }
+
+      .step-copy,
+      .step-visual,
+      .tech-intro > *,
+      .closing-inner > *,
+      .role-grid > *,
+      .lesson-list > * {
+        min-width: 0;
+      }
+
+      .storyboard-card {
+        position: absolute;
+        inset: 3% 2%;
+        display: grid;
+        place-items: center;
+        padding: 22px;
+        background: var(--gold);
+      }
+
+      .storyboard-card img {
+        width: 92%;
+        max-height: 320px;
+        object-fit: contain;
+        filter: drop-shadow(0 14px 16px rgba(25, 25, 25, 0.2));
+        transform: rotate(-1deg);
+      }
+
+      .document-stack {
+        position: absolute;
+        inset: 2% 3%;
+      }
+
+      .document {
+        position: absolute;
+        width: 82%;
+        min-height: 245px;
+        padding: 27px;
+        border: 1px solid var(--gray-4);
+        background: var(--white);
+        box-shadow: var(--shadow);
+      }
+
+      .document:nth-child(1) {
+        top: 72px;
+        left: 0;
+      }
+
+      .document:nth-child(2) {
+        top: 36px;
+        left: 8%;
+      }
+
+      .document:nth-child(3) {
+        top: 0;
+        left: 16%;
+        border-top: 8px solid var(--maroon);
+      }
+
+      .document b {
+        display: block;
+        margin-bottom: 24px;
+        font-size: 18px;
+      }
+
+      .doc-line {
+        width: 100%;
+        height: 7px;
+        margin-bottom: 11px;
+        background: var(--gray-6);
+      }
+
+      .doc-line.short {
+        width: 61%;
+      }
+
+      .language-board {
+        position: absolute;
+        inset: 3%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding: 26px;
+        background: var(--gray-1);
+      }
+
+      .edge-card {
+        display: grid;
+        min-height: 250px;
+        align-content: center;
+        justify-items: center;
+        gap: 15px;
+        padding: 20px;
+        color: var(--white);
+        text-align: center;
+      }
+
+      .edge-card:first-child {
+        background: var(--maroon);
+      }
+
+      .edge-card:last-child {
+        color: var(--gray-1);
+        background: var(--gold);
+      }
+
+      .edge-card img {
+        width: 150px;
+        height: 130px;
+        object-fit: contain;
+      }
+
+      .edge-card b {
+        font-size: 18px;
+      }
+
+      .edge-card span {
+        max-width: 180px;
+        font-size: 12px;
+      }
+
+      .scene-board {
+        position: absolute;
+        inset: 3%;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        padding: 22px;
+        border: 1px solid var(--gray-4);
+        background: var(--white);
+        box-shadow: var(--shadow);
+      }
+
+      .scene-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--gray-5);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .scene-stage {
+        position: relative;
+        display: grid;
+        min-height: 210px;
+        place-items: center;
+        overflow: hidden;
+        background: var(--gray-7);
+      }
+
+      .scene-stage img {
+        position: absolute;
+        right: 0;
+        bottom: -25%;
+        width: 43%;
+      }
+
+      .scene-stage strong {
+        position: relative;
+        z-index: 2;
+        max-width: 65%;
+        font-size: clamp(25px, 3vw, 39px);
+        line-height: 1;
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 5px;
+        padding-top: 16px;
+        border-top: 1px solid var(--gray-5);
+      }
+
+      .clip {
+        height: 28px;
+        background: var(--maroon);
+      }
+
+      .clip:nth-child(2),
+      .clip:nth-child(5) {
+        background: var(--gold);
+      }
+
+      .clip:nth-child(3),
+      .clip:nth-child(6) {
+        background: var(--gray-2);
+      }
+
+      .delivery-card {
+        position: absolute;
+        inset: 3%;
+        display: grid;
+        align-content: center;
+        padding: 38px;
+        color: var(--white);
+        background: var(--maroon);
+        box-shadow: 12px 12px 0 var(--gold);
+      }
+
+      .delivery-card h4 {
+        margin-bottom: 29px;
+        font-size: 31px;
+        letter-spacing: -0.03em;
+      }
+
+      .track {
+        display: grid;
+        grid-template-columns: 78px 1fr auto;
+        gap: 13px;
+        align-items: center;
+        padding-block: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.4);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .track:last-of-type {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+      }
+
+      .wave {
+        height: 30px;
+        color: var(--gold);
+        background: repeating-linear-gradient(
+          90deg,
+          currentColor 0 3px,
+          transparent 3px 8px
+        );
+        mask: linear-gradient(
+          0deg,
+          transparent,
+          #000 32%,
+          #000 68%,
+          transparent
+        );
+      }
+
+      .checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 25px;
+      }
+
+      .check {
+        padding: 5px 8px;
+        color: var(--gray-1);
+        background: var(--white);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .roles {
+        color: var(--white);
+        background: var(--gray-1);
+      }
+
+      .roles .kicker {
+        color: var(--gold);
+      }
+
+      .roles .section-head > p {
+        color: var(--gray-5);
+      }
+
+      .role-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--gray-2);
+      }
+
+      .role {
+        min-height: 510px;
+        padding: clamp(31px, 5vw, 58px);
+        background: var(--gray-1);
+      }
+
+      .role:first-child {
+        border-top: 8px solid var(--gold);
+      }
+
+      .role:last-child {
+        border-top: 8px solid var(--maroon);
+      }
+
+      .role-kicker {
+        margin-bottom: 48px;
+        color: var(--gray-4);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .role h3 {
+        max-width: 420px;
+        margin-bottom: 31px;
+        font-size: clamp(38px, 4.7vw, 61px);
+        font-weight: 900;
+        letter-spacing: -0.045em;
+        line-height: 1;
+      }
+
+      .role ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .role li {
+        padding-block: 13px;
+        border-top: 1px solid var(--gray-2);
+        color: var(--gray-5);
+      }
+
+      .agent-marks {
+        display: flex;
+        gap: 12px;
+        margin-top: 32px;
+      }
+
+      .agent-marks span {
+        display: grid;
+        width: 62px;
+        height: 62px;
+        place-items: center;
+        background: var(--white);
+      }
+
+      .agent-marks img {
+        width: 43px;
+        height: 43px;
+        object-fit: contain;
+      }
+
+      .experience {
+        background: var(--gold);
+      }
+
+      .experience .section-head {
+        margin-bottom: clamp(68px, 9vw, 110px);
+      }
+
+      .experience-track {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .project-step {
+        min-width: 0;
+        min-height: 360px;
+        padding: clamp(30px, 4vw, 46px);
+        background: var(--white);
+      }
+
+      .project-step:nth-child(2) {
+        margin-top: 42px;
+      }
+
+      .project-step:nth-child(3) {
+        margin-top: 84px;
+      }
+
+      .project-number {
+        margin-bottom: 66px;
+        color: var(--maroon);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .project-step h3 {
+        margin-bottom: 14px;
+        font-size: 30px;
+        letter-spacing: -0.035em;
+        line-height: 1;
+      }
+
+      .project-step p {
+        margin-bottom: 0;
+        color: var(--gray-2);
+      }
+
+      .experience-callout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 35px;
+        align-items: center;
+        margin-top: 72px;
+        padding: 31px 35px;
+        color: var(--white);
+        background: var(--maroon);
+      }
+
+      .experience-callout p {
+        max-width: 770px;
+        margin-bottom: 0;
+        font-size: clamp(18px, 2vw, 23px);
+      }
+
+      .experience-callout strong {
+        color: var(--gold);
+        font-size: 18px;
+        white-space: nowrap;
+      }
+
+      .lessons {
+        background: var(--white);
+      }
+
+      .lesson-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: clamp(42px, 8vw, 105px);
+        border-top: 1px solid var(--gray-5);
+      }
+
+      .lesson {
+        min-height: 300px;
+        padding-block: 48px;
+        border-bottom: 1px solid var(--gray-5);
+      }
+
+      .lesson-number {
+        margin-bottom: 43px;
+        color: var(--maroon);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .lesson h3 {
+        margin-bottom: 13px;
+        font-size: 27px;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+      }
+
+      .lesson p {
+        max-width: 480px;
+        margin-bottom: 0;
+        color: var(--gray-2);
+      }
+
+      .technical {
+        background: var(--gray-7);
+      }
+
+      .tech-intro {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
+        gap: clamp(35px, 7vw, 90px);
+        margin-bottom: 65px;
+      }
+
+      .architecture-map {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        border-top: 9px solid var(--gold);
+        background: var(--white);
+        box-shadow: 10px 10px 0 var(--maroon);
+      }
+
+      .architecture-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 20px 24px;
+        color: var(--white);
+        background: var(--gray-1);
+      }
+
+      .architecture-title strong {
+        font-size: 18px;
+      }
+
+      .architecture-title span {
+        color: var(--gray-4);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .architecture-flow {
+        padding: 10px 24px 20px;
+      }
+
+      .architecture-node {
+        display: grid;
+        grid-template-columns: 42px minmax(125px, 0.65fr) minmax(0, 1.35fr);
+        gap: 16px;
+        align-items: start;
+        padding-block: 19px;
+        border-bottom: 1px solid var(--gray-5);
+      }
+
+      .architecture-node:last-child {
+        border-bottom: 0;
+      }
+
+      .architecture-number {
+        color: var(--maroon);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .architecture-node b {
+        font-size: 15px;
+      }
+
+      .architecture-node p {
+        margin-bottom: 0;
+        color: var(--gray-2);
+        font-size: 13px;
+      }
+
+      .tech-rules {
+        display: grid;
+        align-content: start;
+        border-top: 1px solid var(--gray-4);
+      }
+
+      .tech-rule {
+        padding-block: 20px;
+        border-bottom: 1px solid var(--gray-4);
+      }
+
+      .tech-rule b {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .tech-rule p {
+        margin-bottom: 0;
+        color: var(--gray-2);
+        font-size: 14px;
+      }
+
+      details {
+        border-top: 1px solid var(--gray-4);
+      }
+
+      details:last-child {
+        border-bottom: 1px solid var(--gray-4);
+      }
+
+      summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 24px 0;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: 800;
+        list-style: none;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      summary::after {
+        display: grid;
+        flex: 0 0 32px;
+        width: 32px;
+        height: 32px;
+        place-items: center;
+        color: var(--white);
+        background: var(--maroon);
+        content: "+";
+      }
+
+      details[open] summary::after {
+        content: "×";
+      }
+
+      details > div {
+        max-width: 860px;
+        padding: 0 50px 28px 0;
+        color: var(--gray-2);
+      }
+
+      details code,
+      .tech-rule code {
+        padding: 2px 5px;
+        color: var(--white);
+        background: var(--gray-1);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.88em;
+      }
+
+      .closing {
+        padding-block: clamp(95px, 12vw, 160px);
+        color: var(--white);
+        background: var(--maroon);
+      }
+
+      .closing .kicker {
+        color: var(--gold);
+      }
+
+      .closing-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+        gap: clamp(45px, 9vw, 120px);
+        align-items: end;
+      }
+
+      .closing h2 {
+        max-width: 780px;
+        margin-bottom: 24px;
+        font-size: clamp(59px, 8vw, 108px);
+        font-weight: 900;
+        letter-spacing: -0.055em;
+        line-height: 0.92;
+      }
+
+      .closing p {
+        max-width: 650px;
+        margin-bottom: 0;
+        color: #f2d6df;
+        font-size: clamp(18px, 1.8vw, 22px);
+      }
+
+      .closing-note {
+        padding: 26px;
+        color: var(--gray-1);
+        background: var(--gold);
+      }
+
+      .closing-note strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 19px;
+      }
+
+      .closing-note span {
+        display: block;
+        color: var(--gray-2);
+        font-size: 14px;
+      }
+
+      footer {
+        padding: 25px 0;
+        color: var(--gray-5);
+        background: var(--gray-1);
+        font-size: 12px;
+      }
+
+      .footer-inner {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      @media (max-width: 920px) {
+        nav a:nth-child(2),
+        nav a:nth-child(4) {
+          display: none;
+        }
+
+        .hero::before {
+          top: auto;
+          bottom: 0;
+          width: 100%;
+          height: 35%;
+        }
+
+        .hero-grid,
+        .section-head,
+        .step,
+        .tech-intro,
+        .closing-inner {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .hero-grid {
+          gap: 30px;
+          padding-bottom: 70px;
+        }
+
+        .hero-visual {
+          width: min(650px, 100%);
+          min-height: 430px;
+          margin-inline: auto;
+        }
+
+        .step {
+          gap: 42px;
+        }
+
+        .step:nth-child(even) .step-copy,
+        .step:nth-child(even) .step-visual {
+          order: initial;
+        }
+
+        .step-visual {
+          width: min(670px, 100%);
+          margin-inline: auto;
+        }
+
+        .tech-intro {
+          gap: 48px;
+        }
+
+        .experience-track {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 18px;
+        }
+
+        .project-step,
+        .project-step:nth-child(2),
+        .project-step:nth-child(3) {
+          min-height: 0;
+          margin-top: 0;
+        }
+
+        .experience-callout {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      @media (max-width: 650px) {
+        html {
+          scroll-padding-top: 77px;
+        }
+
+        .header-inner,
+        .wrap,
+        .narrow {
+          width: calc(100% - 30px);
+        }
+
+        .header-inner {
+          min-height: 64px;
+        }
+
+        nav {
+          display: none;
+        }
+
+        .brand {
+          min-width: 0;
+        }
+
+        .brand-copy {
+          min-width: 0;
+        }
+
+        .brand-copy strong {
+          font-size: 13px;
+        }
+
+        .brand-copy span {
+          display: none;
+        }
+
+        .progress {
+          top: 72px;
+        }
+
+        .hero-grid {
+          min-height: 0;
+          padding-block: 68px 55px;
+        }
+
+        h1 {
+          font-size: clamp(49px, 14.5vw, 70px);
+        }
+
+        .hero-copy {
+          font-size: 18px;
+        }
+
+        .actions {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .button {
+          width: 100%;
+        }
+
+        .hero-visual {
+          min-height: 330px;
+        }
+
+        .slate {
+          width: 100%;
+        }
+
+        .slate-clapper {
+          height: 44px;
+          border-width: 3px;
+          background: repeating-linear-gradient(
+            118deg,
+            var(--gray-1) 0 45px,
+            #f5f1e8 45px 80px
+          );
+        }
+
+        .slate-note {
+          right: 0;
+          bottom: 2%;
+          width: 188px;
+          padding: 11px 13px;
+          font-size: 11px;
+        }
+
+        section {
+          padding-block: 92px;
+        }
+
+        .section-head {
+          gap: 22px;
+          margin-bottom: 52px;
+        }
+
+        .section-head h2 {
+          font-size: 43px;
+        }
+
+        .setup-row {
+          grid-template-columns: 42px minmax(0, 1fr);
+          gap: 14px;
+        }
+
+        .setup-body {
+          grid-column: 2;
+        }
+
+        .principle {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .step {
+          min-height: 0;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 46px;
+          padding-block: 72px;
+        }
+
+        .step-copy > p:not(.step-label) {
+          font-size: 17px;
+        }
+
+        .step-visual {
+          width: 100%;
+          min-height: 290px;
+          overflow: hidden;
+        }
+
+        .storyboard-card {
+          padding: 12px;
+        }
+
+        .document {
+          width: 82%;
+          min-height: 205px;
+          padding: 21px;
+        }
+
+        .document:nth-child(1) {
+          left: 0;
+        }
+
+        .document:nth-child(2) {
+          left: 7%;
+        }
+
+        .document:nth-child(3) {
+          left: 14%;
+        }
+
+        .language-board {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 8px;
+          padding: 10px;
+        }
+
+        .language-visual {
+          min-height: 500px;
+        }
+
+        .edge-card {
+          min-height: 230px;
+          padding: 12px;
+        }
+
+        .edge-card img {
+          width: 105px;
+          height: 100px;
+        }
+
+        .edge-card span {
+          font-size: 11px;
+        }
+
+        .scene-stage strong {
+          max-width: 74%;
+        }
+
+        .delivery-card {
+          padding: 25px;
+        }
+
+        .track {
+          grid-template-columns: 58px 1fr;
+        }
+
+        .track span:last-child {
+          display: none;
+        }
+
+        .role-grid,
+        .lesson-list,
+        .experience-track {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .role {
+          min-height: 0;
+          padding-block: 43px;
+        }
+
+        .role-kicker {
+          margin-bottom: 35px;
+        }
+
+        .lesson {
+          min-height: 0;
+        }
+
+        .lesson-number {
+          margin-bottom: 26px;
+        }
+
+        .experience-callout {
+          margin-top: 45px;
+          padding: 27px;
+        }
+
+        .experience-callout strong {
+          white-space: normal;
+        }
+
+        .architecture-node {
+          grid-template-columns: 34px minmax(0, 1fr);
+        }
+
+        .architecture-node p {
+          grid-column: 2;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        p,
+        li,
+        summary,
+        .output,
+        .brand-copy {
+          overflow-wrap: anywhere;
+        }
+
+        .closing-note {
+          margin-top: 9px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      @media print {
+        .site-header,
+        .progress,
+        .actions {
+          display: none;
+        }
+
+        section,
+        .hero,
+        .step,
+        .role {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the process</a>
+    <div class="brand-line" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="#top" aria-label="LIVE home">
+          <span class="brand-live">LIVE</span>
+          <span class="brand-copy">
+            <strong>Learners Intelligent Video Engineer</strong>
+            <span>An LEI SDE production system</span>
+          </span>
+        </a>
+        <nav aria-label="Page sections">
+          <a href="#setup">Setup</a>
+          <a href="#process">Process</a>
+          <a href="#roles">Roles</a>
+          <a href="#lessons">Lessons</a>
+          <a href="#technical">Technical</a>
+        </nav>
+      </div>
+    </header>
+    <div class="progress" aria-hidden="true"></div>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="wrap hero-grid">
+          <div>
+            <p class="kicker">LIVE | Learners Intelligent Video Engineer</p>
+            <h1>
+              You set the direction. Agents
+              <span class="highlight">build the film.</span>
+            </h1>
+            <p class="hero-copy">
+              Start in VS Code, a terminal, or another agentic workspace that
+              can reach the project files. A person brings the purpose and
+              taste. Coding agents turn that direction into plans, scenes,
+              revisions, and a final render that stays inspectable at every
+              step.
+            </p>
+            <div class="actions">
+              <a class="button" href="#process">See the workflow</a>
+              <a class="button secondary" href="#technical"
+                >View the technical map</a
+              >
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-label="A complete LIVE film slate">
+            <div class="slate">
+              <div class="slate-clapper" aria-hidden="true"></div>
+              <img
+                class="slate-body"
+                src="assets/live-showcase/props/clapboard-body.png"
+                alt="LIVE clapboard"
+              />
+            </div>
+            <div class="slate-note">
+              Conversation → plan → scenes → master render
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="setup" id="setup">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="kicker">01 | The working surface</p>
+              <h2>Give the agent a real workshop.</h2>
+            </div>
+            <p>
+              The core requirement is not a particular chat app. It is a working
+              surface connected to the project files, a terminal, and a preview.
+              That is what lets conversation become inspectable production work.
+            </p>
+          </div>
+
+          <div class="setup-list">
+            <article class="setup-row">
+              <div class="setup-number">01</div>
+              <h3>Working surface</h3>
+              <div class="setup-body">
+                <p>
+                  Use VS Code, a terminal agent, or a desktop coding app with
+                  scoped filesystem access. Keep chat, code, plans, previews,
+                  and renders close enough to compare.
+                </p>
+                <div class="tags">
+                  <span class="tag">Filesystem</span>
+                  <span class="tag">Terminal</span>
+                  <span class="tag">Local preview</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="setup-row">
+              <div class="setup-number">02</div>
+              <h3>Core engine</h3>
+              <div class="setup-body">
+                <p>
+                  Node and npm install the project. React and TypeScript
+                  structure it. Remotion turns code into deterministic frames.
+                  FFmpeg and ffprobe encode and inspect the result.
+                </p>
+                <div class="tags">
+                  <span class="tag">Node</span>
+                  <span class="tag">TypeScript</span>
+                  <span class="tag">React</span>
+                  <span class="tag">Remotion</span>
+                  <span class="tag">FFmpeg</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="setup-row">
+              <div class="setup-number">03</div>
+              <h3>Optional extensions</h3>
+              <div class="setup-body">
+                <p>
+                  Add only what the story needs: editing skills, TTS, image
+                  generation, or a tool such as Kling for generated motion.
+                  Confirm access, cost, rights, and output format before
+                  production depends on it.
+                </p>
+                <div class="tags">
+                  <span class="tag">Skills</span>
+                  <span class="tag">TTS</span>
+                  <span class="tag">Image generation</span>
+                  <span class="tag">Video generation</span>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="principle">
+            <span class="principle-mark">1</span>
+            <p>
+              <strong>Start local.</strong> Code, files, and local rendering
+              form the dependable base. Generative services are optional asset
+              pipelines, not the foundation of the film.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow" id="process">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="kicker">02 | The process</p>
+              <h2>From conversation to cohesive movie.</h2>
+            </div>
+            <p>
+              Each phase leaves evidence in the repository. Direction becomes a
+              plan, the plan becomes reviewable scenes, and the scenes become a
+              film only after they work on their own.
+            </p>
+          </div>
+
+          <div class="steps">
+            <article class="step">
+              <div class="step-copy">
+                <p class="step-label">Phase 1 | Shape the story</p>
+                <h3>Decide what the film must do.</h3>
+                <p>
+                  The user and agents define the audience, purpose, narrative
+                  spine, and scene beats. Literal explanation and metaphor are
+                  designed together. A strong visual rule can carry meaning that
+                  narration would otherwise need to explain.
+                </p>
+                <span class="output"
+                  >OUTPUT: narrative spine, scene beats, visual metaphor, words
+                  on screen</span
+                >
+              </div>
+              <div class="step-visual">
+                <div class="storyboard-card">
+                  <img
+                    src="assets/live-showcase/props/storyboard-sheet.png"
+                    alt="Six panel paper storyboard"
+                  />
+                </div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-copy">
+                <p class="step-label">Phase 2 | Make the plan visible</p>
+                <h3>Turn chat into production memory.</h3>
+                <p>
+                  Agents capture the decisions in an implementation plan,
+                  storyboard, script, scene map, and asset manifest. Concise
+                  session logs preserve what changed, what failed, and where
+                  another agent can safely continue.
+                </p>
+                <span class="output"
+                  >OUTPUT: plan, storyboard, script, asset manifest, agent
+                  logs</span
+                >
+              </div>
+              <div
+                class="step-visual"
+                aria-label="A stack of production documents"
+              >
+                <div class="document-stack" aria-hidden="true">
+                  <div class="document">
+                    <b>ASSET MANIFEST</b>
+                    <div class="doc-line"></div>
+                    <div class="doc-line short"></div>
+                  </div>
+                  <div class="document">
+                    <b>SCENE MAP</b>
+                    <div class="doc-line"></div>
+                    <div class="doc-line"></div>
+                    <div class="doc-line short"></div>
+                  </div>
+                  <div class="document">
+                    <b>IMPLEMENTATION PLAN</b>
+                    <div class="doc-line"></div>
+                    <div class="doc-line"></div>
+                    <div class="doc-line short"></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-copy">
+                <p class="step-label">Phase 3 | Prove the language</p>
+                <h3>Test the style, then prepare assets.</h3>
+                <p>
+                  Build a small style test before the full film. Set palette,
+                  typography, framing, motion behavior, and transition language.
+                  In parallel, prepare only the cutouts, textures, stills, and
+                  generated material the approved scenes require.
+                </p>
+                <span class="output"
+                  >LIVE RULE: torn edges feel human, cut edges feel
+                  machine</span
+                >
+              </div>
+              <div class="step-visual language-visual">
+                <div class="language-board">
+                  <div class="edge-card">
+                    <img
+                      src="assets/live-showcase/hands/holding.png"
+                      alt="Torn photographic hand"
+                    />
+                    <b>Human</b>
+                    <span>Torn edge, tactile image, organic timing</span>
+                  </div>
+                  <div class="edge-card">
+                    <img
+                      src="assets/live-showcase/agents/chatgpt.png"
+                      alt="Cleanly cut agent mark"
+                    />
+                    <b>Machine</b>
+                    <span>Clean edge, flat mark, precise motion</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-copy">
+                <p class="step-label">Phase 4 | Build and review</p>
+                <h3>Work scene by scene.</h3>
+                <p>
+                  Each scene remains a standalone composition, so it can be
+                  scrubbed, paused, and revised without disturbing the full
+                  film. Agents code the motion. The human owns readability,
+                  rhythm, composition, surprise, and whether a beat feels right.
+                </p>
+                <span class="output"
+                  >LOOP: code → stills → playback → human note → focused
+                  revision</span
+                >
+              </div>
+              <div class="step-visual">
+                <div class="scene-board">
+                  <div class="scene-top">
+                    <span>Standalone scene preview</span>
+                    <span>Review alone</span>
+                  </div>
+                  <div class="scene-stage">
+                    <strong>One scene. One clear job.</strong>
+                    <img
+                      src="assets/live-showcase/hands/superb.png"
+                      alt="Paper collage hand signaling approval"
+                    />
+                  </div>
+                  <div class="timeline" aria-label="Six separate scene clips">
+                    <div class="clip"></div>
+                    <div class="clip"></div>
+                    <div class="clip"></div>
+                    <div class="clip"></div>
+                    <div class="clip"></div>
+                    <div class="clip"></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-copy">
+                <p class="step-label">Phase 5 | Assemble and deliver</p>
+                <h3>Stitch, listen, render, verify.</h3>
+                <p>
+                  Assemble the master only after the scenes hold up. Watch every
+                  join at normal speed. Keep the film silent, add music, use
+                  bespoke TTS, or record a voice. Then render the master and
+                  inspect the actual media file.
+                </p>
+                <span class="output"
+                  >DELIVERY: resolution, fps, duration, codec, pixel format,
+                  audio, dropped frames</span
+                >
+              </div>
+              <div class="step-visual">
+                <div class="delivery-card">
+                  <h4>Master timeline</h4>
+                  <div class="track">
+                    <span>Picture</span>
+                    <div class="wave"></div>
+                    <span>30 fps</span>
+                  </div>
+                  <div class="track">
+                    <span>Sound</span>
+                    <div class="wave"></div>
+                    <span>optional</span>
+                  </div>
+                  <div class="checks">
+                    <span class="check">✓ 1920 × 1080</span>
+                    <span class="check">✓ yuv420p</span>
+                    <span class="check">✓ full watch</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="roles" id="roles">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="kicker">03 | Creative control</p>
+              <h2>Shared work. Clear ownership.</h2>
+            </div>
+            <p>
+              The collaboration works because the human is not reduced to a
+              prompt writer, and the agent is not treated as a taste oracle.
+              Each side owns the part it can actually judge.
+            </p>
+          </div>
+
+          <div class="role-grid">
+            <article class="role">
+              <p class="role-kicker">The director</p>
+              <h3>The human owns taste.</h3>
+              <ul>
+                <li>Purpose, audience, and the thing worth saying</li>
+                <li>Visual language, references, and sensory direction</li>
+                <li>Timing, readability, humor, and emotional feel</li>
+                <li>Approval of scenes, assets, edits, sound, and delivery</li>
+                <li>The right to reject technically correct work</li>
+              </ul>
+            </article>
+
+            <article class="role">
+              <p class="role-kicker">The production team</p>
+              <h3>The agents own execution.</h3>
+              <ul>
+                <li>Repository inspection and current state checks</li>
+                <li>
+                  Plans, scene maps, asset lists, and implementation detail
+                </li>
+                <li>React and Remotion code, timing systems, and assembly</li>
+                <li>
+                  Asset preparation, file hygiene, and reproducible utilities
+                </li>
+                <li>
+                  Type checks, renders, metadata checks, and honest handoffs
+                </li>
+              </ul>
+              <div class="agent-marks" aria-label="Agent team marks">
+                <span
+                  ><img
+                    src="assets/live-showcase/agents/chatgpt.png"
+                    alt="ChatGPT"
+                /></span>
+                <span
+                  ><img
+                    src="assets/live-showcase/agents/claude.png"
+                    alt="Claude"
+                /></span>
+                <span
+                  ><img
+                    src="assets/live-showcase/agents/gemini.png"
+                    alt="Gemini"
+                /></span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="experience" id="experience">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="kicker">04 | Learning through production</p>
+              <h2>Three projects. One system that keeps improving.</h2>
+            </div>
+            <p>
+              The LEI SDE team has used LIVE to create three video projects.
+              Each production has taken less time as the system preserves useful
+              decisions, tools, and review habits. At the same time, the videos
+              have grown more interesting in structure and visual complexity.
+            </p>
+          </div>
+
+          <div class="experience-track">
+            <article class="project-step">
+              <p class="project-number">Project 01 | Establish</p>
+              <h3>Build the production loop.</h3>
+              <p>
+                The first project established the path from story and assets to
+                coded scenes, human review, and a validated render.
+              </p>
+            </article>
+
+            <article class="project-step">
+              <p class="project-number">Project 02 | Reuse</p>
+              <h3>Carry working knowledge forward.</h3>
+              <p>
+                Reusable components, clearer plans, asset conventions, and
+                better handoffs shortened the next build without removing human
+                control.
+              </p>
+            </article>
+
+            <article class="project-step">
+              <p class="project-number">Project 03 | Refine</p>
+              <h3>Spend saved time on ambition.</h3>
+              <p>
+                Faster production cycles created room for more deliberate
+                motion, richer visual ideas, and a more cohesive final edit.
+              </p>
+            </article>
+          </div>
+
+          <div class="experience-callout">
+            <p>
+              LIVE is becoming more capable because each film teaches the next
+              one. The goal is not only faster production. It is better creative
+              work with less repeated setup.
+            </p>
+            <strong>We would love to hear your thoughts.</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="lessons" id="lessons">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="kicker">05 | Lessons from the logs</p>
+              <h2>What the work taught us.</h2>
+            </div>
+            <p>
+              These lessons came from building and revising the LIVE film. They
+              turn specific mistakes into habits that make the next production
+              calmer.
+            </p>
+          </div>
+
+          <div class="lesson-list">
+            <article class="lesson">
+              <p class="lesson-number">01 | Edit, not arithmetic</p>
+              <h3>Do not cut only to satisfy a number.</h3>
+              <p>
+                Remove dead screen time. Keep a beat that needs to breathe.
+                Report duration instead of designing toward a convenient total
+                unless the brief sets a hard limit.
+              </p>
+            </article>
+
+            <article class="lesson">
+              <p class="lesson-number">02 | Protect the scene</p>
+              <h3>Transition overlap can erase a payoff.</h3>
+              <p>
+                A Remotion transition consumes time from both neighbors. Give it
+                clean handles or frozen holds, then inspect the last beat and
+                first readable beat at every join.
+              </p>
+            </article>
+
+            <article class="lesson">
+              <p class="lesson-number">03 | Use punctuation sparingly</p>
+              <h3>A strong idea weakens when repeated.</h3>
+              <p>
+                The clapboard worked as a structural hinge and became irritating
+                at every cut. Keep one visual vocabulary, but use loud and quiet
+                versions with intention.
+              </p>
+            </article>
+
+            <article class="lesson">
+              <p class="lesson-number">04 | Verify the source of truth</p>
+              <h3>Documents age. Artifacts answer.</h3>
+              <p>
+                Check paths, durations, installed tools, and composition IDs
+                against the repository. Record contradictions and never silently
+                propagate a stale claim.
+              </p>
+            </article>
+
+            <article class="lesson">
+              <p class="lesson-number">05 | Keep scenes isolated</p>
+              <h3>Retiming the master is safer.</h3>
+              <p>
+                Do not damage a working scene to make the full film fit.
+                Preserve the standalone composition and put master specific
+                trims, holds, and joins in the assembly layer.
+              </p>
+            </article>
+
+            <article class="lesson">
+              <p class="lesson-number">06 | Separate proof from approval</p>
+              <h3>Technical completion is not taste.</h3>
+              <p>
+                A clean type check proves the code compiles. A complete render
+                proves frames were encoded. Only a human watch can judge
+                meaning, rhythm, and feel.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="technical" id="technical">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="kicker">06 | Technical map</p>
+              <h2>The practical shape of the system.</h2>
+            </div>
+            <p>
+              LIVE connects a human conversation to a controlled production
+              pipeline. The public model below explains how direction becomes a
+              deterministic film without exposing private source structure.
+            </p>
+          </div>
+
+          <div class="tech-intro">
+            <div class="architecture-map" aria-label="LIVE system architecture">
+              <div class="architecture-title">
+                <strong>Direction to delivery</strong>
+                <span>Public architecture</span>
+              </div>
+              <div class="architecture-flow">
+                <div class="architecture-node">
+                  <span class="architecture-number">01</span>
+                  <b>Interaction layer</b>
+                  <p>
+                    Chat, editor, terminal, filesystem access, and local preview
+                    keep human direction connected to visible work.
+                  </p>
+                </div>
+                <div class="architecture-node">
+                  <span class="architecture-number">02</span>
+                  <b>Production control</b>
+                  <p>
+                    Storyboards, scene specifications, scripts, asset records,
+                    and handoffs preserve decisions across agents and sessions.
+                  </p>
+                </div>
+                <div class="architecture-node">
+                  <span class="architecture-number">03</span>
+                  <b>Composition engine</b>
+                  <p>
+                    React, TypeScript, and Remotion express every visual state
+                    as deterministic frame logic that can be reviewed at any
+                    time.
+                  </p>
+                </div>
+                <div class="architecture-node">
+                  <span class="architecture-number">04</span>
+                  <b>Media services</b>
+                  <p>
+                    Approved local media can be extended with controlled image,
+                    video, speech, and audio generation when a scene requires
+                    it.
+                  </p>
+                </div>
+                <div class="architecture-node">
+                  <span class="architecture-number">05</span>
+                  <b>Assembly and delivery</b>
+                  <p>
+                    Independent scenes enter a master timeline, receive sound if
+                    needed, and pass encoding, metadata, and human review gates.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tech-rules">
+              <div class="tech-rule">
+                <b>Frame model</b>
+                <p>
+                  <code>useCurrentFrame()</code> drives animation. Any frame
+                  must be renderable independently.
+                </p>
+              </div>
+              <div class="tech-rule">
+                <b>Determinism</b>
+                <p>
+                  Seed randomness. Never let wall clock time or raw
+                  <code>Math.random()</code> change a render.
+                </p>
+              </div>
+              <div class="tech-rule">
+                <b>Asset boundary</b>
+                <p>
+                  Only reviewed media enters production. Source material,
+                  rejected attempts, and approved assets retain distinct states.
+                </p>
+              </div>
+              <div class="tech-rule">
+                <b>Motion</b>
+                <p>
+                  Use frame math, interpolation, springs, sequences, and
+                  transitions. Avoid browser timed animation in film code.
+                </p>
+              </div>
+              <div class="tech-rule">
+                <b>Validation</b>
+                <p>
+                  Inspect resolution, frame rate, duration, codec, pixel format,
+                  audio streams, and dropped frames.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="narrow">
+            <details>
+              <summary>What should be installed first?</summary>
+              <div>
+                <p>
+                  Start with Node, npm, project dependencies, and FFmpeg with
+                  ffprobe. Pin the React, TypeScript, and Remotion versions so
+                  every agent renders through the same engine. Add new skills,
+                  command line tools, or media services only when the production
+                  requires their capability.
+                </p>
+              </div>
+            </details>
+
+            <details>
+              <summary>How should a scene be implemented?</summary>
+              <div>
+                <p>
+                  Give each scene one component, one duration source, and a
+                  standalone composition. Derive motion from frames, keep timing
+                  constants named, and reuse a small visual kit. Render probe
+                  stills around key beats, then watch the complete scene at
+                  normal speed.
+                </p>
+              </div>
+            </details>
+
+            <details>
+              <summary>Where do TTS and generated media fit?</summary>
+              <div>
+                <p>
+                  They are asset pipelines. Confirm the provider, current model,
+                  price, rights, and output format before any paid call. Batch
+                  TTS by scene when rate limits are tight and keep one voice
+                  model across the film. For generated media, preserve approved
+                  references, record prompts, and inspect every result before it
+                  enters production.
+                </p>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                How does LIVE preserve continuity across agents?
+              </summary>
+              <div>
+                <p>
+                  The system turns decisions into durable production artifacts:
+                  the narrative, scene intent, exact copy, visual rules, asset
+                  status, review notes, and current handoff. A new agent begins
+                  from that evidence, verifies it against the current build, and
+                  continues the existing production instead of reinventing it.
+                </p>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                How are external tools, access, and cost controlled?
+              </summary>
+              <div>
+                <p>
+                  Local and free tools form the default path. External services
+                  are checked for authentication, current capabilities, usage
+                  limits, rights, watermarks, and cost before they enter a plan.
+                  Paid generation requires a specific human decision about the
+                  modality, model, attempt count, and maximum spend.
+                </p>
+              </div>
+            </details>
+
+            <details>
+              <summary>What should happen before delivery?</summary>
+              <div>
+                <p>
+                  Run lint and type checking. Enumerate compositions. Watch
+                  every scene and the master at normal speed. Inspect each join
+                  and the final hold. Render the delivery file, inspect its
+                  metadata and playback, and treat technical completion as a
+                  gate rather than creative approval.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing">
+        <div class="wrap closing-inner">
+          <div>
+            <p class="kicker">The interface is collaboration</p>
+            <h2>Bring the story. Keep the taste.</h2>
+            <p>
+              Let the agents handle the machinery, while every creative decision
+              stays visible, discussable, and human directed.
+            </p>
+          </div>
+          <div class="closing-note">
+            <strong>The finish line is a human watch.</strong>
+            <span
+              >A render can be technically complete. The director decides when
+              it is a film.</span
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap footer-inner">
+        <span>Standalone HTML with no external runtime</span>
+        <span>LIVE | Learners Intelligent Video Engineer</span>
+      </div>
+    </footer>
+
+    <script>
+      const progress = document.querySelector(".progress");
+      const navLinks = [...document.querySelectorAll("nav a")];
+      const navTargets = navLinks
+        .map((link) => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+
+      const updateProgress = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const value = max > 0 ? window.scrollY / max : 0;
+        progress.style.transform = `scaleX(${value})`;
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+          if (!visible) return;
+
+          navLinks.forEach((link) => {
+            link.setAttribute(
+              "aria-current",
+              link.getAttribute("href") === `#${visible.target.id}`
+                ? "true"
+                : "false",
+            );
+          });
+        },
+        { rootMargin: "-20% 0px -65%", threshold: [0, 0.15, 0.35] },
+      );
+
+      navTargets.forEach((target) => observer.observe(target));
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      window.addEventListener("resize", updateProgress);
+      updateProgress();
+    </script>
+  </body>
+</html>
