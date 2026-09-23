@@ -47,6 +47,22 @@ The full interview — what each answer rules in and out, what to do when an ans
 and when to stop and say a thing cannot be built — is in
 [`reference/interview.md`](reference/interview.md).
 
+## What is fixed before you ask anything
+
+Three things are not questions. Discovering them late is how someone ends up with a video they
+cannot use — which has happened here.
+
+- **Every video this makes is 1920×1080 — wide.** There is no vertical option and it is not a
+  setting: every layout constant downstream is authored for landscape, from the safe margins to
+  the caption panel. **Say it the moment anyone mentions socials, Reels, TikTok, Stories or a
+  phone**, and never offer to crop — a 16:9 explainer cropped to 9:16 loses both ends of every
+  diagram and the captions with them. If wide is no use to them, stop, and say plainly that this
+  is not the tool for it.
+- **About thirty seconds is the floor.** Under that the thing has to be raced and stops being
+  watchable. Offer a still image instead.
+- **They approve the result, not you.** Report technical faults — a broken file, the wrong size,
+  missing audio. Never a verdict on whether it is any good.
+
 ## The eleven steps
 
 1. **Write the idea in one sentence.** It forces a decision about what the video is about.

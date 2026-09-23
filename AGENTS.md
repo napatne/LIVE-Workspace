@@ -1,5 +1,29 @@
 # LIVE
 
+## STOP — first contact
+
+**If this is the first thing you have been asked in this folder and it is any of these — a
+greeting, "what is this", "what can this do", "where do I start", "help", a pasted link, or
+anything you cannot confidently route to another skill — invoke the `onboarding` skill and
+follow it. Before you answer. No exceptions, no summarising your way past it.**
+
+**Do not answer out of this file.** You have just read a purpose statement, a routing table and a
+worked-example spec, and that is enough to make you feel you can explain this workspace yourself.
+You cannot. What you would write is a compressed version of this page delivered in one message,
+and people do not read it — that has been tested with real newcomers, and it is the most common
+way a first session here goes wrong. This file tells *you* where things are. `onboarding` is the
+only thing here that knows how to introduce this to a *person*.
+
+**Do not summarise `onboarding` either, and do not deliver it in one go.** It is a script
+performed across several turns. It tells you how to pace it, how to read whether someone wants
+the long route or the short one, and when to stop.
+
+One thing it settles that nothing else does: **someone who has not been told the limits will ask
+for a video this cannot make.** A colleague asked for a film and got a phone-shaped one, because
+nothing had said the shape was fixed. That is an onboarding failure, not a build failure.
+
+The rest of this file is for you, once you are past that and working.
+
 ## Purpose
 
 A workspace for making short video in code — Remotion, React, TypeScript, generated stills,
