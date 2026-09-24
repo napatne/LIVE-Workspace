@@ -27,8 +27,8 @@ There is a 70-second film in here whose subject is this repository. Watching it 
 to understand what this project does.
 
 ```console
-git clone https://github.com/napatne/LIVE.git
-cd LIVE
+git clone https://github.com/napatne/LIVE-Workspace.git
+cd LIVE-Workspace
 npm install
 npm run dev
 ```
