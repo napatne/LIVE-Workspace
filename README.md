@@ -4,6 +4,23 @@
 
 A workspace for making short video in code, with an AI assistant doing the building.
 
+## Open this in an AI coding agent
+
+This repository is built to be worked in through an AI coding agent — **Claude Code** or
+**Codex** — not edited by hand. Before you clone anything, open (or start) one of those:
+
+- In the Claude desktop app, agent/coding mode is the tab marked with a **`</>`** icon. In other
+  desktop apps, look for a **Codex** or **work** tab.
+- Don't have the repository yet? Ask the agent. Point it at this project and it can find and
+  download it for you.
+- Make sure the agent has **computer use** and **terminal/command access** turned on. Both are on
+  by default in Claude Code's and Codex's general settings, but check before you start — the
+  skills in here run shell commands and need it.
+
+Once the agent is open, tell it what you want and it takes it from there — see **Start here**
+below. The steps that follow (cloning, installing, running the preview) are things to ask the
+agent to do, not commands to run yourself.
+
 ## Watch the film first
 
 There is a 70-second film in here whose subject is this repository. Watching it is the fastest way
