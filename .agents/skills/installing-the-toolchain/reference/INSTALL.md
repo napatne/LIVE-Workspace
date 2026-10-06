@@ -1,14 +1,16 @@
 # Getting started
 
-**You don't need to know how to code to use this.** You need two things installed, and the
-assistant will do both for you.
+**You don't need to know how to code to use this.** You need a few things installed, and the
+assistant will do all of them for you.
 
 ## 1. Get the folder
 
-**From the website:** download the zip and unzip it somewhere you'll find again — Documents is
-fine. Don't leave it inside the zip; nothing will work.
+**From your access email:** it carries the link to the repository on GitHub. Clone it, or on that
+page choose **Code → Download ZIP** and unzip it somewhere you'll find again — Documents is fine.
+Don't leave it inside the zip; nothing will work.
 
-**From GitHub:** clone or download it the usual way.
+**Or let the assistant fetch it.** The email also has a prompt to paste into Claude Code or Codex,
+and the assistant downloads the folder for you.
 
 ## 2. Open it in Claude Code or Codex
 
@@ -43,8 +45,12 @@ it unpacks on disk, fetched automatically by
 Remotion so it can draw the frames. It happens once. Your first video will be slower than the
 rest because of it.
 
-**Nothing else.** No Python. No global installs. Nothing that changes how your computer works
-outside this folder.
+**FFmpeg** — a free video tool the project uses for sound, timing and converting files. It needs
+the full version, not the cut-down copy that comes with Remotion. It installs system-wide, so it
+stays on your computer after this folder is gone, and the assistant asks before installing it.
+
+**Nothing else.** No Python. No global npm packages. Node.js and FFmpeg are the only things that
+land outside this folder.
 
 ---
 
@@ -59,8 +65,9 @@ That's the 270MB browser download. It only happens once. If it's been more than 
 your connection may be blocked — tell the assistant and it'll say what failed.
 
 **"It's asking me to approve things constantly."**
-Check that `.claude/settings.json` exists in the folder. It's what tells Claude Code which
-routine commands are fine to run.
+That's the assistant checking before it runs a command, and it's normal. When it asks about a
+routine one — `npm` or `npx remotion` — choose the option that allows it from now on, and the
+questions thin out quickly.
 
 **"I want a voice on my video."**
 That needs a free Google AI key. The assistant walks you through it — about two minutes, no

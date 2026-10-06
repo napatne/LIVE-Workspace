@@ -42,8 +42,8 @@ section, which leaves four for the entire rest of the day including retries.
 **Batch two to four sections per call.** Give the model a direction that produces a usable gap
 between lines, then find the boundaries and play each slice with `trimBefore`/`trimAfter`.
 
-**FFmpeg is bundled with Remotion** — `npx remotion ffmpeg`, not bare `ffmpeg`. **That copy is
-trimmed, and it is not enough for all of this skill**: `silenceremove` and `afade`, which
+**FFmpeg is bundled with Remotion** — `npx remotion ffmpeg`. **That copy is trimmed, and it is
+not enough for all of this skill**: `silenceremove` and `afade`, which
 `scripts/build-audio.mjs` uses, are compiled out of it, so that step needs a full system
 FFmpeg. [splitting.md](splitting.md) covers finding the boundaries and placing the audio, and
 lists what else is missing.

@@ -1,7 +1,8 @@
 # Splitting a batch
 
-**FFmpeg ships with Remotion** — `npx remotion ffmpeg`, `npx remotion ffprobe`, version n7.1.
-Bare `ffmpeg` is not on PATH, so `which ffmpeg` says it is missing. That check is wrong.
+**Two FFmpegs.** Remotion ships a copy — `npx remotion ffmpeg`, `npx remotion ffprobe`, version
+n7.1, deliberately off PATH. A full system install, bare `ffmpeg`, is also required here; the setup
+check installs it. Reach for the system one for anything the bundled build lacks.
 
 > **It is a cut-down build.** `silencedetect` and `loudnorm` are available; **`volumedetect`,
 > `astats`, `ebur128` and `afade` are not** — compiled with `--disable-filters` and a short

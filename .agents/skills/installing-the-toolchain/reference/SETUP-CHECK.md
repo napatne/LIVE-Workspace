@@ -14,20 +14,20 @@ opened a chat window, not a terminal.
 | --- | --- | --- |
 | **Node.js 16 or newer** | Remotion v4 needs it | `node --version` |
 | **Project dependencies** | Remotion, React, TypeScript | `node_modules/` exists |
+| **A full system FFmpeg** | Narration, re-timing, inspection and conversion all call it. Remotion's bundled copy is trimmed and is not a substitute | `ffmpeg -version` |
 | **~270MB free** and a working connection | Chrome Headless Shell, fetched by the **first command that needs a browser** — `npx remotion compositions` and the Studio, not only a render. **~110MB over the wire, ~270MB once unpacked** — measured 2026-09-20. Quote the disk figure; it is the one that can fail | — |
 
 **Warn before that first command, whichever it is.** It stalls for a minute or two with no
 progress output, and two cold runs each read the silence as a hang.
 
-**Nothing else to build a video.** No Python, no global packages. Rendering uses the FFmpeg
-that ships inside Remotion (`npx remotion ffmpeg`).
+**Nothing else.** No Python, no global npm packages.
 
-**A full system FFmpeg is a separate question, and this page used to get it wrong.** The
-bundled copy is trimmed — `setpts`, `minterpolate`, `silenceremove` and `afade` are compiled
-out — and the checked-in scripts in `scripts/` need all four. Nobody needs it for a silent
-captioned video; anyone touching narration or re-timing does. `AGENTS.md` carries the rule.
-**`which ffmpeg` is the wrong test** either way: it cannot see the bundled copy, which is
-deliberately kept off PATH.
+**FFmpeg has to be a full system install, and this page used to get it wrong twice.** Remotion
+ships its own copy (`npx remotion ffmpeg`), but it is trimmed for rendering — `setpts`,
+`minterpolate`, `silenceremove` and `afade` are compiled out — and the checked-in scripts in
+`scripts/` call bare `ffmpeg` and need all four. `AGENTS.md` carries the rule. **`ffmpeg
+-version` tests the system copy only**: it cannot see the bundled one, which is deliberately
+kept off PATH, so a pass means the right thing is installed.
 
 [`INSTALL.md`](INSTALL.md), beside this file, says the same thing for the person rather than
 for you. Point them at it if they want to read ahead, but **do not make it homework** — the
@@ -60,6 +60,9 @@ fine — Remotion needs 16+, and a working install is not a problem to solve.
 | **Windows** | `winget install OpenJS.NodeJS.LTS` |
 | **macOS** | `brew install node` — if Homebrew is missing, send them to <https://nodejs.org> for the LTS installer instead |
 | **Linux** | Their package manager, or <https://nodejs.org> |
+
+**Before asking for the restart, run the FFmpeg check (Step 3).** It is the other system-wide
+install, and if it is missing too, installing both now means one restart instead of two.
 
 **Then tell them to restart Claude Code.** A new install is not on the PATH of a session that
 was already running, so `node --version` will keep failing until they do:
@@ -97,7 +100,7 @@ a *second* install. Nobody enjoys discovering that one question at a time. Say s
 > the rest.
 
 **Say the whole shape once, here.** Otherwise they approve one install, then a second, then sit
-through a silent 270MB download nobody mentioned. Step 3 below still repeats the download when
+through a silent 270MB download nobody mentioned. Step 4 below still repeats the download when
 it actually starts — that is a reminder, not the first they hear of it.
 
 ### It prints something below v16
@@ -166,7 +169,40 @@ other — if it is not said here, it is not said at all until they are already w
 
 **If they say no**, stop and say so plainly. There is nothing to build with.
 
-## Step 3 — Mention the first-render download, once
+## Step 3 — FFmpeg
+
+```bash
+ffmpeg -version
+```
+
+### It prints a version
+
+**Say nothing. Move on.**
+
+### The command fails
+
+```
+> This also needs FFmpeg, a free video tool the project uses for sound, timing and converting
+> files. It installs once for the whole computer, like Node.
+>
+> Shall I install it for you?
+```
+
+**If yes, run the right one for their platform:**
+
+| | |
+| --- | --- |
+| **Windows** | `winget install Gyan.FFmpeg` — the full build; it carries all four filters the scripts need |
+| **macOS** | `brew install ffmpeg` — if Homebrew is missing, send them to <https://ffmpeg.org/download.html> |
+| **Linux** | Their package manager's `ffmpeg` package |
+
+**Then the same restart as Node**, and for the same reason — a new install is not on the PATH of a
+session that was already running. If Node was installed in this same pass, one restart covers both.
+
+**If they say no**, say plainly that narration, re-timing and file conversion will fail without it,
+and stop rather than build something that breaks halfway.
+
+## Step 4 — Mention the first-render download, once
 
 You do not need permission for this — Remotion does it automatically — but **do not let it be
 a silent three-minute pause.** Mention it when you start the first build:
@@ -180,7 +216,7 @@ plainly.
 
 ## Then start the interview
 
-Once Node and `node_modules` are both fine, **go straight to the `building-a-video` skill.** Do not
+Once Node, `node_modules` and FFmpeg are all fine, **go straight to the `building-a-video` skill.** Do not
 report success — nobody needs to hear that their computer is correctly configured.
 
 ## If something fails mid-install
@@ -212,7 +248,8 @@ wrong and running it a third time will not find out what.
 
 - Never install without asking first.
 - Never install global npm packages. Everything this needs is in `package.json`.
-- Never install Python, ffmpeg, or a browser — none is needed, and Remotion brings its own.
+- Never install Python or a browser — neither is needed, and Remotion brings its own browser.
+  FFmpeg is the exception: a full system install is required (Step 3).
 - Never tell them to open a terminal and run something. You run it.
 - Never re-run `npm install` "just in case". If `node_modules` exists, it is done — with the
   one exception above.
