@@ -130,7 +130,7 @@ already contains. Then ask only the gaps, in the order above.
 | "in Hindi", "in Spanish", "for our Spanish-speaking students" | Language | Do not ask; check you can do it — see step 1 |
 | **"I'll record myself", "my video", "screen recording", "footage", "me presenting", "a clip of"** | **Nothing — this is out of scope.** Do **not** read it as an assets or voice answer. | **Go to step 0.5 immediately** |
 | **"animate our logo", "a 10-second intro", "a bumper"** | **Out of scope** | **Go to step 0.5 immediately** |
-| **"for socials", "Reels", "TikTok", "Stories", "for my phone"** | **They may be expecting upright. Everything here is wide** | **Go to step 0.5 immediately** |
+| **"for socials", "Reels", "TikTok", "Stories", "for my phone"** | **They may want upright. Wide is only the default** | **Go to step 0.5 immediately** |
 
 ### Judgement, not pattern-matching
 
@@ -229,15 +229,16 @@ makes at all:
 
 ### They want it upright, for Reels, TikTok or Stories
 
-**Every video this makes is 1920×1080 — wide.** There is no vertical option, and it is not a
-setting. Every layout constant downstream is authored for landscape: the safe margins, the
-figure area, the caption panel, the diagram viewBox. Making a 9:16 version is new layout work
-that nobody has specified, not a number to change.
+**The default is 1920×1080 — wide. Any other shape can be built, if it is chosen now.** Every
+layout constant downstream is authored for the shape: the safe margins, the figure area, the
+caption panel, the diagram viewBox. So a 9:16 version is layout work decided before the first
+scene, not a number changed at the end.
 
-**Say so before anything else, because it is the cheapest possible moment:**
+**Ask before anything else, because it is the cheapest possible moment:**
 
-> These come out wide — the shape YouTube and LinkedIn use — not upright for Reels or TikTok.
-> I can't do upright yet. Is wide any use to you?
+> These come out wide by default — the shape YouTube and LinkedIn use. I can make it upright
+> for Reels or TikTok instead, but we need to choose now, because it changes every layout.
+> Which do you want?
 
 - **Ask this the moment they mention social**, "for socials", Reels, TikTok, Stories, or a
   phone. A cold run invented this question itself because the file did not have it, and was
@@ -245,8 +246,9 @@ that nobody has specified, not a number to change.
   project will ever get.
 - **Do not offer to crop it.** A 16:9 explainer cropped to 9:16 loses both ends of every
   diagram, and the captions with them.
-- **If wide is no use, stop.** Say plainly that this is not the tool for it rather than
-  building something they cannot post.
+- **If they choose another shape, record it in the brief** and set the composition's width and
+  height from it before any scene is laid out. Every margin, panel and figure is then placed for
+  that frame, not adapted from the wide one.
 
 ### Anything else that does not fit
 

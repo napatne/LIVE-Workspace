@@ -108,9 +108,9 @@ going badly. Someone should be able to tell whether they are starting an afterno
 
 **This point is mandatory on every route.** Five things, plainly, without apologising for them:
 
-- **Wide only — 1920×1080.** No upright, no phone shape, nothing for Reels, TikTok or Stories. It
-  is not a setting that can be changed: every layout in here is built for the wide shape. If
-  upright is what they need, say so now, and say this is not the tool for it.
+- **Wide by default — 1920×1080.** Upright for Reels, TikTok or Stories, or square, can be built
+  — but it has to be chosen before building starts. Every layout is authored for its shape, so
+  switching later means redoing the layout, and cropping a finished wide video ruins it.
 - **About thirty seconds is the floor.** Under that it has to be raced and stops being watchable.
   For five seconds, a still image is usually the better answer.
 - **It draws; it does not film.** Text, diagrams, motion graphics, and still pictures moved around
@@ -234,9 +234,9 @@ sitting through the whole film.
 table, not written into `Root.tsx`. Typed separately, the two drift and the master cuts off its own
 last frame.
 
-**1920×1080 is not negotiable in code either.** Every layout constant downstream — safe margins,
-figure area, caption panel, diagram viewBox — is authored for landscape. A 9:16 version is new
-layout work nobody has specified, not a number to change.
+**1920×1080 is the default, not a free number.** Every layout constant downstream — safe margins,
+figure area, caption panel, diagram viewBox — is authored for the composition's shape. A 9:16
+version is new layout work decided before the first scene, not a number changed at the end.
 
 ### Commands
 
