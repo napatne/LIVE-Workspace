@@ -40,8 +40,13 @@ occasionally refused as prohibited content; rewording usually clears it.
 
 ## Music
 
-There is no free tier for music generation on this key — every call is a real charge. Nothing
-here calls it.
+**Made here, for nothing.** The `scoring-music` skill writes a score in code and renders it on this
+machine through a free General MIDI SoundFont — GeneralUser GS, downloaded once by
+`npm run soundfont` (32 MB, from the author's GitHub repository). Its licence allows any use,
+commercial included, with no credit needed on the music. Checked 2026-10-19.
+
+Music *generation* through the Google key above has no free tier — every call is a real charge.
+Nothing here calls it, and nothing needs to.
 
 ## Paid services generally
 

@@ -56,6 +56,25 @@ where a delivered video lives — outside the repository — and do it before de
   assistant will otherwise commit as a matter of tidiness.
 - **Branch rather than working on the default branch**, whenever the work might not land.
 
+## Prompt the person to checkpoint
+
+"An assistant never commits unless asked" is the right rule, and it has a cost: **nothing prompts
+the person either.** One copy of this workspace went fifteen days and four working sessions without
+a commit — 321 new files that existed on one laptop and nowhere else — while the shared repository
+moved on without it.
+
+So at the end of a session, and whenever a piece of work has just been approved, say it in one
+line and let them decide:
+
+> 14 files are uncommitted since 2026-10-06. Want a local checkpoint commit?
+
+Count from `git status --short`, and date from the oldest change if you can tell. A *local* commit
+publishes nothing; it only makes the work recoverable. Then do exactly what they say — a yes
+authorises that one commit, not the next.
+
+**A public repository publishes everything pushed to it, branches included.** Work in progress
+pushed to a public remote is published work in progress. Say so before the first push to one.
+
 ## Several people on one project
 
 **Separate what conflicts badly from what conflicts well.**

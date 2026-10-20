@@ -1,6 +1,6 @@
 ---
 name: working-practice
-description: How to work with a person on a video - who decides what, when a duration means anything, what to report, and how to write notes and documents the next reader can use. Use throughout, and particularly before setting a duration, before calling work finished, and before writing into a storyboard, a script, a plan or a code comment.
+description: How to work with a person on a video - who decides what, how to make a choice on their behalf without making it silently, when a duration means anything, how to check work by measuring rather than looking, what to report, and how to write notes the next reader can use. Use throughout, and particularly when told "you decide", before setting a duration, before calling work finished or checked, at the end of a session, and before writing into a storyboard, a script, a plan or a code comment.
 ---
 
 # Working practice
@@ -22,7 +22,7 @@ watching, and the person you are working with is the one who watches.
 This describes how the work runs: who decides what, when a number means anything, what to report,
 and how to write things down so they still make sense in a month.
 
-Eight rules, in the order they come up. Each carries the point in the work where it is cheap to
+Ten rules, in the order they come up. Each carries the point in the work where it is cheap to
 check.
 
 ## 1 · Act on instructions; answer questions
@@ -32,6 +32,10 @@ check.
 Where the shape of something is not yet agreed, describe the shape in a few lines and stop. A
 finished piece of work handed back in place of an answer skips the agreement that was being asked
 for, and the agreement was the point.
+
+"Do it all in one pass" is an instruction about waiting, not about review. It removes the pauses
+between steps; it does not remove the gates, and what comes out is still an unreviewed draft. One
+session took it as licence to go through every review without stopping.
 
 **Check —** before starting anything long, identify the sentence that asked for it.
 
@@ -46,6 +50,10 @@ Report whether the thing works as built. Leave the verdict on whether it is good
   whether a scene is too busy or too slow, whether the composition is right.
 
 The split is not about capability. It is about who the video is for.
+
+**A metaphor is meaning, so it is theirs.** If a scene needs a symbol nobody has agreed, offer two
+or three in a sentence each and let them choose. One film was built on four symbols the assistant
+had invented; the person's verdict was that it had no story to tell.
 
 **Check —** before calling something over-complicated, simplifying it, or building a different
 version of a beat, ask whether the meaning of that beat has been agreed. If it has not, the
@@ -150,6 +158,46 @@ foot with a date instead.
 
 Detail: [writing.md](reference/writing.md)
 
+## 9 · Every decision is theirs, or yours out loud
+
+A video is hundreds of small decisions. Most get made by whoever is building, and that is fine —
+**as long as each one that shapes the film is said.** Two ways a decision is legitimately made:
+they choose it, or you choose it and say what, why, and that it can change, in one line.
+
+"You decide" is an answer, and it hands the choice to you. It does not make the choice invisible.
+Pick, say what you picked, and write it into the project's brief as yours
+(`building-a-video` → `reference/decisions.md`). The decisions that go wrong are the ones nobody
+was asked about at all — music, the shape of the story, a metaphor, the pace, the ending, whose
+world the pictures show — because they surface only once the film exists.
+
+The same holds for your own engineering choices in a report: *"I did not upgrade Remotion — the
+workshop is in a week and an upgrade changes what every scene renders"* is a decision, named.
+Leaving it out makes it one they cannot see.
+
+**Check —** before building on anything, ask who chose it. If the answer is "nobody said", say
+it now.
+
+## 10 · Measure; do not eyeball
+
+A frame looked at is a frame interpreted, and assistants misread their own output in confident,
+specific ways: a transparent glass read as brown and opaque, so a correct image was "fixed"; three
+deliberate one-frame word stamps read as a bug; a diagram that put the wrong bit in the wrong
+circle, passed by eye. Each was caught by a number — a pixel's alpha, a frame-by-frame diff, a
+count.
+
+Where a property can be measured, measure it: size, length, contrast, transparency, loudness,
+whether a frame is black, whether a cue lands on its frame, whether the audio has every line.
+`scripts/check-render.mjs` measures a finished file; `viewing-and-rendering` says what it covers.
+What is left after measuring — whether it reads, lands, or works — is the person's, under rule 2.
+
+**A test that passes has to have looked at the right thing.** One interactive page passed its whole
+test run because the check sampled the last frame a moment before the page reset itself; another
+"failure" was the test sending a keypress no keyboard sends. When a check passes or fails, confirm
+what it actually sampled before believing it.
+
+**Check —** before saying something "looks right" or "works", find the measurement or the real
+interaction that says so. If there is none, say it is unverified.
+
 ## The checks, in the order they come up
 
 | When | What to check |
@@ -162,6 +210,9 @@ Detail: [writing.md](reference/writing.md)
 | Before saving a note | Whether a first-time reader can use it |
 | Before introducing a word | Whether it is already in use here |
 | Before editing a document's head | Whether the figure belongs at the foot, dated |
+| Before building on a choice | Whose it is, and whether it was said |
+| Before calling something checked | Which measurement or real interaction says so |
+| At the end of a session | How many files are uncommitted and since when — offer a checkpoint (`collaborating-with-git`) and write the log (`keeping-agent-logs`) |
 
 ## What this does not cover
 

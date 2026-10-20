@@ -3,9 +3,19 @@
 ## STOP — first contact
 
 **If this is the first thing you have been asked in this folder and it is any of these — a
-greeting, "what is this", "what can this do", "where do I start", "help", a pasted link, or
-anything you cannot confidently route to another skill — invoke the `onboarding` skill and
+greeting, "what is this", "what can this do", "where do I start", "help", "set this up", a pasted
+link, or anything you cannot confidently route to another skill — invoke the `onboarding` skill and
 follow it. Before you answer. No exceptions, no summarising your way past it.**
+
+**Its order is: make sure it can build, then offer the tour.** It checks Node, the project's
+packages and FFmpeg first and installs what is missing itself — asking once for each, never handing
+the person a command — and only then asks whether they want a quick tour or to go straight to
+making a video. The tour is offered, not imposed.
+
+**If the folder already has work in it** — `scripts/session-start.mjs` lists the last session's
+handoff and any film briefs — this is a returning person, not a newcomer: say where things stood in
+one line and ask one question (`building-a-video` → `reference/interview.md` → *If they come back
+later*).
 
 **Do not answer out of this file.** You have just read a purpose statement, a routing table and a
 worked-example spec, and that is enough to make you feel you can explain this workspace yourself.
@@ -54,10 +64,13 @@ Regenerate the stubs with `node scripts/sync-skills.mjs`.
 | `creating-assets` | Scenes need pictures, or the ones generated came back wrong |
 | `building-scenes` | Writing or changing scene code |
 | `adding-narration` | The video needs a voice, or voice and picture have drifted |
-| `viewing-and-rendering` | Watching, checking a frame, or rendering a file |
-| `working-practice` | Throughout. Especially before setting durations, before calling work finished, and before writing anything down |
+| `scoring-music` | The video needs music or sound effects, someone names a song or a mood, or music and picture have drifted |
+| `making-interactive-video` | The viewer should choose something — a question, a branch, a quiz — or a click-through page is wanted |
+| `viewing-and-rendering` | Watching, checking a frame, rendering, measuring a render, or finishing it for delivery |
+| `working-practice` | Throughout. Especially when told "you decide", before setting durations, before calling work finished, and before writing anything down |
+| `keeping-agent-logs` | At the start of a session, at the end of one, or when asked for a summary, status or handoff |
 | `working-in-parallel` | More than one assistant or person will work on the same video |
-| `collaborating-with-git` | Setting up a repository, sharing one, or undoing something |
+| `collaborating-with-git` | Setting up a repository, sharing one, undoing something, or ending a session with work uncommitted |
 | `remotion-best-practices` | Any Remotion API question. Vendored from upstream — see below |
 
 Three of these are entry points: `onboarding`, `installing-the-toolchain` and `building-a-video`.
@@ -66,10 +79,39 @@ The rest are reached from inside a job, not chosen from a list.
 **Each skill states what it needs before it starts and which skill follows it.** Follow those rather
 than this table once you are inside one — the table is an index, and the skills are the graph.
 
+### The scripts, and the moment for each
+
+A tool offered at the wrong moment is a tool not used. Each of these belongs to one step of
+`building-a-video`; reach for it there.
+
+| When | Run | What it does |
+| --- | --- | --- |
+| A session starts | `node scripts/session-start.mjs` | Where the work stands: branch, uncommitted files, the last log's handoff, open briefs |
+| A new machine, or something will not run | `node scripts/check-setup.mjs` | Looks before anything is installed: Node (and how it was installed), packages, FFmpeg's filters, disk — and this machine's fix for each |
+| Narration is generated | `node scripts/tts-generate.mjs`, then `node scripts/tts-verify.mjs` | Speech from the script, then a transcript check for dropped lines |
+| Narration or effects are cut | `node scripts/build-audio.mjs` | Trims, fades and levels audio cues |
+| The scenes exist and music was chosen | `node scripts/score/…` — see `scoring-music` | A score written against the film's own timeline |
+| A render exists | `node scripts/check-render.mjs <file> --composition <Id>` | Measures size, length, black, frozen, silence, loudness; writes a contact sheet |
+| It is going to someone | `node scripts/finish-video.mjs <file>` | Standard colour range, one delivery loudness |
+| The skills were edited | `node scripts/sync-skills.mjs` | Validates every skill and regenerates the stubs |
+
+## Nobody decides silently
+
+Every decision that shapes a film is either the person's, or the assistant's **said out loud** — what
+was chosen, why, and that it can change — and written into the film's brief,
+`content/<project>/docs/brief.md`, marked *theirs* or *mine*. "You decide" hands a choice over; it
+never makes the choice invisible. The decisions nobody thinks to raise — music, the story's shape, a
+metaphor, the pace, whose world the pictures show — are raised at the step where they arrive.
+`building-a-video` → `reference/decisions.md` lists them all, with the tool for each.
+
 ## The worked example
 
 A 70-second silent paper-collage film whose subject is this repository. It is what the skills were
 written from, and it is registered as `LiveShowcaseFilm`.
+
+**Silent and paper collage are this film's choices, not the workspace's.** New films can have a voice
+(`adding-narration`) and a score (`scoring-music`), and paper collage is the first entry in a
+catalogue of styles (`choosing-a-visual-style` → `reference/styles.md`).
 
 | | |
 | --- | --- |
@@ -173,8 +215,9 @@ fails on anything the spec forbids and warns on the rest.
 
 - Work here runs across many sessions, and an assistant starts each one knowing nothing about the
   last. You are working on one compartment of something that began before you and continues after.
-- Read `content/live-showcase/docs/README.md` and the most recent entries in `agent-logs/`, if there
-  are any, before acting. Do not assume context you were not handed.
+- Run `node scripts/session-start.mjs` first; it prints where the work stands and the last session's
+  handoff. Then read `content/live-showcase/docs/README.md` and the most recent entries in
+  `agent-logs/`, if there are any, before acting. Do not assume context you were not handed.
 - Do the milestone in front of you. Do not run past it into the next one because it seems obvious or
   cheap.
 - **Do not start a scene, a render or a refactor that was not asked for.** Scope is set in the
@@ -207,8 +250,9 @@ to verify rather than a fact.
 ## Agent log
 
 An agent log is a concise session summary and handoff, not a running activity transcript. It is how
-the next session learns where the work stands. `agent-logs/README.md` says why, and
-`agent-logs/TEMPLATE.md` is the shape.
+the next session learns where the work stands. `agent-logs/README.md` says why,
+`agent-logs/TEMPLATE.md` is the shape, and the `keeping-agent-logs` skill says how to write one and
+how to learn from the ones already there.
 
 - One file per session, named `NNN-YYYY-MM-DD-<assistant>.md`, numbered in order. **Check the number
   is free before you use it** — two sessions once collided on one.
@@ -218,7 +262,10 @@ the next session learns where the work stands. `agent-logs/README.md` says why, 
 - Record who you are, what you worked on, the directions you were given in the giver's own words,
   what actually became of it, what you left uncommitted, and where the next session picks up.
 - Report honestly, including what failed, what you got wrong, and what you did not finish.
-- Read the last two or three entries before you start, if there are any.
+- Read the last two or three entries before you start, if there are any, and
+  `agent-logs/LESSONS.md` — the distilled list of what earlier sessions got wrong.
+- Before the session ends, tell the person how many files are uncommitted and since when, and offer
+  a local checkpoint commit (`collaborating-with-git`). Commit only on their yes.
 
 ## Cost rules
 

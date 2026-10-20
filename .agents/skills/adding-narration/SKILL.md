@@ -79,6 +79,20 @@ are where lines go missing unnoticed.
 **Check the API key before starting, not after the script is approved.** No key, no narration, and
 that is a conversation to have during the interview in `building-a-video`.
 
+## Which voice is a decision
+
+The voice — which one, how fast, how warm — is heard in every second of the film. If they have a
+view, use it. If they say "you decide", pick one, play them one generated line before the whole
+script, and say which you picked and why. Record it in the brief (`building-a-video` →
+`reference/decisions.md`) with the model name, because one voice on one model for the whole film is
+the rule, and the next session needs to know which.
+
+## Narration with music under it
+
+Music sits under a voice, never beside it. `scoring-music` lowers the score under every spoken line
+and lets it back up in the gaps, from the same timings this skill produces — so generate and
+measure the narration first, then score against it.
+
 ## Fades are not optional
 
 A cut landing mid-waveform is a step discontinuity, and it is heard as a click. A fade of even 10ms

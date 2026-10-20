@@ -35,7 +35,8 @@ global install changes a machine outside this project and is not ours to change.
 
 ## The order
 
-1. **Node** — version 16 or higher. `node --version`.
+1. **Node** — version 22.12 or higher. `node --version`. (Remotion alone needs 16; the interactive
+   page builder and its test need the newer one.)
 2. **`npm install`** — once, in the project folder. Prints a great deal and takes minutes.
 3. **FFmpeg** — a full system install. See below for why the bundled one is not enough.
 4. **`npm run dev`** — the preview opens a browser tab on its own.
@@ -83,6 +84,22 @@ there yesterday, suspect a broken install before suspecting the code.**
 **Close the preview before reinstalling anything.** Reinstalling deletes first and installs second.
 With the preview holding a file open, the second half fails and the project is left unable to build
 at all — this has already cost someone a working session here.
+
+## Install from a neutral place, and list what changed
+
+System installs — Node, FFmpeg, a package manager's tools — **run from the home folder, never from
+inside this project or any other repository.** A package manager run from inside a repository once
+left a stray `{{pkgetc}}/cert.pem` folder there, which then sat in that repository's status for
+someone to puzzle over.
+
+- **Nothing goes to a system temp folder** that the person cannot see. Downloads and scratch files
+  for this project go inside it (`AGENTS.md` → temporary files).
+- **After every install, say what changed**: what was added, where, and whether anything else had
+  to change for it to work. One install here needed a certificate package relinked before FFmpeg
+  would install — the person should hear that from you, not find it later.
+- **`npm install` should leave `git status` clean.** If it rewrites `package-lock.json`, a
+  different npm version did it. Say so, and do not commit that diff as though it were a real
+  dependency change.
 
 ## Do not assume a missing tool from someone else's report
 

@@ -3,25 +3,28 @@
 **You don't need to know how to code to use this.** You need a few things installed, and the
 assistant will do all of them for you.
 
-## 1. Get the folder
+## 1. Let the assistant fetch it
 
-**From your access email:** it carries the link to the repository on GitHub. Clone it, or on that
-page choose **Code → Download ZIP** and unzip it somewhere you'll find again — Documents is fine.
-Don't leave it inside the zip; nothing will work.
+Open Claude Code or Codex and paste:
 
-**Or let the assistant fetch it.** The email also has a prompt to paste into Claude Code or Codex,
-and the assistant downloads the folder for you.
+> Set up LIVE for me from https://github.com/napatne/LIVE-Workspace — put it in my Documents
+> folder, then read its AGENTS.md and follow it.
 
-## 2. Open it in Claude Code or Codex
+It downloads the folder, installs what is missing — asking you once for each — and then offers a
+quick tour or to go straight to making a video.
 
-Open the folder you just unzipped. Not the folder containing it — **the one with
-`package.json` in it.**
+**Or get it yourself:** on the GitHub page choose **Code → Download ZIP** and unzip it somewhere
+you'll find again — Documents is fine. Don't leave it inside the zip; nothing will work. Then open
+the unzipped folder — **the one with `package.json` in it**, not the one containing it — in Claude
+Code or Codex, and say hello.
 
-## 3. Say what you want
+## 2. Every time after that
+
+Open your assistant **in** the folder and say what you want:
 
 > create a video for me
 
-That's it. If anything is missing, the assistant will tell you what and offer to install it.
+If anything is missing, the assistant will tell you what and offer to install it.
 **Say yes and it handles the rest.** You won't be asked to type commands.
 
 **Unless your laptop is managed by your employer or university.** Those often block installing
@@ -33,9 +36,9 @@ want to know.
 
 ## What gets installed, and why
 
-**Node.js** — the program that actually builds the video. Free, open source, widely used. Only
-installed if you don't already have it, and only after you say yes. **If you already have a
-recent enough version, nothing changes.**
+**Node.js, version 22 or newer** — the program that actually builds the video. Free, open source,
+widely used. Only installed or updated if yours is missing or older, and only after you say yes.
+**If you already have a recent enough version, nothing changes.**
 
 **The project's building blocks** — Remotion (which draws and renders the video), React, and
 TypeScript. These come from the project's own list; nothing else is added.
@@ -48,6 +51,9 @@ rest because of it.
 **FFmpeg** — a free video tool the project uses for sound, timing and converting files. It needs
 the full version, not the cut-down copy that comes with Remotion. It installs system-wide, so it
 stays on your computer after this folder is gone, and the assistant asks before installing it.
+
+**Instrument samples, only if you want music** — a 32MB free sound library the music is played on,
+downloaded into this folder the first time a video gets a score. It stays inside the folder.
 
 **Nothing else.** No Python. No global npm packages. Node.js and FFmpeg are the only things that
 land outside this folder.

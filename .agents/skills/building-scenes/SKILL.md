@@ -60,6 +60,31 @@ components stay small and reusable; type checking runs after meaningful changes.
 **A scene length is a named constant at the top of its own file**, and the master derives its total
 from those. The two disagreeing is how a film ends up cutting off its own last frame.
 
+## Pictures are props on a surface, not slides
+
+A generated picture shown full-screen, then zoomed, then dissolved into the next, is a slideshow,
+and it reads as one. One film's motion was rejected in exactly those words — *"cheap
+powerpoint"* — for paintings moved by strokes, zooms and dissolves.
+
+What worked instead, on the same film's next version: **an authored surface** — a desk, a wall, a
+page, a board, drawn in code and present the whole time — **and pictures used as props on it.**
+Pinned, taped, held up, slid in, set down. Each one arrives when its words do, and is taken away
+when its beat ends.
+
+- **No generated image fills the frame.** The surface is the frame; images sit on it.
+- **Each picture shows literally what its words say.** A picture standing in for a metaphor
+  nobody agreed is a guess the viewer has to decode — see `working-practice` rule 2.
+- **The surface carries continuity.** Light, texture and the camera's position stay put across
+  cuts, so a scene change reads as the same world rearranged rather than a new slide.
+
+## One registration file per film
+
+Every film registers its compositions in one file of its own — `src/<film>/Registrations.tsx` or
+similar — and `src/Root.tsx` only imports those files. `Root.tsx` is shared by every film in the
+folder; three sessions appending to it in one copy left it with imports out of order and three
+films' worth of entries tangled together. With one file per film, two people adding films never
+edit the same lines.
+
 ## Timing is tentative until it is built
 
 Scope durations loosely at the start — a calibration, not a commitment. Solidify them once the

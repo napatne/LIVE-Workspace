@@ -4,28 +4,49 @@
   "description": "A workspace for making short animated explainer videos in code.",
   "license": "UNLICENSED",
   "private": true,
+  "engines": {
+    "node": ">=22.12"
+  },
   "dependencies": {
     "@remotion/cli": "4.0.506",
     "@remotion/google-fonts": "4.0.506",
     "@remotion/layout-utils": "4.0.506",
     "@remotion/media": "4.0.506",
+    "@remotion/player": "4.0.506",
     "@remotion/transitions": "4.0.506",
+    "abcjs": "6.7.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "remotion": "4.0.506"
+    "remotion": "4.0.506",
+    "spessasynth_core": "4.3.22",
+    "tonal": "6.4.3"
   },
   "devDependencies": {
     "@remotion/eslint-config-flat": "4.0.506",
     "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
     "@types/web": "0.0.166",
     "eslint": "9.19.0",
     "prettier": "3.8.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vite": "8.3.3"
   },
   "scripts": {
     "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "check-setup": "node scripts/check-setup.mjs",
+    "session": "node scripts/session-start.mjs",
+    "soundfont": "node scripts/score/fetch-soundfont.mjs",
+    "score": "node scripts/score/build.mjs",
+    "check-render": "node scripts/check-render.mjs",
+    "finish": "node scripts/finish-video.mjs",
+    "skills": "node scripts/sync-skills.mjs",
+    "interactive": "vite --config web/interactive-demo/vite.config.mts",
+    "interactive:build": "vite build --config web/interactive-demo/vite.config.mts"
+  },
+  "overrides": {
+    "stb-vorbis": "0.0.6"
   }
 }

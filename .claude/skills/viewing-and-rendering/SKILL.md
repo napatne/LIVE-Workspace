@@ -1,6 +1,6 @@
 ---
 name: viewing-and-rendering
-description: Opens the preview, plays a composition, captures a single frame, and renders a finished file. Use when someone asks to watch, play, see, check, export or render a video, when the preview list looks empty or wrong, or when a render needs verifying before it goes anywhere.
+description: Opens the preview, plays a composition, captures a single frame, renders a finished file, measures it, and finishes it for delivery. Use when someone asks to watch, play, see, check, export or render a video, when a render needs verifying before it goes anywhere, when a video looks washed out or plays too quietly elsewhere, when a render is slow or the machine is short of memory, or when the preview list looks empty or wrong.
 ---
 
 The skill is at `.agents/skills/viewing-and-rendering/`. Read `.agents/skills/viewing-and-rendering/SKILL.md` now, and

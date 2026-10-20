@@ -19,3 +19,12 @@ out
 # regenerate them with `node scripts/sync-skills.mjs`.
 .claude/*
 !.claude/skills/
+
+# The project hook that prints where the work stands at session start - shared,
+# so every clone gets it. See scripts/session-start.mjs.
+!.claude/settings.json
+
+# Instrument samples for the score (scripts/score/fetch-soundfont.mjs). 32 MB,
+# fetched once per machine and checked against a pinned hash - kept out of every
+# clone's history.
+vendor/soundfonts/

@@ -76,6 +76,25 @@ inconsistent one is the most likely way a set falls apart.
 Show the prompts even when generating them yourself. A wrong prompt read in ten seconds saves a
 wrong picture that has to be noticed in a finished scene.
 
+## Ask whose world the pictures show
+
+Before writing a prompt that contains a place, a person or a culture, ask the person — in one
+question — whose world this is: where they are from, where the story happens, who is in it. Then
+draw that, and nothing invented around it.
+
+- **Do not fall back on stock picturesque settings.** Classical ruins, a Romantic mountain-and-sea
+  landscape and a ballet-like theatre are what a generator produces when nobody said otherwise.
+  For one person's story about their own roots, those came back described — in their words — as
+  *"very euro centric"* and *"fake, not representative of me"*.
+- **An anonymous face is not representation.** A generated stranger who shares someone's broad
+  ethnicity does not stand for them. If the film is about a person, ask what they want shown — a
+  real photograph they supply, an object, a place, a drawn figure that is deliberately nobody.
+- **Invent no personal detail.** Use exactly what they told you. A hometown, a family member or a
+  belief that was not given is not filled in to make a picture richer.
+
+This is a decision, and it is theirs. Record the answer in the brief (`building-a-video` →
+`reference/decisions.md`) so later pictures follow it.
+
 ## Ask two questions of every asset
 
 **What has to match?** Things that must look like the same object, the same hand, the same room go

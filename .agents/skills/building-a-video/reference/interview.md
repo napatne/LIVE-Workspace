@@ -8,14 +8,35 @@ follow this file exactly. Do not improvise a different order. Do not skip the ap
 If you are a human reading this: you don't need to do anything with this file.
 Just open this folder in Claude Code or Codex and say **"create a video for me."**
 
+## Contents
+
+- [The flow](#the-flow)
+- [When to start](#when-to-start) — the setup check, and how much commentary they want
+- [Step 0 — Read what they already told you](#step-0--read-what-they-already-told-you)
+- [Step 0.5 — Can this be built at all?](#step-05--can-this-be-built-at-all)
+- [Rules for the whole conversation](#rules-for-the-whole-conversation)
+- [Step 1 — Topic](#step-1--topic) · [Step 2 — Length](#step-2--length) ·
+  [Step 3 — Voice](#step-3--voice) · [Step 3b — Music](#step-3b--music) ·
+  [Step 4 — Assets](#step-4--assets) · [Step 5 — Style](#step-5--style)
+- [Step 6 — Script approval](#step-6--script-approval) — the gate
+- [Step 7 — Show them the plan](#step-7--show-them-the-plan)
+- [Step 8 — Generate](#step-8--generate) · [Refinement](#refinement) ·
+  [If they come back later](#if-they-come-back-later) · [Never, in this workflow](#never-in-this-workflow)
+- [For the technical reader](#for-the-technical-reader)
+
 > **This file governs the conversation, not the code.** It tells you what to ask, in what
 > order, and what to do with the answers. For how to build the video itself, follow
 > `.agents/skills/remotion-best-practices/SKILL.md` and the development rules in `AGENTS.md`.
 >
-> **Visual style, colour, type and accessibility** are covered by `asu-visual-style`.
-> **How to construct the video in Remotion** — composition structure, deriving duration, the
-> diagram primitives, captions — is covered by `building-scenes`. Read that one after the
-> script is approved and before writing any code. Both live in `.claude/skills/` once
+> **Visual style, colour, type and accessibility** are covered by `choosing-a-visual-style` and
+> `asu-visual-style`. **Music and sound** are covered by `scoring-music`. **How to construct the
+> video in Remotion** — composition structure, deriving duration, the diagram primitives,
+> captions — is covered by `building-scenes`. Read that one after the script is approved and
+> before writing any code. All of them are skills in `.agents/skills/`.
+>
+> **Every decision in this conversation is either theirs or yours out loud.** The full list of
+> decisions a video involves, and the brief that records who made each, is in
+> [`decisions.md`](decisions.md).
 
 > **Paths in this file.** Links to topic scripts are relative to this file, because they move
 > together. Everything else — `public/assets/`, `out/`, `scripts/`, `AGENTS.md`, `ACCESS.md` —
@@ -26,18 +47,18 @@ Just open this folder in Claude Code or Codex and say **"create a video for me."
 
 ## The flow
 
-Five questions, then the script, then the plan, then the video. Always this order.
+Six questions, then the script, then the plan, then the video. Always this order.
 
-**Expect more turns than questions.** Someone who answers everything vaguely gets around ten
-replies from you before a frame exists — the commentary question, the five below, the script
+**Expect more turns than questions.** Someone who answers everything vaguely gets around eleven
+replies from you before a frame exists — the commentary question, the six below, the script
 gate, the picture list, how they are drawn, and the plan. Each one earns its place, but do not
-tell them "just five questions" and then ask ten.
+tell them "just six questions" and then ask eleven.
 
 ```text
-1. Topic → 2. Length → 3. Voice → 4. Assets → 5. Style → 6. Script → 7. Plan → 8. Generate
+1. Topic → 2. Length → 3. Voice → 3b. Music → 4. Assets → 5. Style → 6. Script → 7. Plan → 8. Generate
 ```
 
-**But you rarely ask all five.** People answer questions before you ask them, scattered
+**But you rarely ask all six.** People answer questions before you ask them, scattered
 through their opening message. Your job is to notice, skip what they've answered, and ask
 only what's left.
 
@@ -70,10 +91,10 @@ Don't start until they say yes.
 
 ### First, check it can actually build
 
-**Before you ask anything, run the setup check** — `.agents/skills/installing-the-toolchain/reference/SETUP-CHECK.md`,
-or `.agents/skills/installing-the-toolchain/reference/SETUP-CHECK.md` before that is installed.
+**Before you ask anything, run the setup check** —
+`.agents/skills/installing-the-toolchain/reference/SETUP-CHECK.md`.
 
-In short: Node 16+ and `node_modules/` both have to exist. **If either is missing, you install
+In short: Node 22.12+, `node_modules/` and a full FFmpeg all have to exist. **If any is missing, you install
 it** — explain what and why, ask once, and run it yourself. Do not hand them a command; they
 opened a chat window, not a terminal.
 
@@ -123,6 +144,7 @@ already contains. Then ask only the gaps, in the order above.
 | "60 sec", "1 min", "two minutes", "a minute and a half" | Length | Step 2 |
 | "for school students", "for beginners", "for my class" | Audience | The audience question |
 | "with narration", "with a voiceover", "no voice", "silent", "captions only" | Voice | Step 3 |
+| "with music", "some background music", "lofi", "no music", a named song or style | Music | Step 3b — but a named commercial song is **not** an answer you can use; see step 3b |
 | "I'll send images", "I have pictures", "use my photos", "you make the visuals" | Assets | Step 4 |
 | A specific brief — "the four stages", "just the basics", "focus on evaporation" | What it should explain | The brief question |
 | "for my ASU class", "I teach at ASU", "in ASU colours", a named ASU school or department, or **an `asu.edu` address they typed to you** | ASU style — yes | Step 5 |
@@ -266,8 +288,10 @@ ask them one question rather than refusing.
 2. **One question at a time.** Wait for the answer. Never send the whole interview at once.
 3. **Number the options** so they can just reply `1`, `2`, or `3`.
 4. **Every question has a default.** If they say "I don't know", "you decide", or go quiet —
-   pick the sensible option, **tell them what you picked**, and keep going. Never stall
-   waiting for a decision they don't have.
+   pick the sensible option, **tell them what you picked and why, in one line**, and keep
+   going. Never stall waiting for a decision they don't have. Write the pick into the brief as
+   *mine* (see [`decisions.md`](decisions.md)) so it reappears at step 7 and in the next
+   session. "You decide" moves the choice to you; it never makes it silent.
 5. **No jargon.** Don't say *composition*, *frames*, *fps*, *render*, *props*, *pack*, or any
    file path unless they ask a technical question first. Say *video*, *scene*, *length*,
    *picture*, *voice*.
@@ -498,10 +522,9 @@ it is a real one — this repository has shipped silent videos both ways.
 
   If they confirm, **the script changes shape.** Rewrite it at step 6 as short on-screen
   phrases rather than sentences, and show them that version — not the sentence version they
-  will never see. The worked example was a 90-second silent film built here with no caption
-  panel at all, meaning carried entirely by typography and motion. **It was removed when this
-  repository was cut down to one film, so there is nothing in `src/` to open** — build from
-  this description rather than looking for it.
+  will never see. The LIVE showcase in this folder is built this way: no voice, no caption
+  panel, short phrases set as part of the picture, meaning carried by typography and motion.
+  Its words are in `content/live-showcase/docs/script.md`.
 
 **Never end up with no voice, no captions and a sentence script.** That is a video that says
 nothing, and it is reachable by two "no"s in a row if you are not paying attention.
@@ -595,8 +618,7 @@ If they say it doesn't match:
   update them here and in `ACCESS.md`. Otherwise the next person hits the same wall.
 
 If they said yes and a key exists, **read the `adding-narration` skill before generating
-anything** — `.agents/skills/adding-narration/reference/`, or `.agents/skills/adding-narration/reference/`
-before it is installed. The two things that will bite you soonest:
+anything** — `.agents/skills/adding-narration/`. The two things that will bite you soonest:
 
 - **The free tier is 10 requests per day, per model** (measured; recorded in `ACCESS.md`).
   Batch two to four sections per call, never one per sentence, and never retry in a loop —
@@ -607,6 +629,64 @@ before it is installed. The two things that will bite you soonest:
 And one that costs a rebuild rather than a retry: **the audio will not be exactly the length
 you planned for.** Measure it against each section and widen the section to fit before
 building. If that changes the total, tell them.
+
+---
+
+## Step 3b — Music
+
+**Ask it.** Nobody raises music on their own, and a video with none and a video with a score are
+paced differently from the first scene — so it is decided here, not discovered at the end.
+
+> **Do you want music under it?** Choose one:
+>
+> 1. Yes — I'll make an original piece for it here, timed to the pictures
+> 2. You have a track you want to use
+> 3. No music
+>
+> Just reply with a number.
+
+**Default: 1 if there is no voice, 3 if there is one.** Say which you picked and why, in one
+line. A video with no voice and no music plays as dead air; a voice with music under it is the
+thing people most often ask to turn down afterwards, and music can always be added later.
+
+> No voice, so I'll put a quiet piece of music under it — say if you'd rather it was silent.
+
+### Option 1 — made here
+
+**One follow-up only, and only if they seem to care: what should it feel like?** Give examples
+so it is answerable — *"calm and warm, bright and playful, big and cinematic — or name a piece or
+a style you like."* "You decide" → pick from the subject and the story's mood, and say it in one
+line, as with any default.
+
+**Be straight about what this makes.** It is made in code, here, for free: the sound is clean and
+the timing lands on the pictures exactly, **but an assistant is a better arranger than a
+composer.** Say it once, plainly, the first time music comes up, and offer the way round it:
+
+> If you have a tune in mind — something you can hum, a folk tune, a piece of classical music —
+> tell me. I'm better at arranging a real tune than inventing one.
+
+A tune they bring, or an old public-domain melody they agree to, gets arranged and timed by
+`scoring-music`; that is the strongest route here. Nothing more to ask now — the music is made
+after the scenes exist (`building-a-video` step 10).
+
+### Option 2 — their track
+
+Take it, and check one thing before you rely on it: **that they are allowed to use it.** A track
+they made, bought a licence for, or took from a library that permits it is fine. Ask in one
+sentence if it is unclear.
+
+**A song ripped from YouTube or a streaming service is not usable, whoever asks.** Say so once and
+offer option 1 instead: *"I can't use music from YouTube — it's someone else's recording and the
+video could be taken down. I can make an original piece in that feel instead. Shall I?"* A session
+here has already had to decline exactly this request.
+
+Their file goes in `content/<project>/intake/`; `scoring-music` places it, fades it and brings it
+to the same loudness as everything else.
+
+### Option 3 — none
+
+Accept it and move on. If there is also no voice, mention once that the video will be completely
+silent, and carry on with what they chose.
 
 ---
 
@@ -900,15 +980,18 @@ words, and let them change anything:
 >
 > - **Colour theory** — what it is, the wheel, and complementary colours
 > - **40 seconds**, no voice, words on screen
+> - **Quiet music** under it, made here — *my pick*
 > - **Five pictures**, which I'll draw
-> - **Neutral style** — clean, not ASU
+> - **Neutral style** — clean, not ASU — *my pick*
 >
 > I'll write the scenes, draw the pictures, and render it — a few minutes.
 >
 > **Anything you'd like to change before I start?**
 
-- **Their inputs, not your decisions.** List what they chose. One line at the end for what
-  you will do with it is enough.
+- **Their inputs, and your picks marked as yours.** List what they chose, and tag every line
+  you decided for them — *my pick* is enough. That tag is what lets them see, in one glance,
+  which parts of the video nobody asked them about. One line at the end for what you will do
+  with it is enough.
 - **Always say how the words reach them** — spoken, on screen, or neither. It is the thing
   most likely to have been decided across two separate questions two turns apart, and the
   thing they will most notice if it is wrong.
@@ -995,6 +1078,8 @@ When it's finished, tell them:
   **You start the browser preview, not them.** Run `npx remotion studio` in the background
   and hand them the link — never ask them to run it. It opens on port 3000 unless something
   else is already using it; say the port it actually reported, not the one you expected.
+  **On a machine with 8 GB of memory, stop the preview before a full render** — the two
+  together have pushed renders to an hour.
   In there they can scrub through, jump to any moment, and replay a bit they want to talk
   about — which makes the refinement round below far easier for them.
 - **How long it actually came out**, and what size.
@@ -1022,12 +1107,21 @@ Invite it explicitly the first time:
 
 ## If they come back later
 
-Someone may close the terminal mid-way. If a conversation starts and there's recent
-unfinished work in `public/assets/user-uploads/`, `out/`, or `src/`, say what you found and
-offer to continue:
+Someone may close the terminal mid-way, or come back days later. `scripts/session-start.mjs`
+(it runs on its own in Claude Code) lists every film with a brief and the last session's
+handoff. Read the brief — `content/<project>/docs/brief.md` — and the last log before you say
+anything, then say where things stood **in one line** and ask **one** question:
 
-> Looks like we were part way through a video about the water cycle. Carry on with that, or
-> start something new?
+> Last time we got the water cycle script approved and picked a calm, guitar-led score. Carry on
+> with that, or start something new?
+
+- **Do not re-ask what the brief already holds.** A decision marked *theirs* stands; one marked
+  *mine* can be mentioned in passing — *"I'd picked the music; still happy with that?"* — but
+  never re-run as a question list.
+- **Do not recap the whole project.** One line of where it stood, then the next step. If they
+  want more, they will ask.
+- **No brief, but unfinished work** in `public/assets/user-uploads/`, `out/` or `src/`: say
+  what you found and offer to continue, the same way.
 
 ---
 
@@ -1049,6 +1143,8 @@ offer to continue:
 - Never insist stale setup steps are correct when they say the screen looks different.
 - Never commit anything to Git unless they ask in that message.
 - Never declare the finished video good. They decide that.
+- **Never make a decision silently.** Theirs, or yours said out loud and written in the brief.
+- Never use music they do not have the rights to, however it is asked for.
 
 ---
 
@@ -1060,11 +1156,13 @@ offer to continue:
 | Audience | The reading level of each section's narration |
 | Length | Optional sections dropped shortest-first, then the rest scaled to fit |
 | Voice | WAVs from `scripts/tts-generate.mjs`, verified by `tts-verify.mjs` |
+| Music | A score from `scripts/score/`, written against the film's timeline — see `scoring-music` |
 | Pictures | Code-drawn SVG diagrams, or images under `public/assets/` |
-| Output | A rendered `.mp4` in `out/` |
+| Output | A rendered `.mp4` in `out/`, checked by `scripts/check-render.mjs` and finished by `scripts/finish-video.mjs` |
+| Every choice above | A row in `content/<project>/docs/brief.md`, marked *theirs* or *mine* |
 
-New explainers are **1920×1080 at 30fps**. The Lexi Mentors film is 24fps because its footage
-plates are 24 — a constraint of that film, not a project default.
+New explainers are **1920×1080 at 30fps**. A film built around footage takes the footage's frame
+rate instead — a constraint of that film, not a project default.
 
 Build with Remotion, following `.agents/skills/remotion-best-practices/SKILL.md` and the
 development rules in `AGENTS.md`. Nothing here overrides those — this file governs the

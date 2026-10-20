@@ -1,6 +1,6 @@
 ---
 name: choosing-a-visual-style
-description: Decides what a video looks like - palette, edges, motion, type and texture - and writes that decision down as rules an assistant can build to. Use when the look is undecided, when someone asks for brand or ASU compliance, when images generated separately do not look like they belong to one film, or before generating any asset at all.
+description: Decides what a video looks like - palette, edges, motion, type and texture - from a catalogue of styles that can be made here, and writes that decision down as a style card an assistant can build to. Use when the look is undecided, when someone asks what styles are possible or says "you pick the style", when someone asks for brand or ASU compliance, when images generated separately do not look like they belong to one film, or before generating any asset at all.
 ---
 
 # Choosing a visual style
@@ -8,11 +8,13 @@ description: Decides what a video looks like - palette, edges, motion, type and 
 **Use this when** the look has not been settled, or when what has been generated does not hold
 together as one film.
 
-**You need first** a subject and an audience. Style follows both. Chosen before either, it produces
-a video that looks considered and says nothing.
+**You need first** a subject, an audience, and the story approved in words (`building-a-video`
+step 3). Style follows all three. Chosen before them, it produces a video that looks considered and
+says nothing.
 
-**This produces** a written style decision — five specific answers, kept in one short file — and a
-style preamble reusable verbatim at the head of every image prompt.
+**This produces** a style card in `content/<project>/docs/style.md` — five specific answers, plus how
+things move, what it sounds like, and what goes wrong in it — and a style preamble reusable verbatim
+at the head of every image prompt.
 
 **Then go to** `creating-assets`.
 
@@ -34,8 +36,31 @@ Ask. Do not infer the answer from their email domain, their institution, or the 
 | Route | What it means | What it costs them |
 | --- | --- | --- |
 | **They bring the look** | They have references, or a style in mind. They describe it; turn it into specifics | Most control, most of their time |
-| **Propose one** | Given the subject and audience, suggest a style and let them react | Reacting is easier than inventing, and they keep every veto |
+| **Choose from three** | Given the subject, the audience and the story, propose three distinct styles that can be made here and recommend one | Choosing is easier than inventing, and they keep every veto |
 | **Brand compliance** | An institution's colours and typefaces settle most of it | Least decision. Read `asu-visual-style` for the ASU values |
+
+**The worked example's paper collage is one style, not the house style.** It is in this folder
+because one film was made in it. Offer it when it fits the subject, never by default.
+
+## Proposing three
+
+Pick three from [`reference/styles.md`](reference/styles.md) that suit the subject and differ from
+each other — not three palettes of one look. One line each: what it looks like, and what it is good
+at. Then recommend one and say why, in a sentence.
+
+> Three ways this could look:
+>
+> 1. **Whiteboard** — drawn line by line as it's explained; good for a process with steps.
+> 2. **Flat vector** — clean shapes and bold colour; good for something friendly and quick.
+> 3. **Blueprint** — white lines on deep blue, labelled like a diagram; good for how a thing is built.
+>
+> I'd go with the whiteboard — your subject is a sequence, and drawing it in order explains it.
+> Which one?
+
+**"You pick"** is an answer: take your recommendation, say it in one line, and write it into the
+brief as yours (`building-a-video` → `reference/decisions.md`). Then build the style card and show
+them **one still in that style** before anything else is drawn — a style chosen from a sentence is
+the easiest decision in the project to have got wrong.
 
 **If they did not ask for a brand, do not apply one.** An `asu.edu` address is not an instruction,
 and neither is the word "class" or "students". If something comes back maroon and gold unasked, a
@@ -143,9 +168,36 @@ One rule belongs with it: **no invented interfaces.** No pretend buttons, browse
 features, even drawn ones. A film about a real tool that shows a made-up version of it is
 misrepresenting what the tool does.
 
+## The style card
+
+The five answers are the start of the card, not all of it. A style also decides how a scene is
+filmed and what it sounds like, and if those are left open each scene invents its own. Write the
+card to `content/<project>/docs/style.md` with ten short sections — the shape is in
+[`reference/style-card.md`](reference/style-card.md):
+
+1. **Essence, and what it is not** — the three to five traits that make one frame read as this
+   style, and the styles it is easily confused with.
+2. **Materials** — what it is made of, and how code imitates it.
+3. **Colour** — the five-answers palette, with what each colour is *for*.
+4. **Type** — face, sizes, and whether text sits on the picture or is made of it.
+5. **Motion** — stepped or smooth, the easing, how things arrive and leave, what never moves.
+6. **Camera** — the moves this style does well and what each expresses.
+7. **Sound** — the instruments and textures that belong to this world. It is what
+   `scoring-music` reads first, so the music matches the picture by design rather than by luck.
+8. **Native moves** — the moments only this style can do.
+9. **Pitfalls** — the mistakes the medium itself invites, each with its fix.
+10. **What varies per film** — what stays open for the story to decide.
+
+**Only what holds for every film in the style goes on the card.** This film's story, its palette
+choices for one scene, its running time — those go in the storyboard. A card that carries one film's
+story makes the next film in that style a copy of the first.
+
+**A style the person invents gets a card too**, and it can join the catalogue for the next film:
+[`reference/styles.md`](reference/styles.md) says how.
+
 ## Hand the rules over before any code
 
-Put the five answers in one short document and give it to whoever builds, before the first scene is
+Put the card — or at least the five answers — in front of whoever builds, before the first scene is
 asked for.
 
 Two things that buys. The look stops being reinvented, differently, on each request. And there is
@@ -167,6 +219,10 @@ adjusting the same value again.
 
 ## Reference
 
+- [`reference/styles.md`](reference/styles.md) — the catalogue: styles that can be made here, what
+  each is good at, how it is built in code, and what it costs. Paper collage is the first entry.
+- [`reference/style-card.md`](reference/style-card.md) — the ten-section card to fill in for a
+  film's style, with the paper-collage card as its worked example.
 - [`reference/worked-examples.md`](reference/worked-examples.md) — three films, the style each one
   landed on, and what the choice cost.
 - `asu-visual-style` — ASU colour, typography, logo and accessibility, with every value cited and

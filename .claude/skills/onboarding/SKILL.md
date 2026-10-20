@@ -1,6 +1,6 @@
 ---
 name: onboarding
-description: Explains what this workspace is, what it can make, and walks a newcomer to their first video. Use at first contact - when someone has just opened or cloned this folder, asks what this is or what it can do, asks where to start, or opens with a question no other skill clearly covers.
+description: Gets a newcomer from nothing to ready - checks and installs what the workspace needs, then offers a short tour of what it is and what it can make, and walks them to their first video. Use at first contact - when someone has just opened, cloned or asked you to set up this folder, says hello, asks what this is or what it can do, asks where to start, or opens with a question no other skill clearly covers.
 ---
 
 The skill is at `.agents/skills/onboarding/`. Read `.agents/skills/onboarding/SKILL.md` now, and

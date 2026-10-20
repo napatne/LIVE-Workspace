@@ -1,6 +1,6 @@
 ---
 name: working-practice
-description: How to work with a person on a video - who decides what, when a duration means anything, what to report, and how to write notes and documents the next reader can use. Use throughout, and particularly before setting a duration, before calling work finished, and before writing into a storyboard, a script, a plan or a code comment.
+description: How to work with a person on a video - who decides what, how to make a choice on their behalf without making it silently, when a duration means anything, how to check work by measuring rather than looking, what to report, and how to write notes the next reader can use. Use throughout, and particularly when told "you decide", before setting a duration, before calling work finished or checked, at the end of a session, and before writing into a storyboard, a script, a plan or a code comment.
 ---
 
 The skill is at `.agents/skills/working-practice/`. Read `.agents/skills/working-practice/SKILL.md` now, and

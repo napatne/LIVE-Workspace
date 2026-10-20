@@ -1,19 +1,52 @@
 ---
 name: onboarding
-description: Explains what this workspace is, what it can make, and walks a newcomer to their first video. Use at first contact - when someone has just opened or cloned this folder, asks what this is or what it can do, asks where to start, or opens with a question no other skill clearly covers.
+description: Gets a newcomer from nothing to ready - checks and installs what the workspace needs, then offers a short tour of what it is and what it can make, and walks them to their first video. Use at first contact - when someone has just opened, cloned or asked you to set up this folder, says hello, asks what this is or what it can do, asks where to start, or opens with a question no other skill clearly covers.
 ---
 
 # Onboarding — introducing this workspace to a person
 
 **Use this when** someone has just arrived and has not yet decided what to make.
 
-**You need first** nothing. This is the entry point, and it assumes no prior contact.
+**You need first** nothing. This is the entry point, and it assumes no prior contact — not even an
+install.
 
-**This produces** a person who knows what this makes, what it will not make, what it will ask of
-them, and which way they want to go next.
+**This produces** a machine that can build video, and a person who knows what this makes, what it
+will not make, what it will ask of them, and which way they want to go next.
 
-**Then go to** `building-a-video` if they want one now, `installing-the-toolchain` if nothing runs
-yet, or `viewing-and-rendering` if they only want to watch the example.
+**Then go to** `building-a-video` if they want one now, or `viewing-and-rendering` if they only want
+to watch the example.
+
+---
+
+## Before the first word: make sure it can build
+
+**Run the setup check first** — `installing-the-toolchain` → `reference/SETUP-CHECK.md`: Node
+22.12 or newer, the project's packages, a full FFmpeg. It starts by **looking** —
+`node --version`, then `node scripts/check-setup.mjs` — so you know what is missing, too old or
+incomplete before you say a word about it. Someone who has just cloned this has probably got none
+of the packages and maybe an old Node, and a tour that ends in *"now let's install things"* has
+wasted their attention.
+
+- **All present → say nothing about it.** Go straight to the opening below.
+- **Something missing → install it yourself**, the way the setup check says: what it is and why in
+  a sentence, ask once, run it, mention the one-off browser download. Then the opening.
+- **If you were asked to clone it** and you are not running inside the folder, work from it by
+  path for this session, and say once, at the end of the setup, that next time they should open
+  their assistant *in* the folder — that is where its skills load on their own.
+
+## Open with a choice
+
+Once it can build, **one short message**: what this is in one sentence, and a choice.
+
+> This is a folder that makes short videos out of code — you describe what you want and I build
+> it. Would you like a quick tour of how it works first, or shall we go straight to making a
+> video?
+
+- **Tour** → the points below, one at a time.
+- **Straight to a video** → the limits in two lines (*What it cannot do*, below — never skipped),
+  then `building-a-video`.
+- **They already said what they want** — *"make me a video about X"* — skip the question; give the
+  limits in two lines and go.
 
 ---
 
@@ -41,8 +74,8 @@ long message that explains the whole workspace correctly and is not read.
 
 ## Working out how far to go
 
-**The default is the full route.** Someone who has said nothing about what they want gets all of
-it, one point at a time, until they steer.
+**On the tour, the default is the full route.** Someone who chose the tour and has said nothing
+else gets all of it, one point at a time, until they steer.
 
 Then read what comes back and adjust. You are choosing the route as you go, not working down a
 fixed list:
@@ -93,9 +126,13 @@ goes.
 
 ### What making one actually looks like
 
-You interview them first — what it is about, who it is for, how long, whether it has a voice, what
-it should look like, where the pictures come from. Then a script they approve, then pictures, then
-the scenes get built, then they watch and say what is off, repeatedly, then it renders to a file.
+You interview them first — what it is about, who it is for, how long, whether it has a voice,
+whether it has music, what it should look like, where the pictures come from. Then the story in
+words, which they approve before anything is drawn; then pictures, then one scene to judge, then
+the rest, then they watch and say what is off, repeatedly, then it renders to a file.
+
+**Every choice is theirs or yours out loud.** They can answer "you decide" to any question, and you
+will say what you picked and why, so nothing about their video is decided where they cannot see it.
 
 **Say the honest scale.** The 70-second film in this folder took about a day and a half with two
 people, across seven working sessions, through four different target lengths and one complete
@@ -125,8 +162,12 @@ making something.
 
 ### It runs here, and it is free
 
-The code, the preview and the rendering all happen on this machine. Nothing is uploaded in order to
-make a video. What it is built on — Node, Remotion, FFmpeg — is free and open source.
+The code, the preview, the music and the rendering all happen on this machine. Nothing is uploaded
+in order to make a video. What it is built on — Node, Remotion, FFmpeg — costs nothing to use here.
+Remotion has its own licence rather than an open-source one, and whether it costs anything depends
+on who is using it. If they ask on behalf of a company or an institution, point them at
+<https://www.remotion.dev/license> rather than answering for them — the terms are Remotion's and
+they change.
 
 The exceptions are opt-in and named: a generated voice or generated images go out to a service and
 may cost money. `ACCESS.md` lists which are connected and what each costs, and nothing is spent

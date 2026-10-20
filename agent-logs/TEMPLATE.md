@@ -28,13 +28,17 @@ Files created, changed, moved, or deleted. Commands run that changed state. Serv
 
 What the user approved, rejected, or has not yet reviewed. What passed a gate and what did not. If something was rejected, record the reason in the user's words, not my summary of it.
 
+Decisions made this session, and whose each was — the user's, or mine said out loud — or a pointer to the film's brief (`content/<project>/docs/brief.md`) where they are recorded.
+
 ## What I got wrong
 
 Mistakes, false assumptions, things I claimed that turned out not to be true, and anything I did that the user had to correct or undo. This section is not optional.
 
+Then hold each one against `agent-logs/LESSONS.md`: a repeat adds this log's number to that lesson; a new mistake that could happen to anyone becomes a new lesson there. Say which you did.
+
 ## Stale or wrong documentation I found
 
-Every place a document disagreed with the repository — composition IDs, paths, frame rates, folder names, durations, service terms — and whether it was corrected or left standing. Record it even if you fixed it, and especially if you did not. This section is not optional either; drift one agent notices and does not write down is drift the next three each rediscover.
+Every place a document disagreed with the repository — composition IDs, paths, frame rates, folder names, durations, service terms — and whether it was corrected or left standing. Record it even if you fixed it, and especially if you did not. For each one left standing, write the exact fix you propose, so it can be accepted in one word. This section is not optional either; drift one agent notices and does not write down is drift the next three each rediscover.
 
 ## State at handoff
 

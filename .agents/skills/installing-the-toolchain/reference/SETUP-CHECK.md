@@ -12,8 +12,8 @@ opened a chat window, not a terminal.
 
 | | Why | Check |
 | --- | --- | --- |
-| **Node.js 16 or newer** | Remotion v4 needs it | `node --version` |
-| **Project dependencies** | Remotion, React, TypeScript | `node_modules/` exists |
+| **Node.js 22.12 or newer** | Remotion alone needs only 16, but the page builder for interactive films (Vite 8) needs 20.19+, and the page test uses a WebSocket built into Node from 22 | `node --version` |
+| **Project dependencies** | Remotion, React, TypeScript, the music and interactive tools | `node_modules/` exists |
 | **A full system FFmpeg** | Narration, re-timing, inspection and conversion all call it. Remotion's bundled copy is trimmed and is not a substitute | `ffmpeg -version` |
 | **~270MB free** and a working connection | Chrome Headless Shell, fetched by the **first command that needs a browser** — `npx remotion compositions` and the Studio, not only a render. **~110MB over the wire, ~270MB once unpacked** — measured 2026-09-20. Quote the disk figure; it is the one that can fail | — |
 
@@ -33,16 +33,37 @@ kept off PATH, so a pass means the right thing is installed.
 for you. Point them at it if they want to read ahead, but **do not make it homework** — the
 whole point is that they do not have to.
 
+## Step 0 — Look first, all at once
+
+**Install only what is missing, and know exactly what that is before saying anything.** People
+arrive in every state: nothing at all; Node already there but too old; an FFmpeg that answers but
+lacks the filters the scripts use; packages half-installed by an interrupted run. Each needs a
+different fix, and asking about them one discovery at a time is how a person ends up approving
+three installs they were never told were coming.
+
+1. `node --version`. **Missing, or below 16** → the check below cannot run; go to Step 1.
+2. Otherwise run **`node scripts/check-setup.mjs`**. It reads — installs nothing — and reports Node
+   (and *how it was installed*), npm, every package, FFmpeg (and whether it has every filter the
+   scripts use), and disk space, each as ok, too old, missing or incomplete, with the fix for
+   this machine. It also lists what gets fetched later on first use.
+3. **Everything ok** → say nothing about setup. Carry on.
+4. **Anything needed** → **one short message** with the whole list, in plain words — what each
+   thing is and why it is needed — then ask once for each and run it yourself, **in the order the
+   check gives**: Node before the packages (they install against it), and Node and FFmpeg before a
+   single restart.
+
+Steps 1–4 below are the detail for each item.
+
 ## Step 1 — Node
 
 ```bash
 node --version
 ```
 
-### It prints v16 or higher
+### It prints v22.12 or higher
 
-**Say nothing. Move on.** Do not offer to update it. Node 23 when 24 is current is completely
-fine — Remotion needs 16+, and a working install is not a problem to solve.
+**Say nothing. Move on.** Do not offer to update it. A version below the newest is completely
+fine as long as it is 22.12 or above, and a working install is not a problem to solve.
 
 ### The command fails, or Node is missing
 
@@ -103,12 +124,28 @@ a *second* install. Nobody enjoys discovering that one question at a time. Say s
 through a silent 270MB download nobody mentioned. Step 4 below still repeats the download when
 it actually starts — that is a reminder, not the first they hear of it.
 
-### It prints something below v16
+### It prints something below v22.12
 
 ```
-> You've got Node v14, and this needs v16 or newer to build the video. Shall I update it?
-> Your existing version stays available for anything else that uses it.
+> You've got Node v18, and this needs v22 or newer to build everything it can make. Shall I
+> update it? Your existing version stays available for anything else that uses it.
 ```
+
+**Update it the way it was installed** — `check-setup.mjs` names the source and the command:
+
+| Installed with | Update |
+| --- | --- |
+| nvm, nvm-windows, Volta, fnm | That manager — it installs the new version *beside* the old one, which stays available |
+| Homebrew | `brew upgrade node` |
+| The Windows installer | `winget upgrade OpenJS.NodeJS.LTS`, or the LTS installer from nodejs.org |
+| A Linux distribution's own package | The nodejs.org LTS installer — distributions often ship an old one |
+
+**Never install a second, separate Node beside a version manager.** Two Nodes on the PATH and the
+old one can still win, so the check passes in one terminal and the build fails in the next. After
+the update and the restart, run `node --version` again and confirm the new number before going on.
+
+The minimum used to be 16, which was enough for Remotion alone. It rose when the interactive-page
+builder and its test were added (2026-10-19). A machine that passed this check before may not now.
 
 Same commands. Same restart.
 
@@ -177,7 +214,9 @@ ffmpeg -version
 
 ### It prints a version
 
-**Say nothing. Move on.**
+**And `check-setup.mjs` says ok → say nothing. Move on.** A version alone is not proof: a minimal
+build answers `ffmpeg -version` and lacks the filters the scripts use. If the check says
+**INCOMPLETE**, it is the same conversation as a missing FFmpeg — a full build replaces it.
 
 ### The command fails
 

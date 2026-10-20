@@ -27,6 +27,7 @@ import {
   SceneSix as LiveShowcaseSceneSixComponent,
   SCENE_SIX_DURATION,
 } from "./experiments/live-showcase/SceneSix";
+import { InteractiveDemoRegistrations } from "./interactive/demo/Registrations";
 /**
  * Every composition in the repository, arranged by the thing it belongs to.
  *
@@ -37,6 +38,7 @@ import {
  * | Folder | What it is |
  * | --- | --- |
  * | `LIVE-showcase` | The film |
+ * | `Interactive-demo` | The interactive kit's demo, one composition per path (`src/interactive/`) |
  *
  * Explainers built from `.agents/skills/building-scenes` go in a top-level
  * `Explainers` folder, created when the first one is built. Nothing here yet.
@@ -183,6 +185,13 @@ export const RemotionRoot: React.FC = () => {
           />
         </Folder>
       </Folder>
+
+      {/*
+        The interactive kit's demo - one question, one detour, a composition
+        per path. Its registrations live in their own file, so adding a film
+        never means editing someone else's lines here.
+      */}
+      <InteractiveDemoRegistrations />
     </>
   );
 };

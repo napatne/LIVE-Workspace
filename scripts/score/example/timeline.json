@@ -1,0 +1,23 @@
+{
+  "fps": 30,
+  "sections": [
+    { "id": "title", "frames": 120 },
+    { "id": "theme", "frames": 360 },
+    { "id": "close", "frames": 150 }
+  ],
+  "transitions": [
+    { "after": "title", "frames": 15 },
+    { "after": "theme", "frames": 15 }
+  ],
+  "hits": {
+    "title-card": "title+15",
+    "turn": "theme+144",
+    "button": "close+36"
+  },
+  "ducks": [
+    { "from": "theme+216", "to": "theme+288", "db": -10 }
+  ],
+  "silences": [
+    { "from": "close-12", "to": "close" }
+  ]
+}

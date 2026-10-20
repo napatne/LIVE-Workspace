@@ -4,53 +4,50 @@
 
 A workspace for making short video in code, with an AI assistant doing the building.
 
-## Open this in an AI coding agent
+## Start here — one sentence to your AI agent
 
-This repository is built to be worked in through an AI coding agent — **Claude Code** or
-**Codex** — not edited by hand. Before you clone anything, open (or start) one of those:
+You do not install anything yourself, type commands, or edit files. An AI coding agent does all
+of it, and you talk to it.
 
-- In the Claude desktop app, agent/coding mode is the tab marked with a **`</>`** icon. In other
-  desktop apps, look for a **Codex** or **work** tab.
-- Don't have the repository yet? Ask the agent. Point it at this project and it can find and
-  download it for you.
-- Make sure the agent has **computer use** and **terminal/command access** turned on. Both are on
-  by default in Claude Code's and Codex's general settings, but check before you start — the
-  skills in here run shell commands and need it.
+**1. Open an AI coding agent** — **Claude Code** or **Codex**. In the Claude desktop app it is the
+tab marked **`</>`**; in other apps look for a **Codex** or **work** tab. It needs **terminal /
+command access** turned on — on by default in both, but check.
 
-Once the agent is open, tell it what you want and it takes it from there — see **Start here**
-below. The steps that follow (cloning, installing, running the preview) are things to ask the
-agent to do, not commands to run yourself.
+**2. Paste this:**
 
-## Watch the film first
+> Set up LIVE for me from https://github.com/napatne/LIVE-Workspace — put it in my Documents
+> folder, then read its AGENTS.md and follow it.
 
-There is a 70-second film in here whose subject is this repository. Watching it is the fastest way
-to understand what this project does.
+**3. Say yes when it asks.** It downloads the folder, then checks for and installs what it needs —
+**Node.js**, the project's own packages, and **FFmpeg** — asking you once for each and doing the
+rest itself. If it installs Node or FFmpeg it may ask you to close and reopen the agent once, so
+they show up.
 
-```console
-git clone https://github.com/napatne/LIVE-Workspace.git
-cd LIVE-Workspace
-npm install
-npm run dev
-```
+**4. Choose.** It then offers a **quick tour** of what this is and what it can make, or to go
+**straight to making a video**. Either is fine; you can stop the tour at any point.
 
-A browser tab opens. Expand **LIVE-showcase** in the list on the left, click **LiveShowcaseFilm**,
-and press play. It has no sound — that is deliberate.
-
-## Start here
-
-**Open this folder in a coding assistant and say what you want.** That is the whole interface. The
-assistant reads [`AGENTS.md`](AGENTS.md), finds the skill that matches, and takes it from there.
-
-Three things to say, depending on where you are:
+**Every time after that**, open your agent *in* the `LIVE-Workspace` folder and say what you want.
+It picks up where you left off — it keeps a short record of every decision, and whose it was.
 
 | Say | What happens |
 | --- | --- |
-| *"What is this?"* | It walks you through the workspace and what it can make |
-| *"Nothing runs."* | It installs and verifies Node, the dependencies and FFmpeg |
-| *"Make me a video about X."* | It asks what it needs to know and builds one |
+| *"What is this?"* | A short tour, one point at a time |
+| *"Make me a video about X."* | It asks what it needs — one question at a time — and builds it |
+| *"Show me the example film."* | It opens the 70-second film this folder made about itself |
+| *"Nothing runs."* | It checks and repairs Node, the packages and FFmpeg |
 
-You do not have to know which skill is which. `AGENTS.md` holds the routing table if you want to
-see it, and the skills themselves are in [`.agents/skills/`](.agents/skills/).
+**Work laptop?** Managed machines often block installing software, and no agent can get around
+that. If an install fails, ask your IT service desk for **"Node.js, LTS version"** and **FFmpeg**,
+then try again.
+
+You do not have to know which skill is which. [`AGENTS.md`](AGENTS.md) holds the routing table if
+you want to see it, and the skills themselves are in [`.agents/skills/`](.agents/skills/).
+
+## The example film
+
+There is a 70-second film in here whose subject is this repository — watching it is the fastest way
+to understand what this does. Ask your agent to show it to you. It has no sound; that was that
+film's choice, and a new one can have narration and music.
 
 ## What this is
 
@@ -71,16 +68,20 @@ films, several assistants running in parallel, one shared repository — and wha
 | --- | --- |
 | `.agents/skills/` | The skills. Every one of them, once |
 | `.claude/skills/` | Generated stubs so assistants that auto-discover skills find them |
-| `src/` | The code for every scene |
-| `public/assets/` | The pictures the film uses |
-| `content/` | The storyboard, script and asset notes for the film |
-| `scripts/` | Checked-in utilities — audio, re-timing, skill sync |
-| `out/` | Rendered video files. Deliberately not tracked in Git |
-| `agent-logs/` | A written handoff per working session. Empty until you write one |
+| `src/` | The code for every scene, the interactive kit (`src/interactive/`) and the shared timeline (`src/lib/`) |
+| `web/` | Pages that play a film interactively, each built to one file that opens without a server |
+| `public/assets/` | The pictures and sound the films use |
+| `content/` | The brief, storyboard, script and asset notes for each film |
+| `scripts/` | Checked-in tools — music, measuring and finishing a render, narration, the interactive hand-out, skill sync |
+| `vendor/` | Downloaded once, never tracked: the instrument samples the music is played on |
+| `out/` | Rendered video files and hand-out folders. Deliberately not tracked in Git |
+| `agent-logs/` | A written handoff per working session, and the lessons drawn from them. Empty until you write one |
 
 One film ships, as the worked example: **LIVE showcase**, 70 seconds, silent, paper collage, about
 this repository. Two others were made here and were removed, so that what ships is one film and the
-tools and practice that made it.
+tools and practice that made it. Silent and paper collage are that film's choices: a new one can
+have narration and an original score, in any of the styles the assistant will offer, and can ask
+its viewer questions as it plays.
 
 ## Commands
 
@@ -89,6 +90,15 @@ tools and practice that made it.
 | `npm install` | Install what the project needs. Run once |
 | `npm run dev` | Open the preview in a browser |
 | `npm run lint` | Check the code for errors |
+| `npm run session` | Where the work stands: branch, uncommitted files, the last session's handoff |
 | `npx remotion compositions` | List every video and its real length |
 | `npx remotion render <video> out/<name>.mp4` | Save a video as a file |
-| `node scripts/sync-skills.mjs` | Validate the skills and regenerate the stubs |
+| `npm run check-render -- <file>` | Measure a render: size, length, black or frozen stretches, silence, loudness |
+| `npm run finish -- <file>` | Finish a render for delivery: standard colour range, one loudness |
+| `npm run soundfont` | Download the instrument samples for music. Once per machine |
+| `npm run score -- <score.mjs>` | Build a film's music from its score file |
+| `npm run interactive` | Try the interactive demo in a browser |
+| `npm run skills` | Validate the skills and regenerate the stubs |
+
+You will rarely type any of these. The assistant runs them at the step each belongs to —
+`AGENTS.md` lists which step that is.

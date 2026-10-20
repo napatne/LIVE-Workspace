@@ -2,9 +2,10 @@
 
 One file per working session, written at the end of it, for whoever works on this next.
 
-The folder is empty because these are yours to write. The sessions that built the film in this
-repository kept their logs here and they were removed before it was published — they were a record
-of that work, not an example to follow.
+A fresh copy has no logs here — only this file, [`TEMPLATE.md`](TEMPLATE.md) and an empty
+[`LESSONS.md`](LESSONS.md) — because the logs are yours to write. The sessions that built the film in
+this repository kept their logs here and they were removed before it was published; what they
+learned was written into the skills instead.
 
 ## Why bother
 
@@ -26,5 +27,19 @@ the next session picks up.
 **The honest sections are the valuable ones.** A log recording only what went well makes the next
 session confident about things nobody verified.
 
-The policy — when to write one, when to update the current one, and what belongs in it — is in
-`AGENTS.md`.
+## How the logs teach the next session
+
+A log is read by the next session or two and then forgotten. A lesson is read by every session
+after it. So:
+
+1. **At the start of a session**, `node scripts/session-start.mjs` prints the last log's handoff and
+   how many lessons there are. Read the last two or three logs and [`LESSONS.md`](LESSONS.md) before
+   doing anything.
+2. **At the end**, after writing the log, hold each thing in *What I got wrong* against
+   `LESSONS.md`: a repeat adds this log's number to the lesson; a new mistake that could happen to
+   anyone becomes a new lesson.
+3. **A lesson seen three times is proposed for the skill that would have prevented it**, so it is
+   read at the moment it applies instead of only when someone opens the list.
+
+The `keeping-agent-logs` skill has the detail. The policy — when to write a log, when to update the
+current one, and what belongs in it — is in `AGENTS.md`.
