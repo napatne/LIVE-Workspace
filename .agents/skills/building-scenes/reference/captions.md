@@ -1,24 +1,59 @@
 # Captions
 
-**On by default, and mandatory whenever the video has audio.**
+**On by default whenever the video has speech.** Music gets a short bracketed description, a
+meaningful sound effect gets one where it happens, and background sound none —
+`asu-visual-style/accessibility.md` → *What this means for how we build*.
 
 > ASU: new recorded video intended for students, employees or the public must have edited
 > auto-captions or manual captions, and its guidance is to **aim for 95% accuracy or higher**.
-> Raw auto-generated captions do not qualify. See `asu-visual-style/accessibility.md`.
+> Raw auto-generated captions do not qualify. See `asu-visual-style/accessibility.md`. That
+> accessibility rule applies to every film made here, whichever style was chosen.
 
-### The two cases are not the same
+**The code below is a pattern to write per film, not code that exists.** There is no
+`shared/` folder in `src/`; `chunkNarration` and `Captions.tsx` are written into the film's own
+folder (`src/<film>/`), or lifted to `src/shared/` once a second film wants them.
+
+## Contents
+
+- [What needs captioning](#what-needs-captioning) — speech, music, meaningful sound
+- [The two cases are not the same](#the-two-cases-are-not-the-same) — with and without narration
+- [Where the text comes from](#where-the-text-comes-from)
+- [Chunking](#chunking) — the whole function, and terms not to split
+- [Timing](#timing) · [Styling](#styling) · [Leave room](#leave-room)
+- [SRT, if asked](#srt-if-asked)
+
+## What needs captioning
+
+**Captions carry what a viewer who cannot hear would miss: the speech, and any sound that means
+something.** The rule and its source are in `asu-visual-style/accessibility.md` → *What this
+means for how we build*; in short:
+
+- **Speech** — always captioned, on by default.
+- **Music** — a short bracketed description where it starts, such as `[gentle piano music]`, and
+  again if it changes in a way that matters. On a film whose words on screen already carry
+  everything, that one description is all the music needs.
+- **A sound effect that tells the viewer something** — a knock, an alarm, a crowd reacting — a
+  bracketed description where it happens.
+- **Background sound that carries no meaning** — room tone, a hum — none. Record that judgement
+  in the brief as yours rather than deciding silently.
+- **No audio track at all** — nothing to caption.
+
+A bracketed description is a short line shown at that moment, in the same panel and style as
+any other caption.
+
+## The two cases are not the same
 
 **With narration, captions are a requirement.** Not a setting, not a preference, and not
-something to offer to turn off. The `building-a-video` skill step 3 says to state it in one clause and
-move on.
+something to offer to turn off. `building-a-video` says to state it in one clause and move on.
 
-**With no narration, there is no audio to caption** — so the requirement does not bite, and
+**With no speech, there is nothing spoken to caption** — so the requirement to caption the words
+does not bite (music and meaningful sound still get their bracketed descriptions, above), and
 what is left is a design question the workflow asks: *do you want the words on screen?*
 
 - **Yes** — the default, and what the three ready-made packs are written for. The sentences
   are the video's only voice.
-- **No** — a legitimate pattern, and one that shipped here: a 90-second silent film with
-  no caption panel at all, carrying its meaning through typography and motion. **It was
+- **No** — a legitimate pattern, and one that shipped here: a silent film of about a minute
+  and a half with no caption panel at all, carrying its meaning through typography and motion. **It was
   removed when this repository was cut down to one film**, so there is no longer a copy in
   `src/` to study — the description here is the whole of it. **But the
   script has to be rewritten as short on-screen phrases to suit it.** A sentence script with
@@ -31,7 +66,7 @@ rendering it.
 ## Where the text comes from
 
 **The section's `narration` string** — the same words the voice reads, and the same words the
-person approved at the interview's step 6.
+person approved in the script.
 
 Do not write separate caption copy, and do not transcribe the audio. Generating captions from
 the script means accuracy is not in question — nothing was ever guessed. It also means the
@@ -39,7 +74,8 @@ caption and the voice cannot drift apart.
 
 ## Chunking
 
-**Put it in `shared/caption-text.ts`** — beside `Captions.tsx`, not inside `figures/`.
+**Put it in a `caption-text.ts` you write** — beside the film's `Captions.tsx`, not inside
+`figures/`. Neither file exists until you write it.
 
 **Not `captions.ts`.** It differs from `Captions.tsx` only in case, and on Windows or macOS
 TypeScript fails with **TS1149** — *"File name differs from already included file name only in
@@ -116,8 +152,9 @@ export const chunkNarration = (
 };
 ```
 
-**Pass `keepTogether` per topic.** Export it from the topic's `sections.ts` — for photosynthesis
-`["carbon dioxide"]`, for colour theory `["colour wheel"]`.
+**Pass `keepTogether` per topic.** Export it beside the film's script data (a `sections.ts` you
+write, if the film has one) — for photosynthesis `["carbon dioxide"]`, for colour theory
+`["colour wheel"]`.
 
 **Only multi-word phrases can go in it.** The chunker splits on whitespace
 (`narration.split(/\s+/)`), so a hyphenated word is already a single token and can never be
@@ -164,8 +201,9 @@ landed at nine words, and the sentence-end rule made the remainder its own chunk
 
 See the assembled function above.
 
-**Run `mergeOrphans` over the result and look at a caption frame before you ship.** A panel
-holding one word is obvious in a still and invisible in the code.
+**Check the chunker's output for runts and look at a caption frame before you ship.** The
+assembled function folds runts back in; an earlier copy that did not is where the orphan came
+from. A panel holding one word is obvious in a still and invisible in the code.
 
 ## Timing
 
@@ -231,9 +269,13 @@ which you cannot guarantee.
 
 ## Leave room
 
-When captions are on, **the figure area stops at 190px from the bottom** instead of 120px.
-Pass the flag down so the scene lays itself out accordingly. Otherwise a tall diagram runs
-under the panel.
+When captions are on, **the figure area stops at 190px from the bottom** instead of 120px, in a
+1920×1080 frame. Pass the flag down so the scene lays itself out accordingly. Otherwise a tall
+diagram runs under the panel.
+
+**Upright and square frames are different.** The panel sits above the platform's own caption
+and buttons, not at the bottom of the frame, and the figure stops above the panel. Where that
+is, and how wide the panel can be, is in [upright.md](upright.md).
 
 ## SRT, if asked
 
@@ -245,5 +287,5 @@ separate subtitle file, or wants to import captions produced elsewhere.
 **It is not in `package.json`.** It sits in `node_modules` only because another Remotion
 package depends on it, so importing it is a gamble on someone else's dependency tree. If
 someone genuinely needs SRT, say that it means adding a dependency, and add it properly —
-`npm install @remotion/captions@4.0.506`, matching the version of everything else. That
-prompts for approval by design.
+`npm install @remotion/captions@<version>`, with `<version>` exactly the version of `remotion`
+in `package.json`, so it matches everything else. That prompts for approval by design.

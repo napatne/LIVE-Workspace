@@ -1,4 +1,5 @@
 import { layout, type Answers, type SegmentSpec } from "../kit/model";
+import paths from "../../../web/interactive-demo/paths.json";
 
 /**
  * The interactive kit's own demo: one question, one detour, two paths. It
@@ -17,11 +18,14 @@ export const DEMO_SEGMENTS: readonly SegmentSpec[] = [
   { id: "end", frames: 120 },
 ];
 
-/** Every path a viewer can take - each one registered and rendered as a plain video. */
-export const DEMO_PATHS: Record<string, Answers> = {
-  Short: { route: "short" },
-  Long: { route: "long" },
-};
+/**
+ * Every path a viewer can take, keyed by its exact composition id - each one
+ * registered and rendered as a plain video. The list lives in the page's
+ * folder, web/interactive-demo/paths.json, because scripts/interactive-handout.mjs
+ * reads it too: the compositions registered and the videos handed out are the
+ * same list, and the hand-out clicks through the page once per entry.
+ */
+export const DEMO_PATHS: Record<string, Answers> = paths;
 
 /** Words for the page around the Player: each question, and each option. */
 export const DEMO_LABELS: Record<string, string> = {

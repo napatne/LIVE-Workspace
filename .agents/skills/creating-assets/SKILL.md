@@ -1,6 +1,6 @@
 ---
 name: creating-assets
-description: Works out which pictures a video needs, writes the prompt for each, and gets them into the project at the right size and shape. Use when scenes need images, when generated images come back inconsistent or wrongly framed, when someone wants to supply their own, or when asked where assets go.
+description: Works out which pictures a video needs, decides whether each is drawn in code, supplied or generated elsewhere, writes the prompt where one is needed, and gets them into the project at the right size and shape. Use when scenes need images, when someone says "can you grab an image" or "I found a picture online", when generated images come back inconsistent or wrongly framed, when someone wants to supply their own photos or logo, or when asked where assets go.
 ---
 
 # Creating assets
@@ -11,26 +11,32 @@ fit.
 **You need first** a style decision from `choosing-a-visual-style`, including its style paragraph,
 and a list of scenes. Generating before either exists produces pictures that get thrown away.
 
-**This produces** named files under `public/assets/<project>/`, each one recorded next to the prompt
-that made it, so any of them can be regenerated without guessing.
+**This produces** a picture list with a source for each, and named files staged under
+`public/assets/<project>/`, each generated one recorded next to the prompt that made it, so any of
+them can be regenerated without guessing.
 
 **Then go to** `building-scenes`.
 
 ---
 
-An asset is any picture the code cannot draw itself — a hand, a logo, a prop, a paper texture.
-**Most wasted effort in a video project happens here**, and nearly all of it is preventable by
-sorting before generating.
+An asset is any picture a scene needs — drawn in code, supplied by the person, or generated
+elsewhere from a prompt. **Most wasted effort in a video project happens here**, and nearly all of
+it is preventable by sorting before generating.
 
 ## Ask which of three routes
 
-| Route | What it means |
-| --- | --- |
-| **Generate them** | Fastest. The person reviews what comes back and asks for another pass on anything that does not fit |
-| **They supply them** | For particular photographs, logos or artwork they already hold. Ask early — what exists changes what the film can do |
-| **Write the prompts, they generate** | Specify each picture; they run the prompts elsewhere and put the results back. More work, more control |
+| Route | What it means | What it costs |
+| --- | --- | --- |
+| **1 — I draw them** | Drawn in code, here, in the agreed style. **The default.** Any colour or shape can still change after the film exists | Nothing |
+| **2 — They provide their own** | Particular photographs, logos or artwork they already hold. Ask early — what exists changes what the film can do | Nothing |
+| **3 — I write the prompts, they generate** | Specify each picture; they run the prompts in an image tool they use and send the results back. From then on it is route 2 | Whatever their tool costs them — their account, their choice |
 
-Mixing is normal — own logo, everything else generated.
+Mixing is normal — their own logo, everything else drawn.
+
+**Generating pictures here, through a paid image service, is not one of the three.** `ACCESS.md`
+lists no free image generator, and `AGENTS.md` forbids paid calls without approval. Raise it only when a picture genuinely cannot be drawn and they have nothing to
+supply — and only as a specific proposal: the one picture that is blocked, the exact service, the
+number of attempts, the total cost. Generate nothing until they approve that proposal.
 
 ## Sort before generating anything
 
@@ -73,7 +79,7 @@ something can be tinted in code rather than generated twice.
 paraphrased.** It is the single reason separately generated pictures look like one video, and an
 inconsistent one is the most likely way a set falls apart.
 
-Show the prompts even when generating them yourself. A wrong prompt read in ten seconds saves a
+Show the prompts before anything is generated, whoever generates it. A wrong prompt read in ten seconds saves a
 wrong picture that has to be noticed in a finished scene.
 
 ## Ask whose world the pictures show
@@ -123,19 +129,34 @@ cannot do what is being asked. Change the approach, not the adjectives.
 material or in what was done to it — a clip slowed too far showed a defect that had always been
 there and had simply been too fast to see.
 
+## Pictures found online are the person's call
+
+*"Just grab a picture of the stadium off Google."* **A picture found online belongs to whoever made
+it, and whether to use it is the person's decision** — memes and reference images often sit in a
+grey area. Say that once, plainly, offer to draw it instead (a landmark or an object works well as
+a shape in the film's style), then do what they decide. Do not refuse and do not lecture.
+
+- **If they want it**, they send the file or the link; fetch it if asked, put it in
+  `content/<project>/intake/`, and record in the brief where it came from and that using it was
+  *theirs*.
+- **If the film is going public**, it comes up once more in the delivery check
+  (`viewing-and-rendering`), as a reminder, not a gate.
+- **Their own photo** needs the agreement of anyone recognisable in it.
+
 ## Where files go, and what gets recorded
 
-Files live under `public/assets/<project>/` and are referenced with `staticFile()`. Everything under
-`public/` is copied into every render, so anything parked there is paid for whether the film uses it
-or not.
+**What they hand in goes in `content/<project>/intake/`**, raw, whatever state it arrives in.
+**Only the copies a scene actually uses are staged into `public/assets/<project>/`** — cut out,
+named and sized — and referenced with `staticFile()`. Everything under `public/` is copied into
+every render, so anything parked there is paid for whether the film uses it or not.
 
 **Record the prompt beside the asset.** A picture whose prompt was not kept cannot be regenerated,
 only re-invented.
 
 ## Reference
 
-- [`reference/assets.md`](reference/assets.md) — the three sourcing routes in full, mixing sources,
-  logos, and where files live.
+- [`reference/assets.md`](reference/assets.md) — the three sourcing routes in full, found images,
+  mixing sources, logos, and where files live.
 - [`reference/worked-example-live.md`](reference/worked-example-live.md) — 28 pictures, two real
   prompts, and the mistakes they were shaped to avoid.
 - [`reference/worked-examples-other.md`](reference/worked-examples-other.md) — two more films: one

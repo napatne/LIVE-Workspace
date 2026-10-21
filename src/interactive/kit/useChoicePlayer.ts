@@ -5,7 +5,8 @@ import {
   answersAfterSeek,
   choicePoints,
   pendingChoice,
-  resumeFrame,
+  segmentIndexAt,
+  skipTarget,
   type Answers,
   type Layout,
 } from "./model";
@@ -19,8 +20,10 @@ import {
  *  1. **Stop on a question** and keep the Player there until it is answered —
  *     scrubbing past an unanswered question puts the playhead back on it.
  *  2. **Remember the answers.**
- *  3. **Jump over a detour that does not apply**, once the question's own
- *     reaction has played.
+ *  3. **Jump over a detour that does not apply** - any detour, whenever the
+ *     playhead enters one: after the question's own reaction has played, or
+ *     on a scrub that lands inside it. However many detours follow a question,
+ *     the page plays the same segments as that path's rendered video.
  *  4. **Forget on rewind.** Landing before a question unanswers it and every
  *     question after it, so each is asked again.
  *
@@ -33,8 +36,15 @@ import {
  *   spaceKeyToPlayOrPause={false}     — Space on a focused button presses it
  */
 /**
- * @param status optional element that gets `data-frame` on every frame - for
- *               a test harness to read without re-rendering the page 30 times a second
+ * @param status optional element for a test harness to read without the page
+ *               re-rendering 30 times a second. The hook writes on it:
+ *                 data-frame    the frame on screen, every frame
+ *                 data-segment  the id of the segment playing
+ *                 data-played   JSON array of the segment ids played since
+ *                               frame 0, in order (a rewind trims it)
+ *                 data-segments JSON array of the segment table: id, onlyIf
+ *               scripts/test-interactive-page.mjs compares data-played with
+ *               the path the answers should play.
  */
 export const useChoicePlayer = (
   player: RefObject<PlayerRef | null>,
@@ -50,7 +60,6 @@ export const useChoicePlayer = (
   // "unanswered" would pause it straight back on the question.
   const answersRef = useRef<Answers>({});
   const waitingRef = useRef<string | null>(null);
-  const jump = useRef<{ at: number; to: number } | null>(null);
 
   const setAnswersBoth = useCallback((next: Answers) => {
     answersRef.current = next;
@@ -65,6 +74,14 @@ export const useChoicePlayer = (
     const p = player.current;
     if (!p) return;
 
+    if (status?.current) {
+      status.current.dataset.segments = JSON.stringify(
+        full.placed.map((x) => ({ id: x.spec.id, onlyIf: x.spec.onlyIf ?? null })),
+      );
+    }
+    // Indices into full.placed of the segments played since frame 0.
+    let played: number[] = [];
+
     const onFrame = (e: { detail: { frame: number } }) => {
       const now = e.detail.frame;
       if (status?.current) status.current.dataset.frame = String(now);
@@ -73,15 +90,6 @@ export const useChoicePlayer = (
       const kept = answersAfterSeek(full, answersRef.current, now);
       if (Object.keys(kept).length !== Object.keys(answersRef.current).length) {
         setAnswersBoth(kept);
-        jump.current = null;
-      }
-
-      // 3 · Jump over a detour that does not apply.
-      const j = jump.current;
-      if (j && now >= j.at) {
-        jump.current = null;
-        if (now < j.to) p.seekTo(j.to);
-        return;
       }
 
       // 1 · Stop on a question, and stay there until it is answered.
@@ -90,8 +98,28 @@ export const useChoicePlayer = (
         if (now !== open.hold) p.seekTo(open.hold);
         if (p.isPlaying()) p.pause();
         if (waitingRef.current !== open.choice) setWaiting(open.choice);
-      } else if (waitingRef.current !== null) {
-        setWaiting(null);
+        return;
+      }
+      if (waitingRef.current !== null) setWaiting(null);
+
+      // 3 · Jump over a detour that does not apply. The frame listener runs
+      // after the frame is painted, so the film draws a skipped detour as
+      // empty background (InteractiveFilm) - nothing of it shows meanwhile.
+      const to = skipTarget(full, answersRef.current, now);
+      if (to !== null) {
+        if (to !== now) p.seekTo(to);
+        return;
+      }
+
+      // Only a segment that plays is recorded, so a skipped one never is.
+      const at = segmentIndexAt(full, now);
+      if (at >= 0 && played[played.length - 1] !== at) {
+        played = played.filter((i) => i < at);
+        played.push(at);
+        if (status?.current) {
+          status.current.dataset.segment = full.placed[at].spec.id;
+          status.current.dataset.played = JSON.stringify(played.map((i) => full.placed[i].spec.id));
+        }
       }
     };
 
@@ -121,25 +149,31 @@ export const useChoicePlayer = (
       const next = { ...answersRef.current, [choice]: option };
       setAnswersBoth(next);
       setWaiting(null);
-      // Carry on from the end of the question's own reaction - over the detour
-      // if the answer does not need it, straight into it if it does.
-      const point = choices.find((c) => c.choice === choice);
-      if (point) {
-        const to = resumeFrame(full, choice, next);
-        jump.current = to > point.end ? { at: point.end - 2, to } : null;
-      }
+      // The question's own reaction plays to its last frame; the frame
+      // listener steps over any detour this answer does not play.
       player.current?.play();
     },
-    [choices, full, player, setAnswersBoth, setWaiting],
+    [player, setAnswersBoth, setWaiting],
   );
 
+  // Start again pauses and rewinds now, and plays only after React has
+  // committed that pause. Calling play() straight away was sometimes lost: the
+  // click test found the film stopped on frame 0 after Start again in 2 of
+  // about 30 runs (2026-10-21). The likely cause, read from the Player's
+  // source: a click in the moment the Player ends finds its playback loop
+  // already stopped but its "playing" state not yet false, so play() leaves it
+  // marked as playing with no loop running.
+  const [restarts, setRestarts] = useState(0);
   const restart = useCallback(() => {
-    jump.current = null;
     setAnswersBoth({});
     setWaiting(null);
+    player.current?.pause();
     player.current?.seekTo(0);
-    player.current?.play();
+    setRestarts((n) => n + 1);
   }, [player, setAnswersBoth, setWaiting]);
+  useEffect(() => {
+    if (restarts > 0) player.current?.play();
+  }, [restarts, player]);
 
   const live = useMemo<ChoiceLive>(() => ({ waitingFor, pick }), [waitingFor, pick]);
   /** Pass as the Player's inputProps. */

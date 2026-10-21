@@ -38,8 +38,9 @@ the logo as something the person brings, not something the project provides.
 ## "Can you animate our logo?" — no, and answer it immediately
 
 This is the one thing outright banned, and it is a common request. **Answer in the turn they
-ask it**, not later — the `building-a-video` skill step 0.5 has the wording. Promising it and retracting
-two turns later is worse than saying so at once.
+ask it**, not later — `building-a-video` → `reference/interview.md` has the wording, where it
+checks whether a film can be built at all. Promising it and retracting two turns later is worse
+than saying so at once.
 
 **What you can do:** fade it in, hold it, move it as a rigid unit, and animate everything
 around it. **What you cannot:** reshape it, spin it, build it up stroke by stroke, or recolour

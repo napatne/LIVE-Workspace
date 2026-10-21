@@ -1,6 +1,6 @@
 ---
 name: choosing-a-visual-style
-description: Decides what a video looks like - palette, edges, motion, type and texture - from a catalogue of styles that can be made here, and writes that decision down as a style card an assistant can build to. Use when the look is undecided, when someone asks what styles are possible or says "you pick the style", when someone asks for brand or ASU compliance, when images generated separately do not look like they belong to one film, or before generating any asset at all.
+description: Decides what a video looks like - palette, edges, motion, type and texture - from a catalogue of styles that can be made here, and writes that decision down as a style card an assistant can build to. Use when the look is undecided, when someone asks what styles are possible or says "you pick the style", when someone wants their brand colours, ASU's look or brand compliance, when images generated separately do not look like they belong to one film, or before generating any asset at all.
 ---
 
 The skill is at `.agents/skills/choosing-a-visual-style/`. Read `.agents/skills/choosing-a-visual-style/SKILL.md` now, and

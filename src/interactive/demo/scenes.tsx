@@ -24,7 +24,9 @@ const framesOf = (id: string) => DEMO_SEGMENTS.find((s) => s.id === id)!.frames;
 
 /**
  * A short fade in and out on every segment, so a cut between segments -
- * including the page's jump over a detour - never pops.
+ * including the page's jump over a detour - never pops. The page shows a
+ * skipped detour as empty background for the frame or two before it seeks
+ * past it (InteractiveFilm), so each fade starts and ends on the background.
  */
 const Shell: React.FC<{ id: string; fadeIn?: boolean; fadeOut?: boolean; children: ReactNode }> = ({
   id,
@@ -94,8 +96,11 @@ const AskRoute: React.FC = () => {
       </Line>
       <div style={{ display: "flex", gap: 48, marginTop: 40, opacity: cards }}>
         {(["short", "long"] as const).map((option) => {
-          const chosen = answer === option;
-          const dimmed = answer !== null && !chosen;
+          // In a render the answer is known from frame 0, so the chosen look
+          // waits for the hold: until then the question is still being asked.
+          const answered = answer !== null && frame >= HOLD;
+          const chosen = answered && answer === option;
+          const dimmed = answered && !chosen;
           return (
             <OptionButton key={option} choice="route" option={option} label={DEMO_LABELS[option]}>
               {({ hover, focus }) => (

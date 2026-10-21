@@ -35,7 +35,9 @@ Before the split, one worker builds and everyone agrees on:
 - **Background and surface components** — whatever every scene sits on
 - **Shared text components** — the way a word appears is a decision made once
 - **Transitions** — the joins between scenes belong to neither scene
-- **The timing convention** — where a scene's duration is declared and how the master reads it
+- **The timing convention** — where a scene's duration is declared and how the master reads it.
+  On a film with a score that is `src/<film>/timeline.json`, read by every scene and by the score
+- **The registrations** — every scene registered against a stub (below)
 
 Skip this and every worker invents their own version. Merging then means choosing between four
 near-identical components and re-pointing every scene that used the losers — which costs more than
@@ -54,17 +56,22 @@ State it as a rule about files, because that is what actually conflicts:
 
 > Scenes 4, 5 and 6 and the master assembly. Do not build, re-time or restyle anything else.
 
-**And say who owns the shared registry.** `src/Root.tsx` lists every composition, so every worker
-touches it.
+**And say who owns the registrations.** Each film registers its compositions in one file of its
+own, `src/<film>/Registrations.tsx`, which `src/Root.tsx` imports (`building-scenes` → *One
+registration file per film*). For the worked example that is
+`src/experiments/live-showcase/Registrations.tsx`. That file lists every scene of the film, so
+every worker on the film would touch it.
 
-**Register every scene before the split, and do not touch `Root.tsx` again until the merge.**
-One person — whoever sets up the kit — adds all the entries up front, each pointing at a stub
-component that renders nothing. Workers then only ever edit their own scene file, which no one
-else opens. `Root.tsx` is byte-identical on every branch, so there is no conflict to resolve.
+**Register every scene before the split, and do not touch the registration file again until the
+merge.** One person — whoever sets up the kit — adds all the entries up front, each pointing at a
+stub component that renders nothing. Workers then only ever edit their own scene file, which no
+one else opens. The registration file, and `Root.tsx`, are byte-identical on every branch, so
+there is no conflict to resolve.
 
-This also fixes a second problem: `Root.tsx` is one module graph, so a branch that imports a
-scene file another worker has not written yet **cannot compile, preview, still or render
-anything at all**. Stubs from the start mean every branch runs on its own from minute one.
+This also fixes a second problem: `Root.tsx` and everything it imports are one module graph, so a
+branch that imports a scene file another worker has not written yet **cannot compile, preview,
+still or render anything at all**. Stubs from the start mean every branch runs on its own from
+minute one.
 
 > **An append-only marker does not make this safe, and an earlier version of this page said it
 > did.** Two workers appending at the same marker is an add/add conflict in the same place. It
@@ -72,7 +79,8 @@ anything at all**. Stubs from the start mean every branch runs on its own from m
 > byte-identical lines (`fps={30}`, `width={1920}`, `height={1080}`, `/>`), so Git interleaves
 > the two hunks instead of stacking them. Resolving it per hunk with "take ours" then pairs one
 > worker's `id` with the other's `fps` — **it compiles, it lints, and it silently registers
-> three scenes out of six.** A real run hit exactly this.
+> three scenes out of six.** A real run hit exactly this, in `Root.tsx`, before films had their
+> own registration files; the same happens in any one file two workers append to.
 >
 > If you end up merging that conflict anyway, do not resolve it hunk by hunk. Take one side
 > whole, re-add the other side's entries by hand, and then check the count: the number of
@@ -93,6 +101,18 @@ an instruction crosses, say so before working, rather than after.
 branches share no context at all. Anything sequentially numbered — log files, scene indices — will
 collide, because both pick the next free number from the same starting point. Numbering conflicts
 are add/add conflicts, which are the annoying kind.
+
+**The timeline, on a film with a score.** `src/<film>/timeline.json` holds every section's
+length and every hit, and both the scenes and the score read it. It is a shared file like the
+theme: **one person edits it**, and a worker who wants a scene longer asks them rather than
+changing it on their branch. Two branches that each re-time a section conflict on the same lines,
+and a resolution that takes one number from each side gives the score and the picture different
+films. Rebuild the score once, after the merge, from the merged timeline.
+
+The score build itself does not collide: two runs at once in the same folder each write their
+own temporary file (`out/.score-tmp/`, named per run), and each backs up the previous `score.wav`
+to `out/<project>/score-history/` before replacing it. The output file is still one file, so the
+last run wins — which is another reason to rebuild once, after the merge.
 
 **Prose files.** Two people editing the same document conflict worse than two people editing the
 same code, because there is no compiler to tell you which resolution is wrong. Give each
@@ -122,7 +142,10 @@ overhead — it is where the seams get noticed.
 
 - Every scene plays on its own.
 - Nobody has edited the shared kit.
-- `src/Root.tsx` is unchanged since the split — or, if it was not registered up front, its
-  `<Composition` count equals the scene count and `npx remotion compositions` lists them all.
+- The film's registration file and `src/Root.tsx` are unchanged since the split — or, if the
+  scenes were not registered up front, the `<Composition` count in the registration file equals
+  the scene count and `npx remotion compositions` lists them all.
+- On a scored film, `timeline.json` has had one editor, and the score is rebuilt from the merged
+  copy.
 - The master's total is derived from the scene table, not typed.
 - Type checking passes on the combined result, not just on each half.

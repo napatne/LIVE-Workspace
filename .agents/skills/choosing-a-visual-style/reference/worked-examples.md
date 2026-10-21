@@ -14,7 +14,8 @@ repository and can be watched. The other two were made the same way and are not.
 
 ## Paper cut-out collage, silent
 
-A 70-second film about this repository, registered as `LiveShowcaseFilm`. No sound at all, so every
+A film of about a minute about this repository, registered as `LiveShowcaseFilm`
+(`npx remotion compositions` reports its exact length). No sound at all, so every
 idea arrives through the picture and through words on screen.
 
 **Why the style suited it.** Shapes and text carry meaning on their own, which a silent film needs.

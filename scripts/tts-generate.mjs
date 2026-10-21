@@ -9,7 +9,8 @@
 // text sent to the model, including its director's note — the model speaks the
 // line and follows the note as delivery guidance.
 //
-// Cost: free tier (verified 2026-08-09 on ai.google.dev/gemini-api/docs/pricing).
+// Cost: free tier for this default model (checked 2026-10-21 on ai.google.dev/gemini-api/docs/pricing;
+// gemini-2.5-pro-preview-tts has none - see ACCESS.md).
 // Never call a Lyria/image/video model from here — those are paid.
 
 import { readFile, writeFile, mkdir } from "node:fs/promises";

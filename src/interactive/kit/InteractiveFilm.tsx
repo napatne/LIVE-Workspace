@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { AbsoluteFill, Sequence } from "remotion";
 import { ChoiceContext, type ChoiceContextValue, type ChoiceLive } from "./choice";
-import { checkPolicy, layout, type Answers, type SegmentSpec } from "./model";
+import { checkPolicy, layout, segmentPlays, type Answers, type SegmentSpec } from "./model";
 
 /**
  * Interactive video kit — one film, played two ways.
@@ -11,7 +11,9 @@ import { checkPolicy, layout, type Answers, type SegmentSpec } from "./model";
  *   answers is one ordinary video — which is how each path is reviewed and
  *   rendered.
  * - **Live** (the web page): `all` lays out every segment, `live` is present,
- *   and the page seeks over the detours that do not apply.
+ *   and the page seeks over the detours that do not apply. Those detours draw
+ *   nothing: the page's frame listener runs after a frame is painted, so the
+ *   frame or two before its seek shows empty background, not the wrong detour.
  */
 export type InteractiveFilmProps = {
   answers: Answers;
@@ -53,6 +55,7 @@ export const createInteractiveFilm = (
         */}
         <AbsoluteFill style={{ background, pointerEvents: "none" }}>
           {placed.map((p) => {
+            if (all && !segmentPlays(p.spec, answers)) return null;
             const Scene = scenes[p.spec.id];
             return (
               <Sequence key={p.spec.id} name={p.spec.id} from={p.from} durationInFrames={p.spec.frames}>

@@ -4,6 +4,7 @@
 // instrument at the same program number, which is what makes a score file
 // portable: it opens in MuseScore with the right instruments, and renders here
 // with real sampled ones. Program numbers are 0-based, as MIDI sends them.
+// Not every program has a name here; any of the 128 can be passed as a number.
 
 export const INSTRUMENTS = {
   piano: 0, "bright piano": 1, "electric piano": 4, harpsichord: 6, celesta: 8,
@@ -18,7 +19,12 @@ export const INSTRUMENTS = {
   "soprano sax": 64, "alto sax": 65, "tenor sax": 66, oboe: 68, "english horn": 69,
   bassoon: 70, clarinet: 71, piccolo: 72, flute: 73, recorder: 74, "pan flute": 75,
   "blown bottle": 76, shakuhachi: 77, whistle: 78, ocarina: 79,
-  "warm pad": 89, "choir pad": 91, "halo pad": 94,
+  "square lead": 80, "sawtooth lead": 81, "calliope lead": 82, "chiff lead": 83,
+  "charang lead": 84, "voice lead": 85, "fifths lead": 86, "bass and lead": 87,
+  "new age pad": 88, "warm pad": 89, "polysynth pad": 90, "choir pad": 91,
+  "bowed pad": 92, "metallic pad": 93, "halo pad": 94, "sweep pad": 95,
+  rain: 96, soundtrack: 97, crystal: 98, atmosphere: 99,
+  brightness: 100, goblins: 101, echoes: 102, "sci-fi": 103,
   sitar: 104, banjo: 105, shamisen: 106, koto: 107, kalimba: 108, bagpipe: 109,
   fiddle: 110, shanai: 111, "steel drums": 114, woodblock: 115, taiko: 116,
   "melodic tom": 117, "reverse cymbal": 119, "fret noise": 120, "breath noise": 121,
@@ -40,7 +46,11 @@ export const program = (name) => {
   if (typeof name === "number") return name;
   const p = INSTRUMENTS[name.toLowerCase()];
   if (p === undefined) {
-    throw new Error(`No General MIDI instrument called "${name}". Known: ${Object.keys(INSTRUMENTS).join(", ")}`);
+    throw new Error(
+      `No General MIDI instrument called "${name}". Known: ${Object.keys(INSTRUMENTS).join(", ")}.
+` +
+        "Any General MIDI program also works as a number, 0-127 counted from 0 (score.part(73) is a flute).",
+    );
   }
   return p;
 };

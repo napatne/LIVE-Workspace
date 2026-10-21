@@ -9,7 +9,8 @@ import { Easing, interpolate } from "remotion";
  * Storyboard:  `content/live-showcase/docs/storyboard.md`
  * Script:      `content/live-showcase/docs/script.md`
  * Assets:      `content/live-showcase/docs/assets.md`
- * Scene guide: `content/live-showcase/docs/building-a-scene.md`
+ * Scene guide: `.agents/skills/building-scenes/reference/building-a-scene.md`
+ *              (the copy under `content/` became a pointer to it, 2026-10-21)
  *
  * Written during the Milestone 1 style test. Milestone 2 extracts the kit from
  * whatever proves out here — so treat everything below as provisional until the

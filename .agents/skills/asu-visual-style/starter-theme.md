@@ -6,6 +6,13 @@ is how `#747474` ends up in a video it should never be in.
 
 Read the other files for *why*. This is the *what*.
 
+## Contents
+
+- The theme block — directly below
+- [Using it](#using-it) — through a context, never imported directly
+- [When the person said no to ASU style](#when-the-person-said-no-to-asu-style) — the neutral theme
+- [Quick contrast reference](#quick-contrast-reference)
+
 ```ts
 // ASU visual style. Colours, sizes and spacing verified against ASU's
 // published brand and accessibility guides on 2026-09-19 — see the other
@@ -59,6 +66,8 @@ export type Theme = {
   accent: string;
   figureStroke: string;
   onAccent: string;
+  onPrimary: string;
+  onPrimaryAccent: string;
   figureStrokeAlt: string;
   captionBackground: string;
   captionInk: string;
@@ -86,6 +95,14 @@ export const THEME: Theme = {
   // of the four combinations ASU bans outright.
   onAccent: ASU.gray1,
 
+  // Text sitting ON a maroon fill — a heading band, a card, a name bar.
+  // White is 8.88:1. The obvious guess the other way, black, is 2.36:1 and is
+  // one of the four combinations ASU bans outright.
+  onPrimary: ASU.white,
+  // A second voice on the same maroon fill — the one highlighted word. Gold
+  // is 5.65:1 on maroon, so here, and only on a dark fill, gold may be text.
+  onPrimaryAccent: ASU.gold,
+
   // A meaning-carrying line that is NOT maroon. Gold is 1.49:1 and fails
   // the 3:1 WCAG wants for graphical objects — it is a fill, never a line
   // that means something. Copper is an ASU secondary at 4.10:1.
@@ -96,7 +113,7 @@ export const THEME: Theme = {
 };
 
 // Larger than web type: a video is watched at a distance, often in a small
-// window. Nothing below 22px. Use WEIGHT.bold or WEIGHT.regular — nothing else.
+// window. Use WEIGHT.bold or WEIGHT.regular — nothing else.
 export const TYPE = {
   title: 104,
   subtitle: 44,
@@ -105,12 +122,17 @@ export const TYPE = {
   caption: 40,
 } as const;
 
-// NO figureLabel here. Text inside a diagram is drawn in viewBox units, not
+// The floor, in pixels of the rendered frame. typography.md is the authority
+// for this number and for why it is what it is.
+export const MIN_TEXT_PX = 22;
+
+// NO figureLabel in TYPE. Text inside a diagram is drawn in viewBox units, not
 // pixels, so a number in this pixel scale is meaningless there and invites
 // exactly the mistake that shrank every label by 40% when the viewBox moved.
-// Figure text is FIGURE_TEXT in .agents/skills/building-scenes/reference/diagrams.md, derived from the
-// viewBox so the two cannot drift apart again.
-
+// Convert the floor into viewBox units for the box the <svg> actually fills:
+export const minFigureText = (
+  viewBoxW: number, viewBoxH: number, renderedW: number, renderedH: number,
+) => MIN_TEXT_PX / Math.min(renderedW / viewBoxW, renderedH / viewBoxH);
 
 // ASU requires line spacing of at least 1.5.
 export const LINE_HEIGHT = 1.5;
@@ -119,8 +141,8 @@ export const LINE_HEIGHT = 1.5;
 ## Using it
 
 **Read it through a context, never by importing `THEME` directly.** The person can change
-their mind about ASU colours during refinement — the `building-a-video` skill rule 7 — and that has to
-be a prop change, not a file edit.
+their mind about ASU colours during refinement, and that has to be a prop change, not a file
+edit.
 
 ```tsx
 // shared/theme.ts
@@ -128,7 +150,7 @@ export const ThemeContext = React.createContext<Theme>(THEME);
 export const useTheme = () => React.useContext(ThemeContext);
 
 // shared/types.ts — the prop accepts a shipped name OR a described theme.
-// Step 5 option 3 lets someone describe a look in their own words, so a
+// The look question lets someone describe a look in their own words, so a
 // closed union of "asu" | "neutral" would make that question unanswerable.
 export type ThemeChoice = ThemeName | Theme;
 
@@ -172,9 +194,12 @@ export const NEUTRAL: Theme = {
   // theme the person chose BECAUSE they said no to ASU style.
   figureStrokeAlt: "#6B4C8A", // 6.6:1, and clearly distinct from the navy
   onAccent: "#191919",       // 8.99:1 on the amber
+  // MUST be overridden too, or ASU gold rides along as text on the navy.
+  onPrimary: "#FFFFFF",      // 11.48:1 on the navy
+  onPrimaryAccent: "#E8B04B", // 5.87:1 on the navy
 };
 
-// The two shipped themes in one map. A described theme (step 5 option 3)
+// The two shipped themes in one map. A described theme (a look put in words)
 // is not in here — it arrives as a Theme object and skips the lookup.
 export const THEMES: Record<ThemeName, Theme> = {
   asu: THEME,
@@ -210,6 +235,8 @@ background:
 | `inkSoft` on `background` | 8.69:1 | pass |
 | `captionInk` on `captionBackground` | 11.51:1 | pass — **at full opacity**; see below |
 | `onAccent` on `accent` (gold fill) | 11.18:1 | pass |
+| `onPrimary` on `primary` (maroon fill) | 8.88:1 | pass |
+| `onPrimaryAccent` on `primary` (gold on maroon) | 5.65:1 | pass |
 | `figureStrokeAlt` on `background` | 4.10:1 | pass — and clears 3:1 for graphics |
 | **`accent` on `background`** | **1.49:1** | **fails — fill only, never a line or text** |
 

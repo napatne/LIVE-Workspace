@@ -1,5 +1,5 @@
 import { AbsoluteFill } from "remotion";
-import { SceneOne } from "./SceneOne";
+import { LIVE_SCENE_ONE, SceneOne } from "./SceneOne";
 import { COLORS } from "./theme";
 
 /**
@@ -24,7 +24,8 @@ import { COLORS } from "./theme";
  * seconds overall is not a yes to all three.
  *
  * **This file now plays Scene 1 and stops.** Scene 1, the clapboard and Scene 2
- * are each registered as their own composition in `Root.tsx` —
+ * are each registered as their own composition in `Root.tsx` (since
+ * 2026-10-21, in `Registrations.tsx`, which `Root.tsx` imports) —
  * `LiveShowcaseSceneOne`, `LiveShowcaseSlate`, `LiveShowcaseSceneTwo` — after
  * the director's 2026-09-02 note that the clapboard should be *"its own scene
  * not part of the style test because its a transition"*. Scene 1 had in fact
@@ -44,61 +45,20 @@ import { COLORS } from "./theme";
  *
  * The durations below are exported because they are the single source for this
  * file and for the three sibling compositions.
+ *
+ * Corrected 2026-10-21: only `LIVE_SLAM` and `LIVE_STYLE_TEST_DURATION` are
+ * still defined here. The three scene lengths moved into their own scene files;
+ * see the note below.
  */
 
-/**
- * Scene 1's length. Was 120, then 162 after the 1.35× pacing pass, now 114.
- *
- * **Trimmed 2026-09-02** on the director's note that *"the end of scene 1 when
- * everything is still is too long cut it a bit earlier"*. The number is
- * derived, not guessed: the words are all in by f39 plus their settle, and the
- * hand stamps at `HAND_IN` 62, holds its squash to t=8, then rides
- * `settle(t - 8, 9, 0.45)` out — which is within 0.5% of rest by t≈20. So the
- * last visible movement in the scene is ~f84.
- *
- * At 162 that left 78 still frames (2.6s). 114 leaves 30 (1.0s). If it still
- * reads long the next stop is 102; the floor is ~96, below which the hand's
- * spring-back is cut off mid-settle.
+/*
+ * The three scene lengths that used to be defined here — `LIVE_SCENE_ONE`,
+ * `LIVE_SCENE_TWO` and `LIVE_SCENE_THREE` — moved on 2026-10-21 into
+ * `SceneOne.tsx`, `SceneTwo.tsx` and `SceneThree.tsx`, each at the top of its
+ * own file like scenes 4 to 6. Their values did not change; their history
+ * comments went with them, with dated corrections added where they had gone
+ * stale. Nothing imports them from here any more.
  */
-export const LIVE_SCENE_ONE = 114;
-
-/**
- * Scene 2's length.
- *
- * **352 as of 2026-09-02, up from 180**, because the scene gained the fusion
- * and the film's whole LLM-agnostic turn happens inside it. It is not a
- * re-timing of the old scene and none of the old trims survive as reasoning:
- * where the 180-frame cut held three marks and a fade, this one asks the
- * question, pauses on it, drops three branded marks, fuses them into one, and
- * throws that into the meme's face. Four beats where there was one.
- *
- * Its history, so nobody re-derives it: 180 before the 1.35× pacing pass, 243
- * after it, 205 after a tail trim, 180 again after a second — *"also cut off
- * scene 2 a bit earlier the ending is too long"* — then 330, then this.
- *
- * The floor is the closing beat, not the marks: `and you` lands at f238 and the
- * face is not on the figure until f246, so anything under ~260 ends the scene
- * on a piece still arriving. **330 cleared that floor and was still wrong**:
- * the master's quiet join dissolves over the last 24 frames of whatever it is
- * given, so the finished frame — meme, face and answer all up — had well under
- * a second at full opacity before it started going away. The payoff of the
- * scene was being watched through a dissolve. 352 gives it about a second and
- * three quarters clean, and the master's `tail` on this scene went to 0 at the
- * same time so none of it is thrown away twice.
- *
- * **This is not slack.** The band is 60–70s and the director's standing
- * instruction is not to cut a shot to hit a number; if the film needs to come
- * down, the honest place is a beat that is doing nothing, and every beat in
- * scene 2 is now doing something.
- *
- * **352 → 322 on 2026-09-03.** The hold before the fusion lost 30 frames on the
- * director's note about the marks bobbing twice (see `FUSE_START` in
- * `SceneTwo.tsx`), and every beat after it moved down by the same 30. Taking the
- * length with them keeps the clean rest after the last beat at the 76 frames
- * this comment argues for; leaving it at 352 would have spent the saving on
- * idling instead of removing it from the film.
- */
-export const LIVE_SCENE_TWO = 322;
 
 /**
  * 88 frames, not the storyboard's 20.
@@ -146,26 +106,6 @@ export const LIVE_SCENE_TWO = 322;
  */
 export const LIVE_SLAM = 88;
 
-/**
- * Scene 3's length — 195f, the storyboard's own figure.
- *
- * **Not rescaled 1.35×** like scenes 1 and 2, by director decision 2026-09-02
- * when the scene 3 beat sheet was approved. The beats were designed to fit 195
- * rather than the storyboard's beats being stretched into 263.
- *
- * **255 as of 2026-09-02, up from 195.** The scene gained a second line. The
- * film is silent and carries no narration, so the director's note was that it
- * has to say what is happening in words: `Build a narrative with your agents.`
- * now precedes `Create your storyboard.`, because the narrative is the thing
- * the agents are for and the board comes after it. The two never share the
- * frame, so the scene has to be long enough to place one, hold it, take it
- * away and place the other — 195 could not do that without either line being
- * unreadable.
- *
- * The storyboard line itself is untouched: same slot, same size, same two rows.
- * It arrives at f174 instead of f60 and holds to the end.
- */
-export const LIVE_SCENE_THREE = 255;
 
 /**
  * The style test is Scene 1 and nothing else, so it is exactly Scene 1's

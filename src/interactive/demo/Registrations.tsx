@@ -3,7 +3,8 @@ import { DemoFilm } from "./DemoFilm";
 import { DEMO_PATHS, demoDuration } from "./segments";
 
 /**
- * The demo's compositions, one per path. Each is an ordinary video - the film
+ * The demo's compositions, one per path, with the ids written in
+ * web/interactive-demo/paths.json. Each is an ordinary video - the film
  * laid out for that set of answers - so every path can be watched in Studio and
  * rendered as an MP4 to hand out beside the interactive page.
  *
@@ -12,13 +13,13 @@ import { DEMO_PATHS, demoDuration } from "./segments";
  */
 export const InteractiveDemoRegistrations: React.FC = () => (
   <Folder name="Interactive-demo">
-    {Object.keys(DEMO_PATHS).map((name) => (
+    {Object.keys(DEMO_PATHS).map((id) => (
       <Composition
-        key={name}
-        id={`InteractiveDemo-${name}`}
+        key={id}
+        id={id}
         component={DemoFilm}
-        defaultProps={{ answers: DEMO_PATHS[name] }}
-        durationInFrames={demoDuration(DEMO_PATHS[name])}
+        defaultProps={{ answers: DEMO_PATHS[id] }}
+        durationInFrames={demoDuration(DEMO_PATHS[id])}
         fps={30}
         width={1920}
         height={1080}

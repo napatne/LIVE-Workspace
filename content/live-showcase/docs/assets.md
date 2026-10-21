@@ -356,7 +356,8 @@ render. Three pieces of type are exempt; see [`storyboard.md`](storyboard.md) ru
 ## 5. Delivery
 
 Assets land in `content/live-showcase/intake/` and move to `public/assets/live-showcase/` once
-accepted. Everything in `public/` is copied into every Remotion bundle, so anything parked there is
+accepted. *(Amended 2026-10-21: the workspace rule is now that raw material stays in `intake/` and
+only the copies a scene actually uses are staged into `public/assets/live-showcase/`.)* Everything in `public/` is copied into every Remotion bundle, so anything parked there is
 paid for on every preview and every render whether it is used or not.
 
 What to check before accepting one:
@@ -378,5 +379,19 @@ actually goes.
 **Two files on disk are used by nothing:** `props/scene-2-ending.png` and `hands/thumbs-down.png`.
 Both belonged to earlier versions of scenes that were rebuilt. They are kept rather than deleted, and
 nothing references them.
+
+*Corrected 2026-10-21:* there were more than two. Four further files in `public/assets/live-showcase/`
+were referenced by nothing in the repository, and were being copied into every render:
+
+| Was in `public/assets/live-showcase/` | Now |
+| --- | --- |
+| `hands/ChatGPT Image Sep 2, 2026, 04_49_10 PM.png` | Deleted — byte-identical to the next row |
+| `hands/pointing-at-screen-halftone-hand-cutout-shadow-reduced.png` | `content/live-showcase/intake/pointing-at-screen-halftone-hand-cutout-shadow-reduced.png` |
+| `hands/ChatGPT Image Sep 2, 2026, 04_49_19 PM.png` | `content/live-showcase/intake/chatgpt-image-2026-09-02-04-49-19-pm.png` |
+| `props/storyboard-input.jpeg` | `content/live-showcase/intake/storyboard-input.jpeg` |
+
+No document or code linked to any of them, so no link changed. `props/scene-2-ending.png` and
+`hands/thumbs-down.png` are still in `public/` with rows in `Paper.tsx`'s `GEOMETRY`, and so are
+still copied into every render; moving them is a decision for whoever owns the film.
 
 **Nothing here cost money.** Every generation was on a free tier and the project total is $0.

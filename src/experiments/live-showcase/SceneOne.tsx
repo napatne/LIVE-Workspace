@@ -62,7 +62,39 @@ const { fontFamily: display } = loadArchivoBlack();
  * director notes from an earlier round. **Hardened later the same day** on the
  * note *"i want the thumbs up to slam down on the screen like a stamp but a
  * harsh stamp like with force"*. See `stamp()` below.
+ *
+ * ---
+ * **Corrected 2026-10-21.** Two claims above are stale; they are left standing
+ * as the record of what was believed when they were written.
+ *
+ * - The heading's "162f" is the length before the 2026-09-02 trim. The length
+ *   is `LIVE_SCENE_ONE`, just below; `npx remotion compositions` reports it.
+ * - "still open (#4)" here and "open decision 4" in the block's comment point
+ *   at a numbered list of open decisions that
+ *   `content/live-showcase/docs/script.md` no longer has. The copy in
+ *   `script.md` matches `ROW1` and `ROW2` in this file. The block is still
+ *   measured rather than hardcoded, which costs nothing if the copy changes.
  */
+
+/**
+ * Scene 1's length — the single source for this scene, the master film and the
+ * style test. Moved here from `StyleTest.tsx` on 2026-10-21 so that every
+ * scene's length sits at the top of its own file; the value did not change.
+ *
+ * Was 120, then 162 after the 1.35× pacing pass, now 114.
+ *
+ * **Trimmed 2026-09-02** on the director's note that *"the end of scene 1 when
+ * everything is still is too long cut it a bit earlier"*. The number is
+ * derived, not guessed: the words are all in by f39 plus their settle, and the
+ * hand stamps at `HAND_IN` 62, holds its squash to t=8, then rides
+ * `settle(t - 8, 9, 0.45)` out — which is within 0.5% of rest by t≈20. So the
+ * last visible movement in the scene is ~f84.
+ *
+ * At 162 that left 78 still frames (2.6s). 114 leaves 30 (1.0s). If it still
+ * reads long the next stop is 102; the floor is ~96, below which the hand's
+ * spring-back is cut off mid-settle.
+ */
+export const LIVE_SCENE_ONE = 114;
 
 // Words are the last thing to move (script.md). The block lands first at f27,
 // and the line only starts arriving after it.
@@ -93,6 +125,8 @@ const ROW2_TOP = ROW1_TOP + ROW_SIZE + ROW_GAP;
  * The width is still measured rather than assumed: if the copy grows past what
  * the aspect-derived width holds, the width wins and the block gets taller.
  * `script.md` open decision 4 is still open, so it has to survive a re-wording.
+ * (Corrected 2026-10-21: `script.md` no longer numbers its open decisions; see
+ * the correction under this file's header.)
  */
 const BLOCK_PAD_X = 26;
 const BLOCK_PAD_Y = 28;

@@ -6,6 +6,16 @@ five. It is written for this film, and most of it transfers to any collage film 
 **Read this whole file before touching anything.** Then read the scene you are working on, and
 `SceneTwo.tsx`, which is the worked example of every pattern here.
 
+**This is the only copy.** `content/live-showcase/docs/building-a-scene.md` points here; make
+fixes in this file.
+
+## Contents
+
+- §1 The film · §2 The rules the film never breaks
+- §3 What is shared, and what is yours — including registering a scene
+- §4 The shared kit · §5 The shape of a scene file · §6 Timing
+- §7 Verifying your work · §8 What not to claim · §9 What to report
+
 ## 1. The film
 
 A silent paper-collage film whose subject is this repository. Full description in
@@ -17,7 +27,7 @@ A silent paper-collage film whose subject is this repository. Full description i
 | Resolution | **1920 x 1080** |
 | Audio | **None.** Text on screen carries all meaning |
 | Safe margin | **140px** on every edge |
-| Length | 60-70 seconds. `npx remotion compositions` reports what it currently is |
+| Length | About a minute. `npx remotion compositions` reports what it currently is |
 
 ## 2. The rules the film never breaks
 
@@ -36,7 +46,8 @@ type carries the paper filter** — which it does automatically, by going throug
 
 ## 3. What is shared, and what is yours
 
-**Yours:** the scene file you are building, and one appended entry in `src/Root.tsx`.
+**Yours:** the scene file you are building. Nothing else — not even its registration, which
+exists before you start (below).
 
 **Shared, and a change here affects every scene:**
 
@@ -46,6 +57,7 @@ src/experiments/live-showcase/Paper.tsx         asset geometry, tints, PaperPiec
 src/experiments/live-showcase/PoppedWord.tsx    all on-screen type
 src/experiments/live-showcase/MasterFilm.tsx    the scene table and the joins
 src/experiments/live-showcase/transitions/      slateSlam, paperBreath
+src/experiments/live-showcase/Registrations.tsx every composition of this film
 ```
 
 If a shared file genuinely has to change, say so with the exact change rather than making it
@@ -58,29 +70,36 @@ being reviewable on its own. And when a scene's length does change, check its ma
 
 ### Registering a scene
 
-`src/Root.tsx` groups compositions into folders. Inside the `LIVE-showcase` folder there is a
-marker:
+**Every scene is registered before anyone starts building, by whoever sets up the kit — and
+nobody touches the registrations again until the work is merged.** Each entry points at the
+scene's component and imports its duration constant; a scene not yet built points at a stub that
+renders nothing. A worker then edits only their own scene file, which no one else opens, and the
+registration file is identical on every branch.
 
-```tsx
-{/* ---- APPEND NEW LIVE SHOWCASE SCENES BELOW THIS LINE ---- */}
-```
-
-Append after it, importing the duration constant rather than typing a number:
+The registrations live in one file for the film, `src/experiments/live-showcase/Registrations.tsx`,
+which `src/Root.tsx` imports — not in `Root.tsx` itself. A new scene's entry looks like this,
+importing the duration rather than typing a number, and the frame rate and size from `./theme`:
 
 ```tsx
 <Composition
-  id="LiveShowcaseSceneFour"
-  component={SceneFour}
-  durationInFrames={SCENE_FOUR_DURATION}
-  fps={30}
-  width={1920}
-  height={1080}
+  id="LiveShowcaseSceneSeven"
+  component={SceneSeven}
+  durationInFrames={SCENE_SEVEN_DURATION}
+  fps={FPS}
+  width={WIDTH}
+  height={HEIGHT}
 />
 ```
 
-Append only, keep the marker line, and add the import beside the other live-showcase imports. A
-typed duration and an imported one will disagree eventually, and the composition is what cuts off
-its own last frame when they do.
+**Do not append entries at a marker while others do the same.** Two workers appending at one
+marker is an add/add conflict in the same place, and because every `<Composition>` block ends in
+the same lines Git interleaves the two — a real run resolved it hunk by hunk and silently
+registered three scenes out of six. `working-in-parallel` has the whole story and how to recover
+if it has already happened.
+
+If you need a scene that is not registered, say so in your report and let whoever owns the
+registration file add it. A typed duration and an imported one will disagree eventually, and the
+composition is what cuts off its own last frame when they do.
 
 ---
 
@@ -197,11 +216,12 @@ export const SceneFour: React.FC = () => {
 };
 ```
 
-Also export your duration as a named constant, so the coordinator can register it without
-guessing:
+Also export your duration as a named constant at the top of the file, so the registration and the
+master import it rather than guessing. The name and the number here are placeholders — use your
+scene's own, set from its beats:
 
 ```ts
-export const SCENE_FOUR_DURATION = 344;
+export const SCENE_N_DURATION = 300; // placeholder: your scene's length in frames
 ```
 
 **Every animated value derives from `f`.** No CSS transitions, no `animation`, no `Date.now()`, no

@@ -9,8 +9,11 @@ import { inlineIntoHtml, singleFileBuild } from "../inline-into-html.mjs";
  *                               WITHOUT a server
  *
  * To start a new interactive film, copy this folder to web/<project>/, change
- * the two names below that say "interactive-demo", and add a matching pair of
- * scripts to package.json ("<project>" and "<project>:build").
+ * the two names below that say "interactive-demo", put the film's paths in its
+ * paths.json, and add one script to package.json, "<project>", for the
+ * authoring page. No build script is needed:
+ * `node scripts/interactive-handout.mjs <project>` builds the page itself,
+ * from web/<project>/vite.config.mts into out/<project>/.
  *
  * `publicDir` is off: a film drawn in code needs none, and the project's own
  * public/ would otherwise be copied into every build. A film with images

@@ -6,7 +6,7 @@ description: Writes and renders a film's music - an original score on real sampl
 # Scoring music
 
 **Use this when** the interview settled that the film has music (`building-a-video` →
-`reference/interview.md` step 3b), or music is being added or changed.
+`reference/interview.md` step 1d), or music is being added or changed.
 
 **You need first** the story approved in words, the film's scenes with their lengths, those lengths
 in a timeline file the film reads (below), and the style card's sound section
@@ -28,9 +28,15 @@ out clean and the timing exact. The tune comes out plain.** An assistant is a be
 composer — one director's verdict on a score made this way was *"you are producing nice sounds but
 you are musically challenged"*, and it was fair.
 
-So the strongest route is always **a real tune, arranged here**: one the person hums and writes
-down, picks from the public domain, or writes in MuseScore. Say that the first time music comes up,
-once, and offer it. Then do whichever they choose.
+So the strongest route is always **a real tune, arranged here**: one the person wrote themselves —
+given as notes, a MIDI file or a MuseScore file — or one they pick. Say that
+the first time music comes up, once, and offer it. Then do whichever they choose.
+
+**Whose tune it is, is their call.** A tune they wrote, or one out of copyright (from an edition
+that is out of copyright too), is free to use. A song they name from a record belongs to someone —
+the recording and the tune. Say that once, recommend an original in that feel, and then do what
+they decide: their file, its tune arranged from the notes they give, or the original. Record the
+choice in the brief as *theirs* (`AGENTS.md` → *Rights are the person's call*).
 
 **You cannot hear the result, and they can.** Everything that can be measured — sync, length,
 level, silence, peaks — you measure. Whether it is good, too busy, too sad or silly is theirs, and
@@ -43,9 +49,10 @@ Each one is theirs, or yours said out loud and written into the brief
 
 | Decision | Default if they have no view |
 | --- | --- |
-| **Whether** — score, their track, none | Asked in the interview, step 3b |
+| **Whether** — score, their track, none | Asked in the interview. With no voice, an original score. **An interactive film: none, said out loud** — a question holds the film for as long as the viewer takes, so a score cannot stay in step. A film made from footage: the clips' own sound first |
 | **Feel and instruments** | The style card's sound section; otherwise chosen from the story's mood and named in one line |
-| **The tune** | Theirs if offered; a public-domain melody they agree to; otherwise an original kept short and simple, and called an assistant's tune |
+| **The tune** | One they wrote, if offered; a public-domain melody they agree to; otherwise an original kept short and simple, and called an assistant's tune |
+| **Where it ducks** | Under every line of speech, and under the reading. On a film with words on screen throughout, the long or dense reads only — see *The timeline* |
 | **Music first or picture first** | Picture first — the score is fitted to the cut |
 | **Sound effects** | Only on structural moments: a cut, a landing, a reveal |
 | **Under a voice** | If there is narration, the score is a bed, well under it |
@@ -85,6 +92,32 @@ Where to put it, how the scenes read it, and the position grammar (`"theme+144"`
 **Duck under every line a viewer has to read, not only under speech.** On a film with no voice, the
 music is the only thing competing with the words on screen.
 
+**When words are on screen from start to finish, that rule would duck the whole film**, which is
+the same as a quieter score. Duck only the long or dense reads instead — a paragraph, a list, the
+end card with its credits — or none at all, and say which in one line: it is a decision, theirs or
+yours said out loud, and it goes into the brief.
+
+Ducks and silences ramp over 6 frames **outside** the range written: a duck starts falling 6
+frames before its `from`, and a silence comes back over the 6 frames after its `to`. Place a silence
+that should end on a hit 6 frames early. The details are in
+[`reference/writing-a-score.md`](reference/writing-a-score.md) → *The timeline file*.
+
+**How deep a duck is, is measured in the finished file**, not read off the timeline. The score build
+applies ducks after its compressor and levels with a fixed gain, so `score.wav` carries the depth
+written, and `finish-video.mjs` levels the same way, so it reaches the delivered file. Two things
+can still narrow it: audio whose loudest hits sit far above everything else, where the limiter has
+to squeeze them (the script prints a note when it does), and finishing with `--loudnorm` (measured
+cases are at the end of this file). To check one, measure the ducked
+span against an equal span just before it in the finished file:
+
+```console
+ffmpeg -hide_banner -ss <start-s> -t <length-s> -i out/<film>-final.mp4 -af ebur128 -f null -
+```
+
+Read the integrated loudness (`I:`) of each. Music changes on its own, so neighbouring spans give an
+estimate; for an exact figure, build the score once with that duck removed and measure the same span
+in both.
+
 ## The score file
 
 One small module per film, `content/<project>/music/score.mjs`. **Start by copying
@@ -115,10 +148,15 @@ folk ensemble — and change it, rather than writing from nothing. The API is in
 npm run score -- content/<project>/music/score.mjs --composition <FilmId>
 ```
 
-It refuses if the timeline and the composition disagree on length, then writes `score.mid` and
-`score.wav`, and prints the cue table: every section, hit, duck, silence and music cue, with its
-frame, its time, and its place on the beat grid. **Read the table before anyone listens** — a hit
-three frames off the grid is visible there and nearly invisible by ear.
+It refuses if the timeline and the composition disagree on length, or if the timeline breaks a
+naming or range rule, then writes `score.mid` and `score.wav`, and prints the cue table: every
+section, hit, duck, silence and music cue, with its frame and its time, and every hit's place on the
+beat grid. **Read the table before anyone listens** — a hit three frames off the grid is visible
+there and nearly invisible by ear.
+
+Before it overwrites `score.wav` it copies the previous one into `out/<project>/score-history/`, so
+the audio an earlier render was made from can be returned to. Like the rest of `out/`, it is not in
+version control.
 
 Then in the film's master, once, at frame 0:
 
@@ -156,10 +194,20 @@ render, against the timeline, against a reference they named. "Louder than v2 by
 
 ## Their own track, or a song they found
 
-A file they made, licensed, or took from a library that permits it goes in
+A file they bring — made, licensed, from a library, or ripped from a CD they own — goes in
 `content/<project>/intake/`; place it with `<Audio>` the same way and let finishing set the level.
-**A song from YouTube or a streaming service cannot be used, however it is asked for** — offer an
-original in that feel instead.
+**Where it came from is their call.** If it is a commercial recording, flag it once, with the one
+practical consequence: TikTok, Instagram and YouTube detect copyrighted songs automatically and can
+mute or take down the video. Then use it. Nothing here downloads music from YouTube or a streaming
+service; they bring the file.
+
+**A song they name, with no file**, gets the same single flag, then three ways to go: an original in
+that feel (recommend this — it has no question attached), its tune arranged from notes they give,
+or the track once they send the file.
+
+**A film made from footage** may use the clips' own sound. That is not music, and is not built here:
+it is handled in the scene, with `<Video volume>` — see `working-with-footage`. A score can still go
+under it, ducked wherever the clips' sound matters.
 
 ## Credits
 
@@ -192,3 +240,21 @@ were.
   true peak −2.5 dBTP.
 - AAC at 192 kbps added 1.4 dB of true-peak overshoot to a hot master; at 320 kbps, 0.2 dB. The
   finishing script encodes at 320.
+
+*Dated 2026-10-20, from the test run.*
+
+- A duck written at −5 dB measured about −2.6 LU in the finished file, measured over the ducked span
+  against the music around it. At that date the build compressed the score after applying the ducks.
+
+*Dated 2026-10-21, after the build was reordered (compressor, then ducks, then a fixed gain and
+limiter).*
+
+- On the example score, ducks written at −5 dB and −10 dB measured −5.0 and −10.0 LU in
+  `score.wav`, against the same span built without the duck. The old order gave −4.4 and −8.9, and
+  −2.6 and −6.1 on a score 12 dB hotter.
+- Finishing that score with `finish-video.mjs`, measured as the duck against a span before it: the
+  score itself −10.7 LU; finished with a fixed gain and limiter (the default from 2026-10-21)
+  −10.6 LU; finished with `--loudnorm`, which fell into its dynamic mode, −9.8 LU. An earlier
+  measurement of the loudnorm route gave −8.8 LU.
+- On a deliberately extreme click track, where the limiter took 11 LU off the peaks, a 10 dB duck
+  kept about 1 LU with either method.

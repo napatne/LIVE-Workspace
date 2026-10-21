@@ -35,12 +35,27 @@ The rule: **track what a video is made from, not what it is made into.**
 
 | Tracked | Not tracked | Why |
 | --- | --- | --- |
-| `src/`, `content/`, `scripts/` | | The film, and how to rebuild it |
-| `public/assets/` | | Inputs the code reads. Large, but not reproducible |
+| `src/`, `content/`, `scripts/` | Video and audio in `content/<project>/intake/` | The film, and how to rebuild it. The footage and recordings someone hands in are theirs |
+| `public/assets/` | `public/assets/<project>/footage/` | Inputs the code reads. Large, but not reproducible. Staged footage is someone's footage |
 | `package.json`, lockfile | `node_modules/` | Reinstallable from the first two |
 | Skill and guide files | Per-assistant caches | One canonical copy, not one per tool |
 | | `out/` | Renders are reproducible, and large |
 | | `.env` | Keys never go in a repository |
+
+**Footage and recordings do not travel in the repository.** `.gitignore` leaves out video and audio
+files under any `content/<project>/intake/`, and everything under any
+`public/assets/<project>/footage/`. Pictures and notes in `intake/` are still tracked. The reason is
+rights before size: a clip belongs to whoever shot it, a recording to whoever spoke it, and a
+repository copies whatever it holds to everyone who clones it, for ever.
+
+So a film made from footage travels in two halves. **The repository carries the code and the brief**
+— which clips, which moments, the timecodes, the rights answers. **The person keeps the media**, and
+a second machine gets it from them, not from Git: they put the same files back in `intake/`, and the
+staging step is run again. Say this when such a film is started, not when someone else clones it
+and finds the scenes empty.
+
+**Clips built from someone's recording land in `public/assets/<project>/audio/`, which is tracked.**
+That is their voice. Before a commit carries it into a shared repository, ask.
 
 **Renders being untracked has a consequence worth stating out loud:** a finished film exists only
 on the machine that made it. That has already cost one project its approved final file. Decide
@@ -71,6 +86,11 @@ line and let them decide:
 Count from `git status --short`, and date from the oldest change if you can tell. A *local* commit
 publishes nothing; it only makes the work recoverable. Then do exactly what they say — a yes
 authorises that one commit, not the next.
+
+**A checkpoint never sweeps in media.** Before staging, read the list: a video or audio file outside
+what `.gitignore` already covers — a clip dropped somewhere other than `intake/`, a recording saved
+beside the scenes — is left out and named in your reply. Stage paths by name rather than everything
+at once, so a yes to "commit the work" is not a yes to committing someone's footage.
 
 **A public repository publishes everything pushed to it, branches included.** Work in progress
 pushed to a public remote is published work in progress. Say so before the first push to one.

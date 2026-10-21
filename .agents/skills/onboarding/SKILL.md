@@ -42,11 +42,16 @@ Once it can build, **one short message**: what this is in one sentence, and a ch
 > it. Would you like a quick tour of how it works first, or shall we go straight to making a
 > video?
 
-- **Tour** → the points below, one at a time.
+- **Tour** → the short tour (below), one point at a time. The full route only if they ask for
+  more.
 - **Straight to a video** → the limits in two lines (*What it cannot do*, below — never skipped),
-  then `building-a-video`.
+  then `building-a-video`. Tell `building-a-video` they took the short route: its interview then
+  batches the remaining first questions into one message.
 - **They already said what they want** — *"make me a video about X"* — skip the question; give the
   limits in two lines and go.
+- **They ask to see the example film** — *"show me what it made"*, *"play the example"* — go to
+  `viewing-and-rendering` and show them the worked example. Give the limits in two lines when they
+  turn to making their own.
 
 ---
 
@@ -74,8 +79,15 @@ long message that explains the whole workspace correctly and is not read.
 
 ## Working out how far to go
 
-**On the tour, the default is the full route.** Someone who chose the tour and has said nothing
-else gets all of it, one point at a time, until they steer.
+**On the tour, the default is the short route** — four points, one per message:
+
+1. **What this is.**
+2. **How you work it.**
+3. **What it cannot do** — the limits in two lines.
+4. **Go** — offer to make a video now, or to keep going.
+
+**The full route** is every point below, in order, one at a time. Take it when they ask for more —
+*"tell me more"*, *"how does it all work?"* — or when the signals under *Go longer* say so.
 
 Then read what comes back and adjust. You are choosing the route as you go, not working down a
 fixed list:
@@ -99,19 +111,29 @@ into building, deliver it in two lines before the interview starts. Someone who 
 shape is fixed will ask for a phone-shaped video and find out after they are invested. That has
 happened here.
 
+**Two lines on the short and fast routes; the five bullets on the full route or when asked.** The
+two lines carry the first two limits — the shape, the floor — and end with an offer of the rest:
+
+> Two things to know first: it's wide unless we choose upright before building starts, and about
+> thirty seconds is the shortest it makes. There are a couple more limits if you'd like them.
+
+If their message already runs into another limit — they mentioned footage, or a deadline in
+minutes — say that one too, in a line of its own.
+
 ---
 
 ## The points
 
-Cover these in this order on the full route. Merge, drop or expand them as the conversation tells
-you to — but never move the limits later than they sit here.
+Cover these in this order on the full route; the short route takes *What this is*, *How you work
+it* and *What it cannot do* (in two lines), then offers to go. Merge, drop or expand them as the
+conversation tells you to — but never move the limits later than they sit here.
 
 ### What this is
 
 A folder on their computer that makes videos out of code, and the thing they talk to is you. Two
 directions it works in: **made from nothing** — a script, some pictures, and code that draws every
-frame — and **made from footage** — existing video as a base, re-cut and re-timed with text and
-graphics laid over it.
+frame — and **made from footage** — video they shot or have the rights to, re-cut and re-timed
+with text and graphics laid over it, with the agreement of anyone recognisable in it.
 
 *Cue:* offer to say how they actually work it.
 
@@ -127,32 +149,38 @@ goes.
 ### What making one actually looks like
 
 You interview them first — what it is about, who it is for, how long, whether it has a voice,
-whether it has music, what it should look like, where the pictures come from. Then the story in
-words, which they approve before anything is drawn; then pictures, then one scene to judge, then
-the rest, then they watch and say what is off, repeatedly, then it renders to a file.
+whether it has music. Then the story in words, which they approve before anything is drawn; then
+what it should look like and where the pictures come from; then one scene to judge, then the rest,
+then they watch and say what is off, repeatedly, then it renders to a file.
 
 **Every choice is theirs or yours out loud.** They can answer "you decide" to any question, and you
 will say what you picked and why, so nothing about their video is decided where they cannot see it.
 
-**Say the honest scale.** The 70-second film in this folder took about a day and a half with two
-people, across seven working sessions, through four different target lengths and one complete
-rejection of a finished cut. Going round again is the normal shape of this work, not a sign it is
-going badly. Someone should be able to tell whether they are starting an afternoon or a month.
+**Say the honest scale.** A short, simple film — text and shapes, one round of changes — is
+roughly an hour from first message to finished file. The worked example in this folder, a film of
+about a minute, took about a day and a half with two people, across seven working sessions,
+through four different target lengths and one complete rejection of a finished cut. Going round
+again is the normal shape of this work, not a sign it is going badly. Someone should be able to
+tell whether they are starting an afternoon or a month. (The measurement behind the hour is dated
+at the end of this file.)
 
 *Cue:* offer the limits, and say they are worth hearing before starting rather than after.
 
 ### What it cannot do
 
-**This point is mandatory on every route.** Five things, plainly, without apologising for them:
+**This point is mandatory on every route.** On the short and fast routes it is two lines — the
+shape and the floor — with the rest offered (see *Working out how far to go*). On the full route,
+or when they ask, all five, plainly, without apologising for them:
 
 - **Wide by default — 1920×1080.** Upright for Reels, TikTok or Stories, or square, can be built
   — but it has to be chosen before building starts. Every layout is authored for its shape, so
   switching later means redoing the layout, and cropping a finished wide video ruins it.
-- **About thirty seconds is the floor.** Under that it has to be raced and stops being watchable.
-  For five seconds, a still image is usually the better answer.
+- **About thirty seconds is the floor.** Under that there is not time to read it, or say it, and
+  it stops being watchable. For five seconds, a still image is usually the better answer.
 - **It draws; it does not film.** Text, diagrams, motion graphics, and still pictures moved around
-  — not footage of real people or places, unless they bring the footage themselves or a paid
-  generation service is connected and approved.
+  — not footage of real people or places, unless they bring the footage themselves: theirs to use,
+  with the agreement of anyone recognisable in it (`working-with-footage`). A picture found
+  online is their call: you say once that it belongs to someone, and they decide.
 - **Rendering takes real minutes**, not seconds. The preview is instant; the finished file is not.
 - **They are the judge, not you.** You will tell them if a file is broken, the wrong size or
   missing its sound. You will not tell them whether it is any good. That call is theirs, always.
@@ -167,7 +195,8 @@ in order to make a video. What it is built on — Node, Remotion, FFmpeg — cos
 Remotion has its own licence rather than an open-source one, and whether it costs anything depends
 on who is using it. If they ask on behalf of a company or an institution, point them at
 <https://www.remotion.dev/license> rather than answering for them — the terms are Remotion's and
-they change.
+they change. It comes up again at delivery: anyone publishing a film on behalf of an organisation
+should have checked it, and `viewing-and-rendering` raises it there.
 
 The exceptions are opt-in and named: a generated voice or generated images go out to a service and
 may cost money. `ACCESS.md` lists which are connected and what each costs, and nothing is spent
@@ -180,10 +209,13 @@ without asking them first.
 Three places worth knowing — and they never have to move a file by hand. Naming where something is
 is a complete instruction.
 
-- **What they hand in** goes in `content/` — photos, footage, recordings, notes, reference, in
-  whatever state it arrives. A workbench, not a filing cabinet.
-- **Prepared pictures the video actually draws** sit in `public/`. You move things there once they
-  are cut out, named and sized.
+- **What they hand in** goes in the film's intake folder, `content/<project>/intake/` — photos,
+  footage, recordings, notes, reference, in whatever state it arrives. A workbench, not a filing
+  cabinet. Footage and recordings there stay on this machine; they are not shared with the rest of
+  the folder's history.
+- **Prepared copies the video actually uses** sit in `public/assets/<project>/`. You stage a copy
+  there once it is cut out, named and sized — and only the ones a scene uses, because everything
+  in `public/` is copied into every render.
 - **Finished videos and single frames** land in `out/`. Nothing there is precious; all of it can be
   remade from the rest.
 
@@ -238,12 +270,13 @@ technical question mid-conversation gets a correct answer without leaving the sk
 ### The folder map
 
 ```text
-content/<project>/intake/   material brought in, unprocessed
-content/<project>/docs/     storyboard, script, implementation plan, asset manifest
-public/assets/<project>/    staged assets the code draws, via staticFile()
+content/<project>/intake/   material brought in, unprocessed — video and audio there are gitignored
+content/<project>/docs/     brief, story, storyboard, script, style card, asset manifest
+public/assets/<project>/    staged copies the code draws, via staticFile() — only what a scene uses
 out/                        renders and frame stills — gitignored, reproducible
 src/                        the React/TypeScript that draws every frame
-scripts/                    FFmpeg helpers — audio conditioning, plate re-timing
+scripts/                    setup check, narration, audio conditioning, footage probing and
+                            re-timing, score, render checks and finishing
 .agents/skills/             skills, loaded by agents
 AGENTS.md                   rules for anyone working here — the entry point
 CLAUDE.md                   a pointer to AGENTS.md
@@ -253,16 +286,18 @@ package.json                dependencies; npm install reads this
 
 ### `src/Root.tsx` is the index
 
-Every renderable thing is registered there as a `<Composition>`. Remotion Studio's sidebar *is*
-that file. Unregistered means nonexistent as far as the tooling is concerned.
+Every renderable thing is registered as a `<Composition>`, in its film's own `Registrations.tsx`,
+and `src/Root.tsx` imports each film's file. Remotion Studio's sidebar *is* that list.
+Unregistered means nonexistent as far as the tooling is concerned. The worked example's are in
+`src/experiments/live-showcase/Registrations.tsx`:
 
 ```tsx
 <Composition
   id="LiveShowcaseFilm"                  // the id to render by
   component={MasterFilm}                 // the component that draws it
   durationInFrames={LIVE_FILM_DURATION}  // imported from the scene table, never typed
-  fps={30}
-  width={1920} height={1080}
+  fps={FPS}
+  width={WIDTH} height={HEIGHT}          // from the film's theme, named once
 />
 ```
 
@@ -288,6 +323,10 @@ npx remotion compositions        # list every renderable id
 npx remotion still LiveShowcaseSceneFour out/s4-f090.png --frame=90 --scale=0.5
 npx remotion render LiveShowcaseFilm out/live-showcase.mp4
 npm run lint                     # eslint + tsc
+node scripts/probe-footage.mjs content/<project>/intake/ --film-fps 30   # length, fps, shape, sound per clip
+node scripts/build-audio.mjs --cues <cues.json> --src <dir> --out <dir>  # all three required
+node scripts/check-render.mjs out/<file>.mp4 --composition <Id>          # measure a render
+node scripts/finish-video.mjs out/<file>.mp4                             # delivery colour range and loudness
 ```
 
 `--scale=0.5` is half resolution — fast, and enough to judge composition and timing. The naming
@@ -344,3 +383,11 @@ involved, or a change needs undoing. → `collaborating-with-git`
 `content/<project>/docs/` is the authority on **intent**. The code is the truth about **what
 exists**. Where they disagree, say which is wrong and let a person decide — do not silently change
 either to match the other. `AGENTS.md` carries the full rule.
+
+## Measurements
+
+Dated as taken. Re-measure rather than quoting them as fixed.
+
+- **2026-10-20**, shared machine with several agents rendering at once: a 28-second
+  text-and-shapes film went from first message to finished file in about an hour, including the
+  conversation, two renders and about 25 checking stills.

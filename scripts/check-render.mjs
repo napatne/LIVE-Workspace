@@ -1,12 +1,24 @@
 // Measure a rendered video, so nobody has to judge by eye what a number can say.
 //
-//   node scripts/check-render.mjs <video.mp4> [--composition <Id>] [--no-sheet]
+//   node scripts/check-render.mjs <video.mp4> [--composition <Id>] [--freeze-min <s>] [--sheet-dir <dir>] [--no-sheet]
 //
 // Reports facts, never a verdict: size, frame rate, length (against the
-// composition's own length, if given), colour range, the audio track and its
-// loudness, and stretches of black, frozen picture and silence. Writes a
-// contact sheet - a grid of small frames across the whole video - beside it as
-// <name>-sheet.jpg, so a person can see the film at a glance.
+// composition's own length, if given), the picture's and the sound's own
+// lengths, colour range, the audio track and its loudness, and stretches of
+// black, frozen picture and silence. Writes a contact sheet - a grid of small
+// frames across the whole video - as <name>-sheet.jpg, beside the video or in
+// --sheet-dir. The sheet holds at most 36 tiles, so on a long film one tile
+// stands for several seconds; the report prints the interval.
+//
+// Frozen picture is found on the brightness alone (luma), after converting the
+// picture to TV range. Without that, a full-range render and its finished
+// TV-range copy report different frozen stretches: the conversion narrows the
+// difference between frames, so small motion falls under the threshold in one
+// and not the other. --freeze-min sets the shortest stretch reported (default
+// 2 s); lower it to confirm a short held beat.
+//
+// When the sound stops more than a frame before the picture, the gap is a
+// silent tail, and it is listed with the silences.
 //
 // Exit code 1 only for a measured mismatch: an unreadable file, or a size,
 // frame rate or length that disagrees with the composition. A black, frozen or
@@ -20,22 +32,19 @@
 // all in the copy Remotion bundles.
 
 import { spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import { basename, dirname, extname, join } from "node:path";
 import { argv, exit } from "node:process";
+import { DELIVERY_LUFS, DELIVERY_TRUE_PEAK_DB, LUFS_TOLERANCE, TRUE_PEAK_TOLERANCE_DB } from "./lib/delivery.mjs";
 
 // Remotion's and Vite's own entry files, run with node: no shell, the same on
 // every platform (Node refuses to run npx's .cmd shim without one on Windows).
 const REMOTION_CLI = "node_modules/@remotion/cli/remotion-cli.js";
 
-// The delivery standard, the same constant scripts/finish-video.mjs applies.
-const DELIVERY_LUFS = -14;
-const DELIVERY_TRUE_PEAK = -1;
-
 // Thresholds for the stretch detectors. Short enough to catch a dropped scene,
 // long enough not to report every cut through black or every held beat.
 const BLACK_MIN_S = 0.5;
-const FREEZE_MIN_S = 2;
+const FREEZE_MIN_DEFAULT_S = 2;
 const SILENCE_MIN_S = 1;
 const SILENCE_DB = -50;
 const SHEET_TILES = 36;
@@ -46,12 +55,26 @@ const flag = (name) => {
   const i = args.indexOf(`--${name}`);
   return i >= 0 ? args[i + 1] : undefined;
 };
-const video = args.find((a, i) => !a.startsWith("--") && !args[i - 1]?.startsWith("--composition"));
+// --no-sheet is a switch; the others take a value.
+const VALUE_FLAGS = ["--composition", "--freeze-min", "--sheet-dir"];
+const USAGE = "usage: node scripts/check-render.mjs <video.mp4> [--composition <Id>] [--freeze-min <s>] [--sheet-dir <dir>] [--no-sheet]";
+const video = args.find((a, i) => !a.startsWith("--") && !VALUE_FLAGS.includes(args[i - 1]));
 const composition = flag("composition");
 const wantSheet = !args.includes("--no-sheet");
+const sheetDir = flag("sheet-dir");
+const FREEZE_MIN_S = Number(flag("freeze-min") ?? FREEZE_MIN_DEFAULT_S);
 
-if (!video) {
-  console.error("usage: node scripts/check-render.mjs <video.mp4> [--composition <Id>] [--no-sheet]");
+if (!video || args.includes("--help")) {
+  console.error(USAGE);
+  exit(1);
+}
+const unknown = args.filter((a) => a.startsWith("--") && ![...VALUE_FLAGS, "--no-sheet"].includes(a));
+if (unknown.length) {
+  console.error(`Unknown option ${unknown.join(", ")}.\n${USAGE}`);
+  exit(1);
+}
+if (!Number.isFinite(FREEZE_MIN_S) || FREEZE_MIN_S <= 0) {
+  console.error("--freeze-min needs a length in seconds greater than 0, such as 1 or 0.5.");
   exit(1);
 }
 if (!existsSync(video)) {
@@ -96,12 +119,18 @@ const fps = v ? v.r_frame_rate.split("/").map(Number).reduce((n, d) => n / d) : 
 // The picture's own length. The container's runs a little longer whenever an
 // AAC track is present, because the encoder pads the audio's start.
 const duration = Number(v?.duration ?? a?.duration ?? info.format.duration);
+const videoDur = v?.duration !== undefined ? Number(v.duration) : null;
+const audioDur = a?.duration !== undefined ? Number(a.duration) : null;
 const frames = v ? (v.nb_frames ? Number(v.nb_frames) : Math.round(duration * fps)) : null;
 const fullRange = v && (v.pix_fmt?.startsWith("yuvj") || v.color_range === "pc");
 
 if (v) {
   facts.push(`size ${v.width}×${v.height}, ${Number.isInteger(fps) ? fps : fps.toFixed(3)} fps, ${v.codec_name}`);
   facts.push(`length ${seconds(duration)}, ${frames} frames`);
+  if (a) {
+    const len = (d) => (d !== null ? `${d.toFixed(3)} s` : "not stated");
+    facts.push(`stream lengths: picture ${len(videoDur)}, sound ${len(audioDur)}`);
+  }
   facts.push(`colour ${v.pix_fmt}${v.color_range ? `, range ${v.color_range}` : ""}${v.color_space ? `, ${v.color_space}` : ""}`);
 } else {
   facts.push(`sound only, length ${seconds(duration)}`);
@@ -127,14 +156,19 @@ if (composition && v) {
       if (cW !== v.width || cH !== v.height) defects.push(`Size is ${v.width}×${v.height}; the composition is ${cW}×${cH}.`);
       if (Math.abs(cFps - fps) > 0.01) defects.push(`Frame rate is ${fps}; the composition is ${cFps}.`);
       if (Math.abs(cFrames - frames) > 1) {
-        defects.push(`${frames} frames; the composition is ${cFrames}. A partial render (--frames) explains this; anything else is a fault.`);
+        defects.push(`${frames} frames; the composition is ${cFrames}. A partial render (--frames) explains this, or the code changed since this file was rendered; anything else is a fault.`);
       }
     }
   }
 }
 
 // --- One decode pass for every stretch detector and the loudness ---------
-const filterArgs = v ? ["-vf", `blackdetect=d=${BLACK_MIN_S}:pix_th=0.10,freezedetect=n=0.003:d=${FREEZE_MIN_S}`] : [];
+// blackdetect sees the picture as it is; freezedetect sees the brightness only,
+// converted to TV range first, so a full-range render and its finished copy
+// report the same frozen stretches.
+const filterArgs = v
+  ? ["-vf", `blackdetect=d=${BLACK_MIN_S}:pix_th=0.10,scale=out_range=tv,format=yuv420p,extractplanes=y,freezedetect=n=0.003:d=${FREEZE_MIN_S}`]
+  : [];
 if (a) filterArgs.push("-af", `silencedetect=n=${SILENCE_DB}dB:d=${SILENCE_MIN_S},volumedetect,ebur128=peak=true:framelog=verbose`);
 const pass = run("ffmpeg", ["-hide_banner", "-nostats", "-i", video, ...filterArgs, "-f", "null", "-"]);
 if (pass.status !== 0) {
@@ -159,6 +193,15 @@ if (v) {
   facts.push(frozen.length ? `frozen for ${FREEZE_MIN_S} s or more: ${describe(frozen)}` : `no frozen stretch of ${FREEZE_MIN_S} s or more`);
 }
 
+// A sound stream that stops more than a frame before the picture leaves a
+// silent tail - often narration cut short, or audio never stretched to the
+// film's length.
+const tail = v && a && videoDur !== null && audioDur !== null && videoDur - audioDur > 1 / fps ? [audioDur, videoDur] : null;
+if (tail) {
+  const gap = videoDur - audioDur;
+  notes.push(`The sound ends at ${audioDur.toFixed(3)} s and the picture at ${videoDur.toFixed(3)} s: ${gap.toFixed(3)} s (${Math.round(gap * fps)} frames) of silent tail.`);
+}
+
 if (!a) {
   facts.push("no audio track");
 } else {
@@ -170,13 +213,18 @@ if (!a) {
     const lufs = Number(summary.match(/I:\s+(-?[\d.]+) LUFS/)?.[1]);
     const lra = Number(summary.match(/LRA:\s+([\d.]+) LU/)?.[1]);
     const peak = Number(summary.match(/Peak:\s+(-?[\d.]+|-inf) dBFS/)?.[1]);
-    facts.push(`audio ${a.codec_name} ${a.sample_rate} Hz ${a.channels} ch, ${lufs} LUFS integrated, loudness range ${lra} LU, true peak ${peak} dBTP`);
-    if (Math.abs(lufs - DELIVERY_LUFS) > 1) {
-      notes.push(`Loudness is ${lufs} LUFS; the delivery level is ${DELIVERY_LUFS}. Not finished yet - scripts/finish-video.mjs sets it.`);
+    facts.push(`audio ${a.codec_name} ${a.sample_rate} Hz ${a.channels} ch, ${lufs} LUFS integrated, loudness range (ebur128 LRA) ${lra} LU, true peak ${peak} dBTP`);
+    if (Math.abs(lufs - DELIVERY_LUFS) > LUFS_TOLERANCE) {
+      notes.push(`Loudness is ${lufs} LUFS; the delivery level is ${DELIVERY_LUFS} (noted beyond ±${LUFS_TOLERANCE} LU). Not finished yet - scripts/finish-video.mjs sets it.`);
     }
-    if (peak > DELIVERY_TRUE_PEAK) notes.push(`True peak ${peak} dBTP is above ${DELIVERY_TRUE_PEAK}; it can clip once someone else re-encodes it.`);
+    const peakLimit = DELIVERY_TRUE_PEAK_DB + TRUE_PEAK_TOLERANCE_DB;
+    if (peak > peakLimit) {
+      notes.push(`True peak ${peak} dBTP is above ${peakLimit} (the finishing target is ${DELIVERY_TRUE_PEAK_DB}); it can clip once someone else re-encodes it.`);
+    }
     const silent = stretches("silence_start", "silence_end");
-    facts.push(silent.length ? `silent for ${SILENCE_MIN_S} s or more: ${describe(silent)}` : `no silence of ${SILENCE_MIN_S} s or more`);
+    if (tail) silent.push(tail);
+    const tailNote = tail ? " (the last is the silent tail after the sound stream ends)" : "";
+    facts.push(silent.length ? `silent for ${SILENCE_MIN_S} s or more: ${describe(silent)}${tailNote}` : `no silence of ${SILENCE_MIN_S} s or more`);
   }
 }
 
@@ -186,13 +234,14 @@ if (wantSheet && v && pass.status === 0) {
   const every = duration / tiles;
   const columns = Math.min(SHEET_COLUMNS, tiles);
   const rows = Math.ceil(tiles / columns);
-  const sheet = join(dirname(video), `${basename(video, extname(video))}-sheet.jpg`);
+  if (sheetDir) mkdirSync(sheetDir, { recursive: true });
+  const sheet = join(sheetDir ?? dirname(video), `${basename(video, extname(video))}-sheet.jpg`);
   const made = run("ffmpeg", [
     "-hide_banner", "-loglevel", "error", "-y", "-i", video,
     "-vf", `fps=1/${every.toFixed(4)},scale=320:-2,tile=${columns}x${rows}:padding=4:margin=4`,
     "-frames:v", "1", "-q:v", "3", sheet,
   ]);
-  if (made.status === 0) facts.push(`contact sheet ${sheet} — ${tiles} frames, one every ${every.toFixed(2)} s, left to right`);
+  if (made.status === 0) facts.push(`contact sheet ${sheet} — ${tiles} tiles, one every ${every.toFixed(2)} s, left to right (at most ${SHEET_TILES} tiles, so a long film gets fewer than one a second)`);
   else notes.push(`Could not write the contact sheet: ${made.stderr.slice(-300)}`);
 }
 

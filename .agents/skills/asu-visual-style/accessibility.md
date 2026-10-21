@@ -5,6 +5,19 @@ Verified against ASU's published guidance on **2026-09-19**. Sources at the bott
 **ASU's stated standard is WCAG 2.1 level AA** for all online courses, websites, applications
 and other digital content.
 
+**This file applies to every film made here, whichever visual style was chosen.** Nothing in it
+is a brand rule.
+
+## Contents
+
+- [Captions are required, not optional](#captions-are-required-not-optional) — what gets captioned, including music and footage
+- [Text over footage or photographs](#text-over-footage-or-photographs)
+- [Describe what the visuals say](#describe-what-the-visuals-say)
+- [Colour is never the only signal](#colour-is-never-the-only-signal)
+- [Motion and flashing](#motion-and-flashing) — supplied clips included
+- [Check contrast yourself](#check-contrast-yourself)
+- [Before calling a video done](#before-calling-a-video-done)
+
 ## Captions are required, not optional
 
 This is the part most likely to be treated as a nicety. It is not.
@@ -22,14 +35,33 @@ content." Accessible captions means edited auto-captions or professional human c
 
 ### What this means for how we build
 
-- **Captions go on by default, always.** Not a preference, not a setting someone has to find.
+- **Captions carry what a viewer who cannot hear would miss: the speech, and any sound that
+  means something.** That quoted sentence is about recorded video shown to students, employees
+  or the public; captioning it means making its sound available as text. It is not a rule that
+  every soundtrack needs words on screen.
+- **Speech is always captioned, on by default.** Not a preference, not a setting someone has to
+  find.
+- **A film with music and no voice** has no speech to caption, but the music is still sound. Tell
+  a viewer who cannot hear that it is there — a short bracketed description where it starts,
+  such as *[gentle piano music]*, and again if it changes in a way that matters. The DCMP
+  Captioning Key (below), which ASU points to, covers how to describe music and sound effects;
+  check it for the form rather than inventing one. If the words on screen already carry the
+  whole film, that one description is all the music needs.
+- **A sound effect that tells the viewer something** — a knock, an alarm, a crowd reacting —
+  gets a bracketed description where it happens.
+- **Background sound that carries no meaning** — room tone, a hum, the general noise of a place —
+  needs no caption. Say that you judged it so, in the film's brief, rather than deciding
+  silently.
+- **A film with no audio track at all** has nothing to caption. Its words on screen are the
+  whole message, so they carry every other rule in this file.
 - **Generate captions from the script text**, not from transcribing the audio. The script is
   the source of truth, it is already exact, and there is nothing to get to 95% because it was
   never guessed.
 - **If narration is generated from the same string**, the caption and the voice cannot drift
   apart. Keep that link.
 - **Third-party video** shared with students or employees must be captioned too. If someone
-  supplies a clip, ask.
+  supplies a clip, ask whether it has speech, and caption what it says. The
+  `working-with-footage` skill covers bringing a clip into a film.
 
 ### Caption formatting
 
@@ -46,6 +78,17 @@ for short explainers:
   unreadable the moment a diagram passes behind it.
 - **Leave room.** When captions are on, the figure area has to stop above them rather than
   running underneath.
+
+## Text over footage or photographs
+
+**Any text that sits over footage or a photograph goes on its own opaque panel** — titles, name
+bars, labels and captions alike. Contrast against "what is actually behind it" cannot be
+computed when what is behind it is a moving picture or a photograph with light and dark
+patches: the ratio changes from frame to frame and from letter to letter. A panel gives the text
+one background, and that pair can be computed like any other.
+
+A shadow or outline on bare text is not a substitute. It helps, but it leaves no single pair to
+check.
 
 ## Describe what the visuals say
 
@@ -78,6 +121,10 @@ standard — do not present it as one:
 
 - **Nothing should flash more than three times per second.** Rapid flashing can trigger
   seizures.
+- **That includes footage someone supplies, not only what is animated here.** Watch every clip
+  before it goes in, and look for strobing light, camera flashes, rapid cuts between light and
+  dark, and busy high-contrast patterns. If a stretch flashes, leave it out or ask the person
+  what they want instead. A clip being theirs does not make it safe to show.
 - **Avoid large, fast, full-screen motion.** It can cause nausea and vestibular symptoms.
 - Prefer a figure that draws itself in over about two seconds and then holds still. That is
   also better for comprehension — narration needs something settled to talk over.
@@ -99,11 +146,12 @@ console.log(ratio("#FFC627","#FFFFFF"));  // 1.57 - fails
 ```
 
 **This one will stop and ask for approval, and that is correct.** `node -e` runs whatever it is
-given, so it is deliberately not pre-approved — the alternative is allow-listing arbitrary code
+given, so it is not a command worth approving for good — the alternative is allow-listing arbitrary code
 execution to save one click. Say yes; it is a calculator.
 
-**It is Node, not Python, on purpose.** Node is already required to build anything here. Python
-is not installed and `SETUP-CHECK.md` promises never to install it.
+**It is Node, not Python, on purpose.** Node is already required to build anything here;
+Python is not. Do not assume this machine has Python, and do not install it —
+`installing-the-toolchain` → `reference/SETUP-CHECK.md` rules that out.
 
 | Target | Ratio |
 | --- | --- |
@@ -116,12 +164,14 @@ ASU also names WebAIM's contrast checker as its tool of choice:
 
 ## Before calling a video done
 
-- [ ] Captions are on, and their text came from the script rather than a transcription
+- [ ] Speech is captioned, and the caption text came from the script rather than a transcription
+- [ ] Music and meaningful sound are described; background sound left uncaptioned is noted in the brief
 - [ ] Every text colour clears 4.5:1 against what is actually behind it — computed, not guessed
+- [ ] Every word over footage or a photograph sits on an opaque panel
 - [ ] No gold text on a light background
 - [ ] Nothing meaningful is carried by colour alone
 - [ ] Every diagram's point is stated in the narration
-- [ ] Nothing flashes more than three times a second
+- [ ] Nothing flashes more than three times a second — supplied clips included
 - [ ] A still shrunk to quarter size is still readable
 
 **Then report what was done, not that it is compliant.** *"Captions are on and the colours

@@ -1,11 +1,22 @@
 # Generating
 
+## Contents
+
+- [The manifest](#the-manifest)
+- [Batching — the thing the quota forces](#batching--the-thing-the-quota-forces)
+- [Voices](#voices)
+- [Verify. Every time.](#verify-every-time)
+- [When a prompt is refused](#when-a-prompt-is-refused)
+- [When verification finds a missing line](#when-verification-finds-a-missing-line)
+- [What comes back](#what-comes-back)
+- [Budgeting a day](#budgeting-a-day)
+
 ## The manifest
 
 `scripts/tts-generate.mjs` takes a JSON array and an output directory:
 
 ```bash
-node scripts/tts-generate.mjs <manifest.json> public/assets/<slug>/audio
+node scripts/tts-generate.mjs <manifest.json> content/<project>/narration
 ```
 
 Each entry is `{ id, voice, prompt }`. One entry becomes one WAV named `<id>.wav`, and **one
@@ -32,7 +43,10 @@ request regenerating.
 **Blank lines between the lines are the contract** the split depends on — they are what makes
 the model pause. Ask for the pause explicitly in the direction.
 
-**The manifest lives at `content/<slug>/tts-manifest.json`**, mirroring the Lexi layout.
+**The manifest lives at `content/<project>/tts-manifest.json`**, beside the film's brief. The
+batches it produces go in `content/<project>/narration/`, where `scripts/build-audio.mjs` cuts them
+into one clip per line in `public/assets/<project>/audio/`. Only the clips go in `public/`, because
+everything there is copied into every render.
 
 ## Batching — the thing the quota forces
 
@@ -40,13 +54,12 @@ the model pause. Ask for the pause explicitly in the direction.
 section, which leaves four for the entire rest of the day including retries.
 
 **Batch two to four sections per call.** Give the model a direction that produces a usable gap
-between lines, then find the boundaries and play each slice with `trimBefore`/`trimAfter`.
+between lines, then find the boundaries and cut one clip per line with `scripts/build-audio.mjs`
+(or, while timings are still moving, play each slice with `trimBefore`/`trimAfter`).
 
-**FFmpeg is bundled with Remotion** — `npx remotion ffmpeg`. **That copy is trimmed, and it is
-not enough for all of this skill**: `silenceremove` and `afade`, which
-`scripts/build-audio.mjs` uses, are compiled out of it, so that step needs a full system
-FFmpeg. [splitting.md](splitting.md) covers finding the boundaries and placing the audio, and
-lists what else is missing.
+**A full system FFmpeg is required.** The copy bundled with Remotion (`npx remotion ffmpeg`) is
+trimmed: `silenceremove` and `afade`, which `scripts/build-audio.mjs` uses, are compiled out of
+it. [splitting.md](splitting.md) covers finding the boundaries, cutting the clips and placing them.
 
 **One film here got 15 narration cues out of 3 API calls** — two scene batches plus one
 separate line. Fifteen separate calls would have been one and a half days of quota. **That
@@ -55,9 +68,10 @@ gone; the ratio is the part worth keeping.
 
 ### Batch by tier, not by file order
 
-`planSections` drops **whole tiers**, and the packs put `recap` — a `core` section — last in
-file order, after every `extended` one. Batch on adjacency and a 30-second render needs the
-extended batch to play one line.
+A film built from a topic pack plays **whole tiers** — `core`, then `standard`, then
+`extended` — chosen by length, and the packs put `recap` — a `core` section — last in file
+order, after every `extended` one. Batch on adjacency and a 30-second version needs the extended
+batch to play one line.
 
 **Group each tier's sections into their own batches.** Then a 30-second video needs only the
 core batch, a 60-second one needs core + standard, and dropping a tier drops whole files.
@@ -68,7 +82,7 @@ length. Two to four is the working range.
 
 ## Voices
 
-`prebuiltVoiceConfig.voiceName`. The Lexi film used **Rasalgethi** for narration and **Charon**
+`prebuiltVoiceConfig.voiceName`. One earlier film used **Rasalgethi** for narration and **Charon**
 and **Leda** for short non-verbal sounds. Rasalgethi was picked by the director from a
 four-way audition — *"i loved this one! it has that sarcastic tone to it."*
 
@@ -84,39 +98,36 @@ has actually shipped, and auditioning costs requests you may want later.
 `gemini-2.5-flash-preview-tts` — a different engine, reading roughly twice as fast. It had to
 be regenerated later on the engine it was chosen for.
 
-### The two sources disagree about `gemini-2.5-pro-preview-tts`
+### Which models are free
 
-`ACCESS.md` says switching model id — and it names `2.5-pro` — "grants a fresh 10/day", which
-reads as though it has a free tier. `agent-logs/016` records it returning **429 on the first
-call of the day**, and concludes it has none.
-
-**The log is later and it is empirical** — someone hit the wall. Treat `2.5-pro` as having no
-free tier and do not plan around it. If you need a fresh quota, `2.5-flash` and `3.1-flash` are
-the ones observed to work.
-
-**Neither claim has been re-checked since 2026-08-10.** If this matters to what you are doing,
-verify it with one call rather than trusting either file.
+**`gemini-2.5-pro-preview-tts` has no free tier.** An earlier session found it returning **429 on
+the first call of the day**, and Google's pricing page lists it as paid only. Do not reach for it
+when a free model's quota runs out — every call is charged. The free ones, and the date they were
+checked, are in `ACCESS.md`. If you need a fresh quota, switch to another free model, knowing the
+voice engine changes with it.
 
 **Set the model explicitly** so a default cannot change under you:
 
 ```bash
 # bash
-TTS_MODEL=gemini-3.1-flash-tts-preview node scripts/tts-generate.mjs content/<slug>/tts-manifest.json public/assets/<slug>/audio
+TTS_MODEL=gemini-3.1-flash-tts-preview node scripts/tts-generate.mjs content/<project>/tts-manifest.json content/<project>/narration
 ```
 
-**On Windows, use the Bash tool for this**, not PowerShell. The bash form above is pre-approved
-and runs without interrupting anyone. The PowerShell equivalent is not:
+**On Windows, use the Bash tool for this**, not PowerShell. The bash form above is one command,
+so once the person approves it for this project it stops asking — a key in `.env` is already their
+permission to use the service (`installing-the-toolchain` → `reference/PERMISSIONS.md`). The
+PowerShell equivalent cannot become a rule as cleanly:
 
 ```powershell
-# Works, but matches no permission rule, so it stops and asks. PowerShell tool calls
-# do not carry shell state between them, so the two lines must go as one ';'-joined
-# string - and that string is what nothing matches.
+# Works, but asks every time. PowerShell tool calls do not carry shell state between
+# them, so the two lines must go as one ';'-joined string - and a rule for that string
+# matches nothing else.
 $env:TTS_MODEL = 'gemini-3.1-flash-tts-preview'
-node scripts/tts-generate.mjs content/<slug>/tts-manifest.json public/assets/<slug>/audio
+node scripts/tts-generate.mjs content/<project>/tts-manifest.json content/<project>/narration
 ```
 
 If you genuinely have no Bash tool, run `node scripts/tts-generate.mjs ...` on its own — that
-form *is* allowed. **Read the top of `scripts/tts-generate.mjs` first and confirm its default
+form fits a plain `node scripts/*` rule. **Read the top of `scripts/tts-generate.mjs` first and confirm its default
 model is still the one you want**, because dropping the prefix is exactly the thing the
 explicit-model rule above exists to prevent.
 
@@ -128,7 +139,7 @@ mid-video means regenerating all of it.
 ## Verify. Every time.
 
 ```bash
-node scripts/tts-verify.mjs public/assets/<slug>/audio/batch-a.wav public/assets/<slug>/audio/batch-b.wav
+node scripts/tts-verify.mjs content/<project>/narration/batch-a.wav content/<project>/narration/batch-b.wav
 ```
 
 **Name the files.** PowerShell does not glob-expand for native commands, so `*.wav` arrives at
@@ -139,9 +150,17 @@ has **its own quota**, separate from the TTS models — so verifying does not sp
 budget. It is still a rate-limited free-tier model uploading the whole WAV inline, so do not
 loop it.
 
-**`tts-verify.mjs` has no error handling.** Unlike the generator it never checks that the key
-was found and never checks the response status — with a bad key it prints `ERROR 400:` per file
-and **exits 0**. Read the output; do not trust the exit code.
+**It is for generated speech only.** It sends every file as `audio/wav`, and its transcription
+prompt is written for synthesis — it asks for stage directions read aloud by mistake. A person's
+own recording is checked by listening through it against the script, matching the line count from
+splitting, and the person confirming — see [recording.md](recording.md).
+
+**What it checks before it calls anything:** that `.env` exists and that it holds
+`GOOGLE_AI_STUDIO_API_KEY`. Either missing, it prints a plain message saying what is needed and
+stops with exit code 1. It also checks each response's status, so a rejected request — a bad key, a
+spent quota — is reported as an error for that file rather than printed as though it were a
+transcript. Still read every file's output: one failed file among several is easy to miss, and a
+transcript that came back is only as good as your comparison against the script.
 
 **Read the transcript against your script, line by line.** You are looking for:
 
@@ -156,10 +175,10 @@ for a file missing a third of its content — and it also **exits 0 when every s
 failed**, because failures are caught per-entry and printed as `FAIL`. Read the lines, not the
 status.
 
-**With no `.env` at all, `tts-generate.mjs` throws a raw ENOENT stack trace** — its friendly
-"key not found" branch is unreachable because `readFile(".env")` throws first. **`tts-verify.mjs`
-has no such branch at all** and also dies with ENOENT, exit code 1. That is the normal state of
-a fresh clone, so check the file exists before running either.
+**With no `.env`, or no key in it, both scripts say so in plain words and stop** with exit code 1
+— the message names the variable and points at `ACCESS.md`. That is the normal state of a fresh
+clone. `.env` is created only once the person has said they want a generated voice and will get a
+key; until then, the scripts are not the place to find out it is missing.
 
 ## When a prompt is refused
 

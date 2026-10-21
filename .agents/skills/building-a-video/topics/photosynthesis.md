@@ -41,7 +41,7 @@ below it, in file order — nothing is squeezed, nothing is raced.
 **30 seconds is the floor.** Never go below it by cutting words out of `core`. If they ask for
 less, say 30 is the shortest this one goes — **do not offer to "cover one part of it" instead**,
 because no shorter version of this script exists and nothing says how to write one.
-The `building-a-video` skill step 2 has the wording.
+`building-a-video` → `reference/interview.md` step 1b has the wording.
 
 ---
 
@@ -62,7 +62,7 @@ taken straight out of the air.
 ## reaction · 8s · core
 
 **Heading:** Inside the leaf
-**Figure:** cycle — Sunlight → Water → Sugar → Oxygen
+**Figure:** flow — Sunlight + Water + Carbon dioxide → Sugar + Oxygen
 
 Inside the leaf, sunlight turns that water and carbon dioxide into sugar. The plant keeps the
 sugar and releases the oxygen.
@@ -78,7 +78,7 @@ chlorophyll, the pigment that catches the light.
 ## scale · 12s · standard
 
 **Heading:** The scale of it
-**Figure:** bars — Ocean plankton 50, Forests 30, Grassland 20
+**Figure:** bars — Sea ≈ half, Land ≈ half (two equal bars, labelled "about half"; no percentages)
 
 This happens on a scale that is hard to picture. Forests and oceans run this same reaction
 constantly, everywhere the light reaches. Half the world's oxygen comes from the sea.
@@ -102,7 +102,8 @@ sugar.
 ## limits · 12s · extended
 
 **Heading:** What slows it down
-**Figure:** bars — Light 40, Carbon dioxide 30, Warmth 30
+**Figure:** bars — Light, Carbon dioxide, Warmth, as how much of each there is; one bar clearly
+the shortest and marked as the one that sets the pace. No numbers — the narration gives none
 
 Three things set the pace: how much light there is, how much carbon dioxide, and the
 temperature. Whichever is scarcest decides the speed, however much of the others there is.
@@ -110,7 +111,7 @@ temperature. Whichever is scarcest decides the speed, however much of the others
 ## respiration · 12s · extended
 
 **Heading:** Plants breathe too
-**Figure:** cycle — Oxygen in → Energy → Carbon dioxide out
+**Figure:** flow — Oxygen in → Energy → Carbon dioxide out
 
 Plants breathe as well. Day and night they also use oxygen and give off carbon dioxide. In
 daylight photosynthesis simply outpaces it, so the leaf gives out far more than it takes.
@@ -133,6 +134,6 @@ and everything else borrows it.
 
 ## recap · 3s · core
 
-**Figure:** cycle — Light → Sugar → Oxygen
+**Figure:** flow — Light → Sugar + Oxygen
 
 Light in, sugar and oxygen out.

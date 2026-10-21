@@ -3,6 +3,15 @@
 Verified against <https://brandguide.asu.edu/brand-elements/design/fonts> and
 <https://accessibility.asu.edu/articles/typography> on **2026-09-19**.
 
+## Contents
+
+- [Which font](#which-font) — Arial, and the two weights it has
+- [Sizes](#sizes) — the type scale, the 22px floor, and text inside a diagram
+- [Spacing — ASU's stated numbers](#spacing--asus-stated-numbers)
+- [Formatting restrictions](#formatting-restrictions)
+- [Contrast](#contrast)
+- [Resizing](#resizing)
+
 ## Which font
 
 **Use Arial.**
@@ -64,25 +73,47 @@ export const TYPE = {
   caption: 40,
 } as const;
 
-// NO figureLabel here. Text inside a diagram is drawn in viewBox units, not
-// pixels, so a number in this pixel scale is meaningless there and invites
-// exactly the mistake that shrank every label by 40% when the viewBox moved.
-// Figure text is FIGURE_TEXT in .agents/skills/building-scenes/reference/diagrams.md, derived from the
-// viewBox so the two cannot drift apart again.
-
+// The floor, in pixels of the rendered 1920x1080 frame. See "The floor" below.
+export const MIN_TEXT_PX = 22;
 ```
 
-**Nothing below 22px.** ASU gives no hard minimum, only that "small fonts are difficult to
-read for those with low vision and should be avoided" — 22px is the floor at which text stays
-readable when someone watches at quarter size.
-
-**Text inside a diagram is a separate matter.** Figures are drawn in viewBox units, and how
-those map to pixels depends on the viewBox. Do not reach into this scale for them — use
-`FIGURE_TEXT` from `.agents/skills/building-scenes/reference/diagrams.md`, which derives from the viewBox. A flat number
-here silently shrank every diagram label by 40% the last time the viewBox changed.
-
 Weights: **700** for titles, headings, captions and bullets. **400** for body text. Nothing
-else — see the weights note above.
+else — Arial ships only those two (see *Weights*, under *Which font*).
+
+### The floor
+
+**No text in the rendered frame is smaller than 22px.** This file is the one place that number
+is set; anything else that quotes it is quoting this. ASU gives no hard minimum, only that
+"small fonts are difficult to read for those with low vision and should be avoided" — 22px is
+the floor at which text stays readable when someone watches a 1920x1080 film at quarter size.
+It is this project's floor, not ASU's.
+
+It holds for every film, whichever style was chosen: it is an accessibility rule, not a brand
+one. An upright or square frame is read on a phone; `building-scenes` →
+`reference/upright.md` says what changes there. Nothing there goes below this floor.
+
+### Text inside a diagram
+
+**The floor is in rendered pixels, and SVG text is not.** A figure's `<text>` is sized in
+viewBox units, and one unit is one pixel only when the viewBox is exactly as wide as the box it
+renders into. Do not reach into `TYPE` for diagram labels, and do not write `22` as a viewBox
+font size — both are right for one viewBox and silently wrong for the next. A flat number shrank
+every diagram label in this project by 40% the last time the viewBox changed.
+
+Convert instead:
+
+```ts
+// Smallest font-size, in viewBox units, that renders at MIN_TEXT_PX.
+// renderedW/renderedH: the size in frame pixels of the box the <svg> fills.
+// With the default preserveAspectRatio ("meet") the smaller scale wins.
+export const minFigureText = (
+  viewBoxW: number, viewBoxH: number, renderedW: number, renderedH: number,
+) => MIN_TEXT_PX / Math.min(renderedW / viewBoxW, renderedH / viewBoxH);
+```
+
+A 1000-unit-wide viewBox drawn 1200px wide: one unit is 1.2px, so the smallest label is
+22 ÷ 1.2 ≈ 18.3 units. The same viewBox drawn 600px wide: one unit is 0.6px, so the smallest
+label is about 36.7 units. Shrinking a label to fit stops at this number, not at 22.
 
 ## Spacing — ASU's stated numbers
 

@@ -46,7 +46,7 @@ below it, in file order — nothing is squeezed, nothing is raced.
 **30 seconds is the floor.** Never go below it by cutting words out of `core`. If they ask for
 less, say 30 is the shortest this one goes — **do not offer to "cover one part of it"
 instead**, because no shorter version of this script exists and nothing says how to write one.
-The `building-a-video` skill step 2 has the wording.
+`building-a-video` → `reference/interview.md` step 1b has the wording.
 
 ## Two figures this pack needs that the other packs do not
 

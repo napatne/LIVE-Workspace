@@ -12,9 +12,10 @@
 //   - loopCount: 0, so nothing repeats past the end.
 
 import { spawnSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { BasicMIDI, SoundBankLoader, SpessaLog, SpessaSynthProcessor, SpessaSynthSequencer } from "spessasynth_core";
+import { DELIVERY_TRUE_PEAK_DB } from "../../lib/delivery.mjs";
 
 export const SAMPLE_RATE = 48000;
 const BLOCK = 128;
@@ -25,7 +26,9 @@ SpessaLog.infoEnabled = false;
 
 /**
  * Render a MIDI file to two Float32Arrays exactly `seconds` long, with `gain`
- * (a function of time, from lib/timeline.mjs → gainCurve) applied to every sample.
+ * (a function of time) applied to every sample. The build passes no gain here:
+ * the timeline's ducks and silences go on in level(), after the compressor, so
+ * the compressor cannot flatten them.
  */
 export const renderMidi = async ({ midi, seconds, soundfont, gain = () => 1, sampleRate = SAMPLE_RATE }) => {
   const bank = SoundBankLoader.fromArrayBuffer(readFileSync(soundfont).buffer);
@@ -94,35 +97,90 @@ export const writeFloatWav = (path, { left, right, sampleRate }) => {
   writeFileSync(path, Buffer.concat([header, data]));
 };
 
-const ffmpeg = (args) => {
+const ffmpeg = (args, { binary = false } = {}) => {
   console.log(`$ ffmpeg ${args.join(" ")}`);
-  const r = spawnSync("ffmpeg", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+  const r = spawnSync("ffmpeg", args, { encoding: binary ? "buffer" : "utf8", maxBuffer: 1024 * 1024 * 1024 });
   if (r.error?.code === "ENOENT") throw new Error("ffmpeg is not on PATH. A full system FFmpeg is required - see installing-the-toolchain.");
-  if (r.status !== 0) throw new Error(r.stderr.slice(-1500));
-  return r.stderr;
+  if (r.status !== 0) throw new Error(`${r.stderr}`.slice(-1500));
+  return binary ? r.stdout : r.stderr;
 };
 
 /**
  * Level the score to `lufs` and write it as 24-bit WAV for the film to play.
  *
- * A gentle compressor and a limiter go first. Without them, a score with a few
- * loud hits measures quiet overall, and bringing it up to level pushes those
- * hits into the limiter at the finishing step - about 4 dB of limiting on the
- * first score made this way.
+ * The order matters, and is: compress, then duck, then set the loudness.
+ *
+ * A gentle compressor and a limiter go first, on the music before any duck.
+ * Without them, a score with a few loud hits measures quiet overall, and
+ * bringing it up to level pushes those hits into the limiter at the finishing
+ * step - about 4 dB of limiting on the first score made this way.
+ *
+ * The ducks and silences (`gain`, from lib/timeline.mjs → gainCurve) go on
+ * after the compressor. Applied before it, the compressor reads a duck as the
+ * music getting quieter and turns it back up, so a duck comes out shallower
+ * than written.
+ *
+ * The loudness is then set with one fixed gain for the whole file and a peak
+ * limiter, not loudnorm. loudnorm asked for linear mode still falls back to
+ * its dynamic mode whenever the gain would push the true peak over the target
+ * - which it did on every score tried - and dynamic mode narrows ducks too.
+ * A fixed gain leaves the depth of every duck as written; the limiter touches
+ * only the peaks. Measured 2026-10-21 on the example score made 12 dB hotter,
+ * a duck written at -5 dB, against the music around it: -2.6 LU with ducks
+ * before the compressor, -4.7 LU with ducks after it but loudnorm still
+ * levelling, -5.0 LU as here.
+ *
+ * `input` is a 32-bit float WAV with no ducks in it; a second temporary file is
+ * written beside it and removed.
  */
-export const level = (input, output, lufs) => {
+export const level = (input, output, lufs, gain = () => 1) => {
   const chain = "acompressor=threshold=-20dB:ratio=2:attack=20:release=250:makeup=1,alimiter=limit=0.7:attack=3:release=80:level=disabled";
-  const measured = ffmpeg(["-hide_banner", "-nostats", "-i", input, "-af", `${chain},loudnorm=I=${lufs}:TP=-2:LRA=11:print_format=json`, "-f", "null", "-"]);
-  const m = JSON.parse(measured.slice(measured.lastIndexOf("{"), measured.lastIndexOf("}") + 1));
-  ffmpeg([
-    "-hide_banner", "-loglevel", "error", "-y", "-i", input,
-    "-af", `${chain},loudnorm=I=${lufs}:TP=-2:LRA=11:measured_I=${m.input_i}:measured_TP=${m.input_tp}:measured_LRA=${m.input_lra}:measured_thresh=${m.input_thresh}:offset=${m.target_offset}:linear=true,aresample=${SAMPLE_RATE}`,
-    "-c:a", "pcm_s24le", output,
-  ]);
-  const check = ffmpeg(["-hide_banner", "-nostats", "-i", output, "-af", "ebur128=peak=true:framelog=verbose", "-f", "null", "-"]);
-  const summary = check.slice(check.lastIndexOf("Summary:"));
-  return {
-    lufs: Number(summary.match(/I:\s+(-?[\d.]+) LUFS/)?.[1]),
-    truePeak: Number(summary.match(/Peak:\s+(-?[\d.]+) dBFS/)?.[1]),
+  // 1. Compress and limit the unducked music; read it back as raw float samples.
+  const pcm = ffmpeg(["-hide_banner", "-loglevel", "error", "-i", input, "-af", chain, "-ac", "2", "-ar", String(SAMPLE_RATE), "-f", "f32le", "-"], { binary: true });
+  const frames = Math.floor(pcm.length / 8);
+  const left = new Float32Array(frames);
+  const right = new Float32Array(frames);
+  // 2. Duck and silence, sample by sample.
+  for (let i = 0; i < frames; i++) {
+    const g = gain(i / SAMPLE_RATE);
+    left[i] = pcm.readFloatLE(i * 8) * g;
+    right[i] = pcm.readFloatLE(i * 8 + 4) * g;
+  }
+  const ducked = input.replace(/\.wav$/i, "") + "-ducked.wav";
+  writeFloatWav(ducked, { left, right, sampleRate: SAMPLE_RATE });
+  // 3. Loudness: one fixed gain to the target, and a limiter for the peaks it
+  // pushes up. Measured once, written, measured again, and corrected once if
+  // the limiter took the level off target.
+  const measure = (file) => {
+    const log = ffmpeg(["-hide_banner", "-nostats", "-i", file, "-af", "ebur128=peak=true:framelog=verbose", "-f", "null", "-"]);
+    const summary = log.slice(log.lastIndexOf("Summary:"));
+    return {
+      lufs: Number(summary.match(/I:\s+(-?[\d.]+) LUFS/)?.[1]),
+      truePeak: Number(summary.match(/Peak:\s+(-?[\d.]+|-inf) dBFS/)?.[1]),
+    };
   };
+  // A sample-peak ceiling 1 dB under the true-peak target, for the peaks
+  // between samples. latency=1 keeps the limiter from delaying the music.
+  const ceiling = (10 ** ((DELIVERY_TRUE_PEAK_DB - 1) / 20)).toFixed(4);
+  const write = (gainDb) =>
+    ffmpeg([
+      "-hide_banner", "-loglevel", "error", "-y", "-i", ducked,
+      "-af", `volume=${gainDb.toFixed(2)}dB,alimiter=limit=${ceiling}:attack=3:release=80:level=disabled:latency=1,aresample=${SAMPLE_RATE}`,
+      "-c:a", "pcm_s24le", output,
+    ]);
+  try {
+    const before = measure(ducked);
+    if (!Number.isFinite(before.lufs)) throw new Error("The score measured silent throughout - nothing to level.");
+    let gainDb = lufs - before.lufs;
+    write(gainDb);
+    let result = measure(output);
+    if (Math.abs(result.lufs - lufs) > 0.3) {
+      gainDb += lufs - result.lufs;
+      write(gainDb);
+      result = measure(output);
+    }
+    return result;
+  } finally {
+    rmSync(ducked, { force: true });
+  }
 };

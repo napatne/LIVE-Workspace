@@ -1,6 +1,6 @@
 ---
 name: choosing-a-visual-style
-description: Decides what a video looks like - palette, edges, motion, type and texture - from a catalogue of styles that can be made here, and writes that decision down as a style card an assistant can build to. Use when the look is undecided, when someone asks what styles are possible or says "you pick the style", when someone asks for brand or ASU compliance, when images generated separately do not look like they belong to one film, or before generating any asset at all.
+description: Decides what a video looks like - palette, edges, motion, type and texture - from a catalogue of styles that can be made here, and writes that decision down as a style card an assistant can build to. Use when the look is undecided, when someone asks what styles are possible or says "you pick the style", when someone wants their brand colours, ASU's look or brand compliance, when images generated separately do not look like they belong to one film, or before generating any asset at all.
 ---
 
 # Choosing a visual style
@@ -37,7 +37,7 @@ Ask. Do not infer the answer from their email domain, their institution, or the 
 | --- | --- | --- |
 | **They bring the look** | They have references, or a style in mind. They describe it; turn it into specifics | Most control, most of their time |
 | **Choose from three** | Given the subject, the audience and the story, propose three distinct styles that can be made here and recommend one | Choosing is easier than inventing, and they keep every veto |
-| **Brand compliance** | An institution's colours and typefaces settle most of it | Least decision. Read `asu-visual-style` for the ASU values |
+| **A brand — ASU's or theirs** | An institution's or organisation's colours and typefaces settle most of it | Least decision. For ASU, read `asu-visual-style` for the values. For their own, ask for their brand guide or a sample, and take the values from that rather than from memory |
 
 **The worked example's paper collage is one style, not the house style.** It is in this folder
 because one film was made in it. Offer it when it fits the subject, never by default.
@@ -62,9 +62,10 @@ brief as yours (`building-a-video` → `reference/decisions.md`). Then build the
 them **one still in that style** before anything else is drawn — a style chosen from a sentence is
 the easiest decision in the project to have got wrong.
 
-**If they did not ask for a brand, do not apply one.** An `asu.edu` address is not an instruction,
-and neither is the word "class" or "students". If something comes back maroon and gold unasked, a
-decision that was theirs has been made for them.
+**If they did not ask for a brand, do not apply one.** An `asu.edu` address is not an instruction —
+typed, or sitting in the session context — and neither is the word "class" or "students". If
+something comes back maroon and gold unasked, a decision that was theirs has been made for them.
+When there are ASU signals, offer ASU style as one option among the others and let them say yes.
 
 **Declining a brand does not decline the accessibility rules.** Readable contrast, captions, and
 describing what is on screen apply on all three routes. Those live in `asu-visual-style` too, in
@@ -147,7 +148,12 @@ read as one film. `creating-assets` uses it on every asset; the worked example k
 **Footage sets the frame rate.** If the video contains footage of any kind — filmed or generated —
 it arrives at some rate and that rate wins. Leave the frame rate open until the first motion test
 rather than choosing a number and then fighting the material. Where nothing constrains it, 30 is
-the default here.
+the default here. `working-with-footage` measures what a clip arrives as and covers bringing it in.
+
+**The frame's shape is not a style decision either.** Wide is the default; upright and square can
+be built. A style does not fix the shape, but a layout drawn for a wide frame does not survive
+being stood upright — `building-scenes` → `reference/upright.md` covers the upright and
+square frame.
 
 **Whether real people appear is decided before the look is.** A style built on written descriptions
 handed to an image generator, rather than on photographs, means no likeness of anyone is used
@@ -164,9 +170,16 @@ would.
 **Deciding to use no images is a style decision like any other**, and gets written down with the
 same five answers minus texture.
 
-One rule belongs with it: **no invented interfaces.** No pretend buttons, browser windows or
-features, even drawn ones. A film about a real tool that shows a made-up version of it is
-misrepresenting what the tool does.
+One rule belongs with it: **when a film depicts a real product or tool, do not invent its
+interface.** No pretend buttons, browser windows or features for it, even drawn ones. A film about
+a real tool that shows a made-up version of it is misrepresenting what the tool does — show the
+real thing, or describe it in words.
+
+That rule is about misrepresenting something real. **A generic drawn card, button or window that
+imitates no real product is allowed when it is the subject** — the email with a button in a
+phishing quiz, a form a lesson is about. Keep it plainly generic: no real product's name, logo,
+layout or colours. Write that choice into the style card, so the next scene does not wonder whether
+it broke a rule.
 
 ## The style card
 
@@ -226,6 +239,7 @@ adjusting the same value again.
 - [`reference/worked-examples.md`](reference/worked-examples.md) — three films, the style each one
   landed on, and what the choice cost.
 - `asu-visual-style` — ASU colour, typography, logo and accessibility, with every value cited and
-  dated. Read it before choosing any colour if the brand route was picked, and read its
+  dated. Read it before choosing any colour if ASU's brand was picked, and read its
   `accessibility.md` whichever route was picked.
+- `working-with-footage` — when the film is built from the person's own clips.
 - `creating-assets` — the next step, and where the style preamble gets used.

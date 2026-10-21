@@ -1,7 +1,7 @@
 # What goes wrong
 
 Making a video this way goes wrong constantly. That is the normal shape of the work, not a sign of
-doing it badly. The film in this repository is 70 seconds long and took seven working sessions,
+doing it badly. The film in this repository is about a minute long and took seven working sessions,
 four different target lengths, and one complete rejection of a finished cut.
 
 This is about expecting that, and about the habits that catch problems early rather than late.

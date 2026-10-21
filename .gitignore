@@ -28,3 +28,23 @@ out
 # fetched once per machine and checked against a pinned hash - kept out of every
 # clone's history.
 vendor/soundfonts/
+
+# Footage and recordings the person hands in. Raw material goes in
+# content/<project>/intake/ and the copies a scene uses are staged into
+# public/assets/<project>/footage/ - see the working-with-footage skill. Rights
+# mean this media does not travel in the repository: it belongs to whoever shot
+# or recorded it, and a clone that needs it gets it from the person, not from
+# Git. It is also large. Pictures and notes in intake/ are still tracked; only
+# video and audio are left out. Patterns are spelled case-blind because phones
+# write .MOV and .MP4, and Git matches case on macOS and Linux.
+content/*/intake/**/*.[mM][pP]4
+content/*/intake/**/*.[mM][oO][vV]
+content/*/intake/**/*.[mM]4[vV]
+content/*/intake/**/*.[mM][kK][vV]
+content/*/intake/**/*.[aA][vV][iI]
+content/*/intake/**/*.[wW][eE][bB][mM]
+content/*/intake/**/*.[wW][aA][vV]
+content/*/intake/**/*.[mM]4[aA]
+content/*/intake/**/*.[mM][pP]3
+content/*/intake/**/*.[aA][aA][cC]
+public/assets/*/footage/

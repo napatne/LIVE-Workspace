@@ -47,7 +47,47 @@ const { fontFamily: display } = loadArchivoBlack();
  * and just start from the hand entering with the storyboard"*. So the scene now
  * opens on bare paper with the hand already arriving, and the storyboard
  * document's scene 3 description is stale on this point.
+ *
+ * ---
+ * **Corrected 2026-10-21.** The heading's "195f", the "195 frames, not 263"
+ * paragraph and the four-row beat list describe the scene before it gained its
+ * second line and lost its ink lines, both on 2026-09-02. They are left
+ * standing as that record. The length is `LIVE_SCENE_THREE`, just below
+ * (`npx remotion compositions` reports it); the lines and their order are
+ * `NARRATIVE_ROWS` and `LINE_ROWS` in this file, and the marks now hover on
+ * the board instead of being joined to it by ink.
  */
+
+/**
+ * Scene 3's length — the single source for this scene and the master film.
+ * Moved here from `StyleTest.tsx` on 2026-10-21 so that every scene's length
+ * sits at the top of its own file; the value did not change.
+ *
+ * Scene 3's length — 195f, the storyboard's own figure.
+ *
+ * **Not rescaled 1.35×** like scenes 1 and 2, by director decision 2026-09-02
+ * when the scene 3 beat sheet was approved. The beats were designed to fit 195
+ * rather than the storyboard's beats being stretched into 263.
+ *
+ * **255 as of 2026-09-02, up from 195.** The scene gained a second line. The
+ * film is silent and carries no narration, so the director's note was that it
+ * has to say what is happening in words: `Build a narrative with your agents.`
+ * now precedes `Create your storyboard.`, because the narrative is the thing
+ * the agents are for and the board comes after it. The two never share the
+ * frame, so the scene has to be long enough to place one, hold it, take it
+ * away and place the other — 195 could not do that without either line being
+ * unreadable.
+ *
+ * The storyboard line itself is untouched: same slot, same size, same two rows.
+ * It arrives at f174 instead of f60 and holds to the end.
+ *
+ * **Corrected 2026-10-21.** The first sentence's "195f" is the length before
+ * the paragraph that follows it, not the length now. And the second line is no
+ * longer `Create your storyboard.`: it became `Then storyboard it.` the same
+ * day (see the comment on `LINE_ROWS`, and `script.md`). Its slot, size, two
+ * rows and its arrival at f174 (`LINE_IN`) are as described.
+ */
+export const LIVE_SCENE_THREE = 255;
 
 /** Content aspect of the two scene-3 pieces, from their measured boxes. */
 const SHEET_G = GEOMETRY["props/storyboard-sheet.png"];

@@ -1,17 +1,12 @@
 import { linearTiming, TransitionSeries } from "@remotion/transitions";
 import { Freeze, Sequence } from "remotion";
-import { SceneOne } from "./SceneOne";
-import { SceneTwo } from "./SceneTwo";
-import { SceneThree } from "./SceneThree";
+import { SceneOne, LIVE_SCENE_ONE } from "./SceneOne";
+import { SceneTwo, LIVE_SCENE_TWO } from "./SceneTwo";
+import { SceneThree, LIVE_SCENE_THREE } from "./SceneThree";
 import { SceneFour, SCENE_FOUR_DURATION } from "./SceneFour";
 import { SceneFive, SCENE_FIVE_DURATION } from "./SceneFive";
 import { SceneSix, SCENE_SIX_DURATION } from "./SceneSix";
-import {
-  LIVE_SCENE_ONE,
-  LIVE_SCENE_THREE,
-  LIVE_SCENE_TWO,
-  LIVE_SLAM,
-} from "./StyleTest";
+import { LIVE_SLAM } from "./StyleTest";
 import { paperBreath } from "./transitions/paperBreath";
 import { slateSlam } from "./transitions/slateSlam";
 
@@ -19,8 +14,8 @@ import { slateSlam } from "./transitions/slateSlam";
  * The LIVE showcase, end to end — `LiveShowcaseFilm`.
  *
  * Six scenes, five joins. Every scene composition stays registered on its own in
- * `Root.tsx` so it can still be reviewed and re-rendered alone; this is the
- * delivery composition.
+ * `Registrations.tsx` (imported by `Root.tsx`) so it can still be reviewed and
+ * re-rendered alone; this is the delivery composition.
  *
  * ---
  * ## Rebuilt 2026-09-02 after the first master pass
@@ -54,6 +49,10 @@ import { slateSlam } from "./transitions/slateSlam";
  * | 3 · storyboard | ink lines drawn f144-174 | f128 | **all three ink lines** |
  * | 4 · stitching | stitch lands f470 | f453 | the landing |
  * | 5 · silent era | applause f466-488, `Yay!!` f486 | f455 | **the payoff** |
+ *
+ * (Corrected 2026-10-21: in the current `SceneFour.tsx` the stitch lands at
+ * `STITCH_LANDED` = 440, not f470. Whether it was f470 at the first master pass
+ * is not recorded, so the row is left as written.)
  *
  * And on the incoming side the first 72 frames of every scene came up under
  * blur and frost: scene 2's title (f36) and all three agent marks (f68/82/96),
@@ -107,7 +106,9 @@ import { slateSlam } from "./transitions/slateSlam";
  * 2026-09-03**, when scene 2's pre-fusion hold lost 30 frames on a note about
  * the marks bobbing twice. That trim was made for the bounce, not for the
  * number; landing on the band's ceiling is a coincidence, not an achievement,
- * and the paragraphs below still stand.
+ * and the paragraphs below still stand. Those figures are a dated measurement;
+ * `npx remotion compositions` reports the current length of `LiveShowcaseFilm`
+ * (still 2101 frames on 2026-10-21).
  *
  * All of that second was scene 3, which gained a line the film cannot do
  * without: it is silent, and the director's instruction was that it therefore
@@ -193,10 +194,28 @@ const joinLength = (j: Join) =>
  * `head`/`tail` remove dead air. `holdIn`/`holdOut` give the join somewhere to
  * happen that is not on top of a beat — set them to the length of the adjoining
  * join and the join costs the film exactly its own length and buries nothing.
- * That is the whole repair described in the header.
+ * Longer than the join = a still hold before the join: the extra frames are the
+ * frozen frame on screen on its own, before the join starts over it. Shorter
+ * than the join = the join runs over live frames of the scene. That is the
+ * whole repair described in the header.
  *
  * Each scene's own first and last beat, so a trim can be checked against
  * something real rather than eyeballed. **No trim below crosses one of these.**
+ *
+ * The beats are named by the constants in each scene file, so the table cannot
+ * drift from the scene the way copied numbers did. The length is the
+ * `duration` in each row of `SCENES` below.
+ *
+ * | Scene | first beat | last beat |
+ * | --- | --- | --- |
+ * | 1 · the ask | `BLOCK_IN` the block | `HAND_IN` + ~22, the hand settled (see `LIVE_SCENE_ONE`) |
+ * | 2 · the team | `TITLE_IN` the question | `HEAD_FLIGHT_END` the face lands |
+ * | 3 · storyboard | `HAND_IN` the hand | `LINE_IN` + its settle, the storyboard line |
+ * | 4 · stitching | `SUPERB_HAND_IN` the hand | `STITCH_LANDED` the stitch lands, then `FILM_LINE_IN` |
+ * | 5 · silent era | `FILM_IN` the film plays | `CLAP_LANDED` the applause lands |
+ * | 6 · LIVE card | `CLOSING_LINE_IN` the line | `HOLD_START`, then a still card |
+ *
+ * **Corrected 2026-10-21.** This table used to copy the numbers:
  *
  * | Scene | len | first beat | last beat |
  * | --- | --- | --- | --- |
@@ -206,6 +225,10 @@ const joinLength = (j: Join) =>
  * | 4 · stitching | 520 | f50 | f470 stitch lands |
  * | 5 · silent era | 522 | f62 film plays | f488 applause lands |
  * | 6 · LIVE card | 450 | f50 line | f150, then a still card |
+ *
+ * Checked against the scene files that day, every figure matched except scene
+ * 4's last beat: `STITCH_LANDED` in `SceneFour.tsx` is 440, not 470. (Scene 3's
+ * f186 is `LINE_IN` 174 plus a settle that was not re-measured.)
  */
 type SceneSpec = {
   name: string;
@@ -283,6 +306,11 @@ const SCENES: SceneSpec[] = [
     head: 26,
     // Plays out. The stitch lands at f470 and sits for 50 frames before the
     // breath starts dissolving over it.
+    //
+    // Corrected 2026-10-21: the stitch lands at `STITCH_LANDED` (440 in
+    // SceneFour.tsx), `It's a film!` arrives at `FILM_LINE_IN` after it, and
+    // the scene plays to its own end; the breath dissolves over its last
+    // `LIVE_BREATH` frames.
   },
   {
     name: "Silent era",
@@ -322,7 +350,7 @@ const played = (s: SceneSpec) => body(s) + (s.holdIn ?? 0) + (s.holdOut ?? 0);
  * Sum of the played scenes, less the frames the joins overlap.
  *
  * Kept as a derived value rather than a literal so that re-timing above updates
- * `Root.tsx` too — the two must never disagree, and hand-syncing them is exactly
+ * the registration in `Registrations.tsx` too — the two must never disagree, and hand-syncing them is exactly
  * how a master composition ends up cutting off its own last frame.
  */
 export const LIVE_FILM_DURATION =

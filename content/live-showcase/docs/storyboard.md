@@ -1,6 +1,6 @@
 # Storyboard
 
-A 70-second silent paper-collage film whose subject is this repository. A person brings an idea and a
+A silent paper-collage film, about a minute long, whose subject is this repository. A person brings an idea and a
 storyboard; AI agents assemble it; the cut notices it has no sound; a finished film hands the work
 back to the viewer. The tool is a clapboard reading LIVE.
 
@@ -10,7 +10,7 @@ back to the viewer. The tool is a clapboard reading LIVE.
 | Audio | None. Text carries all meaning |
 | Safe margin | 140px |
 | Style | Paper cut-out collage — see [`assets.md`](assets.md) |
-| Length | 60–70 seconds |
+| Length | About a minute. `npx remotion compositions` reports the exact length |
 
 **No frame counts appear in this document.** Each scene's length lives in its own source file as a
 named constant, and `npx remotion compositions` prints the film's. A duration copied into prose is a
@@ -45,6 +45,11 @@ mounted live rather than captured as a still. The tool made this; here is this b
 
    Scene 6 is the exception, deliberately. It is a card rather than speech, it is static, and it
    holds for about fifteen seconds, so its text elements sit together.
+
+   *Amended 2026-10-21:* "about fifteen seconds" is the length of the scene's own composition,
+   `LiveShowcaseSceneSix`. In the film, `MasterFilm.tsx` trims the scene's head and tail, so it holds
+   for less; the master's scene table has the figures. The card is still static for most of its time
+   on screen, which is what the exception rests on.
 
 5. **The type is paper too.** Every line carries a paper-fibre texture and a slightly deckled edge —
    an SVG filter applied once in `PoppedWord.tsx`, not an asset. Set type on scanned torn paper reads
@@ -258,3 +263,16 @@ The film is built silent and the rules above give text all the meaning. A music 
 separate piece of work: `scripts/build-audio.mjs` is a per-cue trimmer and normaliser with no concept
 of a continuous bed, so scoring would mean generalising it or writing something new, plus sourcing a
 track.
+
+*Amended 2026-10-21:* that is no longer true of the workspace. The `scoring-music` skill and
+`scripts/score/` (`npm run score`) now write an original score against a film's own timeline, with
+no track to source. Scoring this film would still be new work: it needs the film's scene lengths in a
+timeline file the score can read, which this film does not have. The film stays silent by choice, not
+for want of a tool.
+
+## Corrections
+
+*2026-10-21:* the opening line said "A 70-second silent paper-collage film", and the format table's
+Length row said "60–70 seconds" — the band the director set on 2026-09-02. Both were replaced with
+"about a minute", because a duration in prose goes stale when the film is re-timed and nobody
+re-checks it. `npx remotion compositions` reports the length.

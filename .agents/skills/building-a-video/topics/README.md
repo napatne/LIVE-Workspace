@@ -182,7 +182,7 @@ option and then waits through a full build — worse than not offering it at all
 
 - **A pack's script is pre-approved *as content*, and the agent never rewrites it during a
   session.** That is the entire point of a pack.
-  **This does not mean skipping the interview's step 6.** the `building-a-video` skill requires showing the words to
+  **This does not mean skipping the story gate at step 3.** The `building-a-video` skill requires showing the words to
   the person and getting a go-ahead *every time, including topics 1–3* — they have never seen
   this script, however settled it is on our side. Pre-approved means **we** are not
   re-litigating the wording; it does not mean **they** do not get to read it. An earlier
@@ -198,8 +198,16 @@ option and then waits through a full build — worse than not offering it at all
   put the specific clash to the person — the figure, the words, and the change you would
   make — and let them decide. Ship it as written only if they say so, and record it.
 
-  > The live example is `photosynthesis.md`'s `scale` section: the bar chart shows *Ocean
-  > plankton 50, Forests 30, Grassland 20* and the narration states none of the 30, the 20 or
-  > "Grassland". Two separate cold runs each found it and each correctly refused to resolve it
-  > alone. It is still open — the fix is a pack edit, which belongs to the team, not to a
-  > session.
+  > **The photosynthesis case is closed (pack edit, 2026-10-21).** Its `scale` bars showed
+  > *Ocean plankton 50, Forests 30, Grassland 20*, and the narration states none of the 30, the
+  > 20 or "Grassland"; two cold runs each found it and correctly refused to resolve it alone.
+  > The team changed the figure, not the words: the bars are now *Sea ≈ half, Land ≈ half*,
+  > which the narration's "half the world's oxygen comes from the sea" states. In the same edit,
+  > `limits` lost its *Light 40, Carbon dioxide 30, Warmth 30* — numbers the narration never
+  > gives and that mean nothing as shares — for unnumbered bars with the scarcest marked, which
+  > is what the narration says; and `reaction`, `respiration` and `recap` became flows, because
+  > a cycle claims the last step leads back to the first (oxygen does not make sunlight).
+  >
+  > **Still open:** `colour-theory.md`'s `practice` bars, *Contrast 40, Meaning 35,
+  > Consistency 25* — the narration gives no numbers and never says "consistency". Put it to
+  > the person if they choose the 120-second version, as above, until the team edits the pack.

@@ -9,6 +9,7 @@ the person has chosen.
 - [How to use this](#how-to-use-this)
 - [Drawn entirely in code](#drawn-entirely-in-code) — free, and changeable to the last minute
 - [Built around pictures](#built-around-pictures) — needs generated or supplied stills
+- [Built around footage](#built-around-footage) — the person's own clips, with overlays drawn in code
 - [Adding a style](#adding-a-style)
 
 ## How to use this
@@ -118,6 +119,20 @@ a desk, a wall, a board.
   (`creating-assets`).
 - *Sound:* room tone; the foley of the surface (pins, tape, paper); whatever the story's world
   sounds like.
+
+## Built around footage
+
+**Live footage with overlays.** The person's own clips carry the picture; code draws the titles,
+name bars, labels and any graphics over and between them. This is a route more than a look — the
+overlays still need a style from the lists above, and no film card exists for it yet.
+
+- *Good for:* an event, a place, a talk, a demonstration someone filmed.
+- *Built with:* their clips, brought in through `working-with-footage`, which measures each one's
+  length, frame rate and shape first; code-drawn overlays.
+- *Watch for:* every word over the picture needs its own opaque panel, and every clip needs a check
+  for flashing (`asu-visual-style` → `accessibility.md`); the footage sets the frame rate; an
+  upright phone clip in a wide frame, or the reverse (`building-scenes` → `reference/upright.md`).
+- *Sound:* the clips' own sound first; music only if they want it over or instead.
 
 ## Adding a style
 

@@ -2,12 +2,22 @@
 
 How a script becomes a timeline, and how one script serves any requested length.
 
-> **Speaking rate: about 100 wpm, not 150.** The 150 wpm in the topic-pack README is a
-> *writing budget* for fitting words to a section. Measured against this project's own shipped
-> narration the real delivered rate is **~100 wpm** (95 counting allotted clip time, ~107
-> counting pure speech). A cold agent computed a script's spoken length at 150 and concluded a
-> 45-second video would be two-thirds silence; at the measured rate it was not. **Use 100 wpm
-> whenever you are reasoning about how long something will actually sound.**
+**These are patterns to write per film, not code that exists.** `shared/types.ts`,
+`shared/plan.ts`, `planSections`, `useTheme`, `TitleCard` and `SectionScene` are not in `src/` —
+nothing below can be imported. Write the pieces this film needs, in the film's own folder
+(`src/<film>/`). Earlier builds that followed these files wrote 1,100–1,400 lines before their
+first frame. The one piece of shared timing code that does exist is `src/lib/timeline.mjs`, for
+films with a score — see
+[A scored film reads its lengths from the timeline](#a-scored-film-reads-its-lengths-from-the-timeline).
+
+> **Speaking rate: measure the voice you have.** The 150 wpm in the topic-pack README is a
+> *writing budget* for fitting words to a section, not a speaking rate. The one text-to-speech
+> voice this project measured delivered about **100 wpm** (95 counting allotted clip time, ~107
+> counting pure speech). That is one voice's rate, not a rule — a different voice, or a person
+> reading, will differ. A cold agent computed a script's spoken length at 150 and concluded a
+> 45-second video would be two-thirds silence; at the measured rate it was not. **Reason about
+> how long something will sound from the measured rate of the voice actually being used**, and
+> measure it from the first generated or recorded line.
 
 ## Contents
 
@@ -15,11 +25,12 @@ How a script becomes a timeline, and how one script serves any requested length.
 - [The three versions](#the-three-versions) — tiers, and what plays at each length
 - [Turning that into frames](#turning-that-into-frames) — `planSections`, scale, dropped sections
 - [Deriving the duration](#deriving-the-duration) — `calculateMetadata`, never a typed total
+- [A scored film reads its lengths from the timeline](#a-scored-film-reads-its-lengths-from-the-timeline)
 - [The contracts between the shared pieces](#the-contracts-between-the-shared-pieces)
 - [Assembling](#assembling)
 - [Laying out a section](#laying-out-a-section) — what any layout must prove
 - [The title card](#the-title-card) · [One thing not to "fix"](#one-thing-not-to-fix) · [The end card](#the-end-card)
-- [No voice means no audio track](#no-voice-means-no-audio-track)
+- [No audio at all means no audio track](#no-audio-at-all-means-no-audio-track)
 - [Motion](#motion)
 
 **Timing and tier arithmetic here are utilities to call. Layout and motion are yours to
@@ -29,12 +40,13 @@ decide per video** — this file says what a layout has to satisfy, never what i
 
 Write `sections.ts` first. Everything else derives from it.
 
-**These types live in `shared/types.ts`, not in a topic folder.** `shared/plan.ts` consumes a
-`Section`, so a topic-local declaration would force explainer two to import out of explainer
-one — the exact drift `shared/` exists to prevent.
+**Put these types beside the planner that consumes them, not inside one topic's script.** With
+one explainer, that is the film's own `shared/types.ts`. When a second explainer wants the same
+planner, move both up to `src/shared/` — otherwise explainer two imports out of explainer one,
+which is the drift a shared folder exists to prevent. Neither folder exists until you write it.
 
 ```ts
-// shared/types.ts
+// shared/types.ts — to be written; not in src/
 export type Tier = "core" | "standard" | "extended";
 
 /**
@@ -72,10 +84,10 @@ export type Section = {
   tier: Tier;
   seconds: number;
   heading?: string;
-  /** Spoken and shown as the caption. Exactly the words approved at the interview's step 6. */
+  /** Spoken and shown as the caption. Exactly the words the person approved in the script. */
   narration: string;
   /**
-   * The silent-with-no-captions case only (workflow step 3, "no" to words on
+   * The silent-with-no-captions case only (no voice, and "no" to words on
    * screen). Two or three words per entry — the labels that appear instead of
    * the sentence. `narration` still holds the approved sentence as the record
    * of what the beat means, but with captions off nothing renders it.
@@ -91,7 +103,7 @@ export type Section = {
 > when captions are off, and the only other candidate — `bullets` — is described in this same
 > file as unproven and means something else. The branch was reachable from the workflow before
 > anything could carry it. **Do not overload `narration` with phrases**; the approved sentence
-> has to survive somewhere, because it is what the person agreed to at the interview's step 6.
+> has to survive somewhere, because it is what the person agreed to when they approved the script.
 
 > **`bullets` without a `figure` leaves a hole, and the types will not stop you.** Both fields
 > are optional and independent, so a section carrying only bullets compiles, lints, and renders
@@ -152,8 +164,7 @@ whole sections at their written pace, so nothing is raced and no sentence is del
 30-second version slowed; 90 seconds is the 60-second version slowed.
 
 **30 seconds is the floor.** Below it, fitting the length means racing the narration or
-deleting sentences. The `building-a-video` skill step 2 tells the agent to offer something honest
-instead.
+deleting sentences. `building-a-video` tells the agent to offer something honest instead.
 
 ### Writing your own script to these tiers
 
@@ -220,8 +231,8 @@ const versionFor = (targetSeconds: number): Tier[] => {
  */
 const FLOOR_SECONDS = 30;
 
-// shared/plan.ts — takes `sections` as a PARAMETER. It cannot close over a
-// topic's SECTIONS constant, because it lives in shared/ and serves every topic.
+// shared/plan.ts (to be written) — takes `sections` as a PARAMETER. It cannot
+// close over a topic's SECTIONS constant, because it serves every topic.
 export const planSections = (sections: Section[], rawTargetSeconds = 60) => {
   const targetSeconds = Math.max(FLOOR_SECONDS, rawTargetSeconds);
   const tiers = versionFor(targetSeconds);
@@ -266,7 +277,7 @@ export const planSections = (sections: Section[], rawTargetSeconds = 60) => {
 };
 ```
 
-**Tell the person which sections were dropped**, at the interview's step 6 when you show the script — not
+**Tell the person which sections were dropped** when you show them the script — not
 sprung on them at delivery.
 
 ### The clamp can break the promise
@@ -305,24 +316,31 @@ export const calculateMetadata: CalculateMetadataFunction<Props> = ({ props }) =
 ```
 
 ```tsx
+// src/<film>/Registrations.tsx — Root.tsx imports this file and places it.
+// WIDTH, HEIGHT and FPS are this film's constants, set from the shape the brief
+// recorded (16:9 1920×1080, 9:16 1080×1920, square 1080×1080). Never type them here.
 <Composition
-  id="Explainer-photosynthesis"
+  id="Photosynthesis"
   component={PhotosynthesisVideo}
   calculateMetadata={calculateMetadata}
-  defaultProps={{ targetSeconds: 60, captions: true, theme: "asu" as const }}
+  defaultProps={{ targetSeconds: 60, captions: true, theme: THEME_CHOICE }}
   durationInFrames={1800}   // placeholder; calculateMetadata overrides it
-  fps={30}
-  width={1920}
-  height={1080}
+  fps={FPS}
+  width={WIDTH}
+  height={HEIGHT}
 />
 ```
 
-**`as const` on the theme matters.** Under `strict`, a bare `theme: "asu"` widens to `string`
+`THEME_CHOICE` is whatever the style card produced — a theme object built from the card, or
+`"asu" as const` only when the person chose the ASU brand. **The brand is opt-in**; nothing here
+defaults to it.
+
+**`as const` on a theme name matters.** Under `strict`, a bare `theme: "asu"` widens to `string`
 and will not narrow to the theme union — a compile error the example otherwise walks you into.
 
-**This matters.** The older per-film compositions in `Root.tsx` carry hand-typed durations that
-must be kept in step with the code by hand, and `AGENTS.md` flags that as a live trap. Do not
-add another one.
+**This matters.** A hand-typed `durationInFrames` has to be kept in step with the code by hand,
+and the two drifting is how a composition cuts off its own last frame. Import or derive every
+length; never type one.
 
 **Verify it before rendering — but not the way that looks obvious:**
 
@@ -341,10 +359,50 @@ npx remotion compositions --props='{"targetSeconds":30}'   # must print 900, not
 If that still prints 1800, `calculateMetadata` is not wired up and every length the person
 asks for will be ignored.
 
+## A scored film reads its lengths from the timeline
+
+`planSections` returns frames in memory. **The score cannot read memory.** It reads one JSON file,
+`src/<film>/timeline.json`, through `src/lib/timeline.mjs` — the one piece of shared timing code
+that exists in `src/`. So a film with music keeps its section lengths, transitions, hit points,
+ducks and silences in that file, and **the scenes read their lengths from it too.** One number
+per length, read by both sides; typed in a scene as well, picture and music drift apart and the
+music lands late on every cut after the first change.
+
+```tsx
+import timelineJson from "./timeline.json";
+import { resolveTimeline } from "../lib/timeline.mjs";
+
+export const TIMELINE = resolveTimeline(timelineJson);
+// In Registrations.tsx: durationInFrames={TIMELINE.total}
+// In the master:        <Sequence durationInFrames={TIMELINE.frames("theme")}> …
+// In a scene:           const TURN = TIMELINE.local("turn", "theme"); // a hit, in the scene's own frames
+```
+
+Rules that come with it:
+
+- **The timeline replaces per-scene length constants; it does not sit beside them.** A scene
+  that declares its own number and also appears in the timeline has two lengths.
+- **No section or hit is named `end`.** `end` means one past the last frame of the film, and the
+  resolver refuses the name.
+- **No name ends in a hyphen and digits** (`scene-2`, `beat-10`). `-2` reads as an offset of two
+  frames, so the resolver refuses those too. Use `scene-two`, `close`, `title-card`. Names hold
+  only letters, digits, `_` and `-`, and a hit cannot share a section's name.
+- **One person edits `timeline.json` at a time.** Every scene and the score read it, so it is a
+  shared file in the same sense as the theme.
+- **A tiered explainer with a score** writes the planner's result into the timeline: run
+  `planSections` for the length the person chose, write each kept section's frames into
+  `timeline.json`, and build from the file. Changing the length then means regenerating the
+  file and rebuilding the score, not changing a prop.
+
+The full shape of the file, the position grammar (`"theme+144"`, `"theme.end"`) and the
+transitions are in `scoring-music` → `reference/writing-a-score.md`. A film with no music
+does not need a timeline.
+
 ## The contracts between the shared pieces
 
-**Two agents building two explainers must produce the same signatures**, or `shared/` stops
-being shared. These are the ones that were being invented:
+**Two agents building two explainers must produce the same signatures**, or a shared folder
+stops being shared. None of these exists in `src/` yet; they are the ones that were being
+invented, so write them to these shapes:
 
 > **Resolve `theme` once, at the top of the video component**, and put the result in the context:
 > `const theme = typeof t === "string" ? THEMES[t] : t;`. Everything downstream reads a `Theme`
@@ -359,13 +417,12 @@ being shared. These are the ones that were being invented:
 export type ThemeName = "asu" | "neutral";
 
 /**
- * Step 5 option 3 lets the person describe a look in their own words, so the
- * theme prop has to accept more than the two shipped names. A Theme object is
- * a valid value; `THEMES[name]` only runs for the string form.
+ * Most looks come from a style card, not from a shipped name, so the theme
+ * prop has to accept more than the two names. A Theme object is a valid value
+ * — and the usual one; `THEMES[name]` only runs for the string form.
  *
- * Without this, "you tell me the style" is a question the build cannot answer.
- * A cold run picked option 3, described a dark neon look, and found there was
- * no way to pass it.
+ * Without this, a described look is one the build cannot take. A cold run
+ * described a dark neon look and found there was no way to pass it.
  */
 import type { Theme } from "./theme";   // defined in asu-visual-style/starter-theme.md
 
@@ -409,7 +466,7 @@ export const FigureView: React.FC<{
 }> = ({ ... }) => ...
 
 // <video>/figures/Gallery.tsx - every figure this video uses, full frame,
-// one after another. A review tool; see step 7.
+// one after another. A review tool; explainer-architecture.md, build step 7.
 export const FigureGallery: React.FC<{ ... }> = ({ ... }) => ...
 ```
 
@@ -426,10 +483,18 @@ it costs nothing.
 ## Assembling
 
 ```tsx
-<AbsoluteFill style={{ backgroundColor: THEME.background, fontFamily: ASU_FONT }}>
-  <Sequence name="Title" durationInFrames={titleFrames} layout="none">
-    <TitleCard title={TITLE} subtitle={SUBTITLE} />
-  </Sequence>
+import { AbsoluteFill, Sequence, staticFile } from "remotion";
+import { Audio } from "@remotion/media";
+// TitleCard and SectionScene are this film's own components — written per
+// video, from its style card. FONT is the family the style card names, loaded
+// once (Arial only when the ASU brand was chosen).
+
+<AbsoluteFill style={{ backgroundColor: theme.background, fontFamily: FONT }}>
+  {titleFrames > 0 ? (
+    <Sequence name="Title" durationInFrames={titleFrames} layout="none">
+      <TitleCard title={TITLE} subtitle={SUBTITLE} />
+    </Sequence>
+  ) : null}
 
   {planned.map(({ section, from, durationInFrames }) => (
     <Sequence
@@ -440,11 +505,16 @@ it costs nothing.
       layout="none"
     >
       <SectionScene section={section} durationInFrames={durationInFrames} />
-      {audio?.[section.id] ? <Audio src={staticFile(audio[section.id])} /> : null}
+      {audio?.[section.id] ? <Audio src={staticFile(audio[section.id].src)} /> : null}
     </Sequence>
   ))}
 </AbsoluteFill>
 ```
+
+`<Audio>` comes from `@remotion/media`, which is in `package.json` and is what the vendored
+Remotion guidance (`remotion-markup/audio.md`) recommends. The `remotion` package also exports
+an `Audio`; use the `@remotion/media` one. How a clip is trimmed and placed is
+`adding-narration`'s business.
 
 Three things that are easy to get wrong:
 
@@ -468,46 +538,62 @@ videos were identical apart from their words.
 | | |
 | --- | --- |
 | Nothing overlaps the caption | A tall figure must stop above it, not run under it |
-| Nothing meaningful sits outside the safe margin | Labels anchored at an edge are the usual offender |
+| Nothing meaningful sits outside the safe margin | Labels anchored at an edge are the usual offender. Upright and square: the platform safe box in [upright.md](upright.md) |
 | Text clears its background at 4.5:1, meaningful shapes at 3:1 | Computed against what is *actually* behind them |
 | The figure fills the space it is given | A shape sized for a different frame reads as a small island |
 | Positions are derived, not typed twice | Same rule as durations — two numbers that must agree, calculate one |
 
-**One arrangement that satisfies all of that**, from the worked explainer — a heading top-left,
-the figure centred in the space between heading and caption, the caption band across the
-bottom. Its one non-obvious number: **when captions are on, the figure area has to stop about
+**One arrangement that satisfies all of that**, from an earlier 1920×1080 explainer — a heading
+top-left, the figure centred in the space between heading and caption, the caption band across
+the bottom. Its one non-obvious number: **when captions are on, the figure area has to stop about
 190px from the bottom rather than 120px**, or a tall diagram runs underneath the caption panel.
+That number is for that wide frame; an upright frame's caption sits above the platform's own UI
+([upright.md](upright.md)).
 
 **Take that as evidence the constraints are satisfiable, not as the arrangement to use.** A
 figure can be full-bleed with the caption over it, the picture can sit beside the text rather
 than above it, a scene can carry no caption band at all. What cannot change is the column on
 the right of the table above.
 
-**`bullets` take a 110px row** directly under the figure area, centred, at `TYPE.bullet` in
-`inkSoft`. **Separate them with a visible divider, not just a gap** — at 40px two bullets read
-as one run-on line ("68% within one   95% within two"). Use a `·` in `gray4` between them, or
+**`bullets` take a 110px row** directly under the figure area, centred, in the video's secondary
+text colour. **Separate them with a visible divider, not just a gap** — at 40px two bullets read
+as one run-on line ("68% within one   95% within two"). Use a `·` in a quiet colour between them, or
 at least 120px of space. Three or fewer, and the figure area shrinks
 by that much when they are present. No shipped script uses them, so treat this as the
 specification rather than something proven.
 
 ## The title card
 
-Every explainer opens with one, for **3 seconds**:
+**Optional, and designed per video.** Whether a film opens on a title at all, and what that
+title looks like, comes from the story and the style card — not from this file. Many films are
+better opening straight on their first picture.
 
-- Title in `ink`, 104px, **weight 700**, centred. **Not 900** — Arial has 400 and 700 only,
-  and anything else is synthesised into a smeared approximation. See
-  `asu-visual-style/typography.md`.
-- **A gold rule sweeping out underneath it** — about 460px wide, 10px tall, fully rounded.
-  This is the one motif carried across every video in the series; keep it.
-- Subtitle below in `inkSoft`, 44px, if there is one.
+The tier arithmetic budgets 3 seconds for a title because the shipped topic scripts do. A film
+without one sets `TITLE_SECONDS` to 0 and gives the time to the sections — say so if it moves the
+length the person asked for.
+
+When there is one, what holds whatever it looks like:
+
+- **Weights the font actually has.** Arial ships 400 and 700 only; anything else is
+  synthesised into a smeared approximation. Other families differ — load the weight you use.
+  `asu-visual-style/typography.md` has the detail.
+- **Contrast and the type floor** from `asu-visual-style` apply, whichever style was chosen.
+- **Inside the safe area of the frame actually being used** — on an upright film that is the
+  platform safe box in [upright.md](upright.md), not the middle of the frame.
+
+An earlier version of this section fixed a 104px Arial title over a gold rule and called it "the
+one motif carried across every video in the series". That was one series' house look, carried
+into every style; it is gone on purpose.
 
 ## One thing not to "fix"
 
 `tsconfig.json` sets `lib: ["es2015"]`, and the planner above uses `Array.prototype.includes`,
-which is ES2016. **It compiles fine here** — the transitive types widen the lib. Verified by
-building against it, not assumed.
+which is ES2016. When an earlier build wrote that planner, **it compiled fine** — the transitive
+types widen the lib. The planner is not in `src/` now, so this has not been re-checked since.
 
-Do not rewrite it as `indexOf` to pre-empt an error that does not happen.
+If you write it, run `npx tsc --noEmit` and believe the result. Do not rewrite `includes` as
+`indexOf` to pre-empt an error that may not happen; change it only if `tsc` actually reports
+one.
 
 ## The end card
 
@@ -542,27 +628,35 @@ When you do add one:
   Return `endCardFrom` and `endCardFrames` alongside the rest so the composition can place it.
 - **Same background** as everything else. Nothing else on it but the thing it is carrying.
 - **If it holds a logo**, its isolation zone is the whole point of using an end card — nothing
-  else competes, so the rule satisfies itself. Half the sunburst's height clear on all four
-  sides.
+  else competes, so the rule satisfies itself. For the ASU mark, half the sunburst's height
+  clear on all four sides (`asu-visual-style/logo.md`); another organisation's logo has its own
+  rule.
 - **Fade in over 10–12 frames and hold.** Do not animate the logo's shape.
 - Because it comes out of the same budget, a 60-second video with an end card is still 60
   seconds — the sections give up 2s between them. Nothing to warn the person about.
 
-## No voice means no audio track
+## No audio at all means no audio track
 
-Remotion adds a **silent stereo AAC track by default**. On a 60-second video that is about
-2.4MB of a 4.0MB file — 60% of the deliverable is silence — and it pushes the container
-duration to 60.053s, which quietly breaks the exact-length guarantee everything above works to
-establish.
+Remotion adds a **silent stereo AAC track by default** when a film has no sound. On a 60-second
+video that was about 2.4MB of a 4.0MB file — 60% of the deliverable silence — and it pushed the
+container duration to 60.053s, which quietly breaks the exact-length guarantee everything above
+works to establish.
 
-**If the person said no to a voice, render muted:**
+**Render muted only when the film has no audio at all: no voice, no music, no sound effects,
+no sound from footage.**
 
 ```bash
 npx remotion render <Id> out/<slug>.mp4 --muted
 ```
 
-Measured on a real build: 4.0MB with the silent track, **1.6MB muted**, and the container
-duration lands on exactly 60.000000s instead of 60.053333s.
+**No voice is not the same as no audio.** A film without narration usually has a score, and
+`--muted` drops it from the file without a warning — the render succeeds and the music is simply
+gone. **A film with a score, effects or clip sound must never be rendered muted.** Check the
+brief's music and sound decisions before adding the flag, and run `check-render` afterwards: it
+reports whether an audio stream is present.
+
+Measured on a real build with no sound of any kind: 4.0MB with the silent track, **1.6MB
+muted**, and the container duration landed on exactly 60.000000s instead of 60.053333s.
 
 ## Motion
 

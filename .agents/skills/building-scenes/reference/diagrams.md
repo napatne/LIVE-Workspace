@@ -38,7 +38,7 @@ So, plainly:
 | Decided per video, by the person | Fixed, and not yours to trade away |
 | --- | --- |
 | Palette and what each colour means | Contrast ratios and the accessibility floor |
-| Edges — sharp, soft, torn, hand-drawn | Text never below 22px |
+| Edges — sharp, soft, torn, hand-drawn | Text never below the floor in `asu-visual-style/typography.md`, in rendered pixels |
 | Motion — slide, snap, stepped, drawn | Nothing meaning-bearing carried by colour alone |
 | Texture — flat, grain, paper, print | The narration states what the figure shows |
 | Whether a figure is a box, a scene, a photograph of a thing, or a word | Nothing flashing more than three times a second |
@@ -91,7 +91,7 @@ that have nothing to do with ASU** — they are not brand rules, they are the fl
 | Text on its background clears **4.5:1** | Compute it. Do not eyeball it |
 | A line or shape that *carries meaning* clears **3:1** against what is behind it | Compute it |
 | Nothing meaning-bearing is carried by colour alone | Remove the colour and check it still reads |
-| Text is never below **22px** | The floor in `asu-visual-style/typography.md` |
+| Text is never below **22px in the rendered frame** | `asu-visual-style/typography.md` → *The floor* sets it. SVG text is in viewBox units: convert with `minFigureText` there — 22 units is 22px only when the viewBox is as wide as its box |
 | Nothing flashes more than three times a second | Draw-then-hold satisfies this naturally |
 | A quantity is never encoded only as a length | Put the number on the bar, and reserve room for it |
 | The narration states what the figure shows | Read the script with the pictures removed. If something is lost, the script is wrong |
@@ -116,12 +116,18 @@ bands.
 ### Fitting a label
 
 **Wrap first, then shrink, then wrap again** — a smaller size fits more words per line, so the
-first wrap is stale once the size has dropped. Never shrink below 22.
+first wrap is stale once the size has dropped. Never shrink below the floor converted to viewBox
+units (`minFigureText` in `asu-visual-style/typography.md`). A floor written as a bare number in
+viewBox units is right for one viewBox and wrong for the next.
+
+`wrapLines`, `fitSize` and `measure` are helpers you write; they are not in `src/`.
 
 ```tsx
-export const layoutLabel = (text: string, maxWidth: number, start: number) => {
+export const layoutLabel = (
+  text: string, maxWidth: number, start: number, floor: number, // floor: viewBox units
+) => {
   let lines = wrapLines(text, maxWidth, start);
-  const size = fitSize(lines, maxWidth, start);      // floors at 22
+  const size = fitSize(lines, maxWidth, start, floor); // floors at minFigureText(...), not at 22
   if (size !== start) lines = wrapLines(text, maxWidth, size);
   return { lines, size };
 };
@@ -238,6 +244,11 @@ reading as a floating triangle.
 
 **A circle in a wide frame is a small island.** In anything near 2:1, a shape constrained by the
 height leaves a third of the width empty on each side. Use two radii, one per axis.
+
+**In an upright frame the same trap turns over.** A shape constrained by the width leaves the
+height empty above and below it, and a flow laid left to right gets steps too narrow for their
+labels. Run sequences top to bottom, stack comparisons, and size the figure to the platform's
+safe box rather than the frame — [upright.md](upright.md) has the box and the rest.
 
 **Odd counts around a ring leave a gap, and rotating to "fix" it just moves the gap.** An
 earlier version of this file said to offset odd counts by half a step; rendered side by side
@@ -360,8 +371,10 @@ obvious in a still, roughly by how often they happen:
 
 Draw what the explanation actually needs. Then decide where it lives:
 
-- **Something any subject could want** — put it with the other shared pieces so the next video
-  can use it.
+- **Something any subject could want** — once a second video wants it, put it in a shared
+  folder (`src/shared/`, created then) so both can use it. Only arithmetic and measurement
+  belong there; a figure that draws stays with a video unless someone has decided on a house
+  style.
 - **Something that only means anything for this subject** — keep it in the video's own folder
   and pass it in, so the shared pieces never import from one topic.
 

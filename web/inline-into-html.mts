@@ -1,14 +1,21 @@
-import type { Plugin } from "vite";
+import type { BuildOptions, Plugin } from "vite";
+
+type OnWarn = NonNullable<NonNullable<BuildOptions["rollupOptions"]>["onwarn"]>;
 
 /**
  * Build an interactive page as ONE html file that opens without a server.
  *
  * Chrome refuses to load a `<script type="module">` from a `file://` address,
- * and a page that cannot be opened by double-clicking cannot be emailed, zipped
- * or dropped in a shared folder. So the build is a single classic script,
- * inlined into `index.html`, with relative paths - one file, no server, no
- * network. Edge and Chrome behave the same here; check Safari and Firefox
- * before promising them.
+ * and a page that cannot be opened by double-clicking cannot be zipped, put on
+ * a shared drive or copied to someone's machine. So the build is a single
+ * classic script, inlined into `index.html`, with relative paths - one file, no
+ * server, no network. Edge and Chrome behave the same here; check Safari and
+ * Firefox before promising them.
+ *
+ * Sending it by email is a different matter: many mail systems block or strip
+ * `.html` attachments. Zip the hand-out folder before mailing it, and say that
+ * it may still be blocked. Whether a learning platform serves an uploaded page
+ * with its script running, rather than as a download, has not been tried.
  *
  * Every interactive page's vite.config.mts uses this; copy web/interactive-demo/
  * to start one.
@@ -53,5 +60,15 @@ export const singleFileBuild = (outDir: string) => ({
   modulePreload: false as const,
   cssCodeSplit: false,
   assetsInlineLimit: 100_000_000,
-  rollupOptions: { output: { format: "iife" as const, inlineDynamicImports: true } },
+  rollupOptions: {
+    // An iife bundle is never split, so it is one chunk to inline.
+    output: { format: "iife" as const },
+    // @remotion/player starts with "use client", a directive for React server
+    // frameworks that means nothing in a page with no server. The bundler warns
+    // that it drops it; only that warning is silenced, every other one shows.
+    onwarn: ((warning, warn) => {
+      if (warning.code === "MODULE_LEVEL_DIRECTIVE") return;
+      warn(warning);
+    }) satisfies OnWarn,
+  },
 });

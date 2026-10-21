@@ -25,6 +25,20 @@ its frame to `holdAt` until there is an answer (`Math.min(frame, HOLD)` in the d
 **A jump over a detour pops.** *Fix:* every segment fades in and out over a few frames, so the seek
 lands on a fade, not a cut.
 
+**Then a picture held across segments blinks at every join.** A film that keeps one thing on screen
+through a question, its detour and what follows — an email being examined, a form being filled —
+fades that thing out and back in at each edge if every segment fades whole. *Fix:* fade only what
+changes, and keep the held picture still. The segment after a detour cannot know from its own frames
+whether the detour played, so it reads `useAnswers()` and sets its starting state from the answer:
+the marks the detour added already on after one answer, brought in after the other. Watch both
+paths across that join.
+
+**Detours for more than one answer.** A question with a detour for each answer, or a detour placed
+later than straight after its question, is allowed, and the page steps over every segment whose
+`onlyIf` was not answered. The paths in Studio and the MP4s are laid out separately, from the same
+table. *Check:* for every path, the segments the click test reports on the page match the ones in
+that path's MP4. A mismatch means the page and the renders disagree about the film.
+
 **A film animated on twos.** A hold on an odd frame is a frame the stepping never shows. Hold on an
 even frame.
 
@@ -48,6 +62,12 @@ updates. *Fix:* a re-entrancy flag, not a frame check.
 film's buttons, not toggle playback. `spaceKeyToPlayOrPause={false}` — Space on a focused button
 must press it; with Space bound, the Player also pulls focus back to its own play button whenever
 playback changes, which steals it from anything the viewer was using.
+
+**A viewer scrubs into a detour that does not apply.** Dragging the progress bar can land the
+playhead inside a detour the viewer's answer skipped — the bar includes every segment. The page
+moves it on to the next segment that applies; landing before the question instead forgets the
+answer, by the rewind rule, and asks again. *Check by hand on the built page:* answer, then drag into
+the skipped detour, and watch where the playhead lands. The click test does not scrub.
 
 **`staticFile()` does not work in the page.** Outside Remotion's bundler it resolves to the Remotion
 server's path, which does not exist under `file://`. A film with images gives the page's Vite config
@@ -82,6 +102,15 @@ this.
 
 **A keyboard test that fails for the test's reasons.** A real Enter key carries the text `"\r"`; one
 sent without it is a keypress no keyboard makes, and the page was wrongly blamed for ignoring it.
+
+**A keyboard test that passes for the test's reasons.** Focusing the button from script and then
+sending Enter proves Enter works on a focused option, not that a keyboard user can reach it. The
+test presses Tab, for real, until an option has focus, and reports the count.
+
+**A hand-out that clicked one path.** Run with no answers, the click test takes the first option of
+every question, so the path that skips a detour — the one most likely to break — went untested.
+The hand-out now runs the test once for every path; run it by hand with `--answer` for anything
+else.
 
 **Frame numbers typed into a test go stale** the moment a segment is re-timed. Read them from the
 page (`data-total`) or from the segment table, never from memory.

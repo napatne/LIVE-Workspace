@@ -1,6 +1,6 @@
 ---
 name: creating-assets
-description: Works out which pictures a video needs, writes the prompt for each, and gets them into the project at the right size and shape. Use when scenes need images, when generated images come back inconsistent or wrongly framed, when someone wants to supply their own, or when asked where assets go.
+description: Works out which pictures a video needs, decides whether each is drawn in code, supplied or generated elsewhere, writes the prompt where one is needed, and gets them into the project at the right size and shape. Use when scenes need images, when someone says "can you grab an image" or "I found a picture online", when generated images come back inconsistent or wrongly framed, when someone wants to supply their own photos or logo, or when asked where assets go.
 ---
 
 The skill is at `.agents/skills/creating-assets/`. Read `.agents/skills/creating-assets/SKILL.md` now, and

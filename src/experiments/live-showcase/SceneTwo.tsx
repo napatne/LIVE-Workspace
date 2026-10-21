@@ -100,6 +100,53 @@ const { fontFamily: display } = loadArchivoBlack();
  */
 
 /** 330, up from 180 — see the beat table. `LIVE_SCENE_TWO` is the number. */
+/*
+ * Corrected 2026-10-21: the line above, and the "330f" in the header's table,
+ * are an earlier length. `LIVE_SCENE_TWO` is now defined just below, moved here
+ * from `StyleTest.tsx` on 2026-10-21 with its value unchanged, and its own
+ * comment carries the history. `npx remotion compositions` reports the length.
+ */
+
+/**
+ * Scene 2's length — the single source for this scene and the master film.
+ *
+ * **352 as of 2026-09-02, up from 180**, because the scene gained the fusion
+ * and the film's whole LLM-agnostic turn happens inside it. It is not a
+ * re-timing of the old scene and none of the old trims survive as reasoning:
+ * where the 180-frame cut held three marks and a fade, this one asks the
+ * question, pauses on it, drops three branded marks, fuses them into one, and
+ * throws that into the meme's face. Four beats where there was one.
+ *
+ * Its history, so nobody re-derives it: 180 before the 1.35× pacing pass, 243
+ * after it, 205 after a tail trim, 180 again after a second — *"also cut off
+ * scene 2 a bit earlier the ending is too long"* — then 330, then this.
+ *
+ * The floor is the closing beat, not the marks: `and you` lands at f238 and the
+ * face is not on the figure until f246, so anything under ~260 ends the scene
+ * on a piece still arriving. **330 cleared that floor and was still wrong**:
+ * the master's quiet join dissolves over the last 24 frames of whatever it is
+ * given, so the finished frame — meme, face and answer all up — had well under
+ * a second at full opacity before it started going away. The payoff of the
+ * scene was being watched through a dissolve. 352 gives it about a second and
+ * three quarters clean, and the master's `tail` on this scene went to 0 at the
+ * same time so none of it is thrown away twice.
+ *
+ * **This is not slack.** The band is 60–70s and the director's standing
+ * instruction is not to cut a shot to hit a number; if the film needs to come
+ * down, the honest place is a beat that is doing nothing, and every beat in
+ * scene 2 is now doing something.
+ *
+ * **352 → 322 on 2026-09-03.** The hold before the fusion lost 30 frames on the
+ * director's note about the marks bobbing twice (see `FUSE_START` below), and
+ * every beat after it moved down by the same 30. Taking the length with them
+ * keeps the clean rest after the last beat at the 76 frames this comment argues
+ * for; leaving it at 352 would have spent the saving on idling instead of
+ * removing it from the film.
+ *
+ * f238 and f246 above are `ANSWER_IN` and `HEAD_FLIGHT_END` below; checked
+ * against them on 2026-10-21.
+ */
+export const LIVE_SCENE_TWO = 322;
 
 /* ------------------------------------------------------------------- beats */
 

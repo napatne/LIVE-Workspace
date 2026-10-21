@@ -112,5 +112,6 @@ read by others as a fact about the project. It was not. Check on the machine in 
   and what to say first.
 - [`reference/SETUP-CHECK.md`](reference/SETUP-CHECK.md) — the step-by-step verification, including
   what to do when Node is missing or too old, and the one time `npm install` is re-run.
-- [`reference/PERMISSIONS.md`](reference/PERMISSIONS.md) — what an assistant may run unattended,
-  what still asks, what is refused, and the reasoning behind each split.
+- [`reference/PERMISSIONS.md`](reference/PERMISSIONS.md) — nothing is pre-approved; how a person
+  builds their own rules as they go, kept local to this repository, why a key in `.env` counts as
+  permission to use that service, and which rules are worth adding, asking about or refusing.

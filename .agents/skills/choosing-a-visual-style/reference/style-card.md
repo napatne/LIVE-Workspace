@@ -65,9 +65,14 @@ Moments only this style can do. For each: what it is, and three kinds of content
 Mistakes the medium itself invites, each with its fix.
 
 ## 10. What varies per film
-What the story decides each time: structure, characters, opening, ending, pace, palette within the
-colour logic.
+Which things the story decides each time, named but not filled in: structure, characters, opening,
+ending, pace, palette within the colour logic. This film's answers to them go in the storyboard
+and the brief, not here.
 ```
+
+**Section 10 is a list of open questions, not this film's answers.** It says what a film in this
+style is free to choose, so the next film knows where it may differ. Writing this film's opening or
+pace into it is the one-film content the card must not carry.
 
 ## Worked example — paper collage
 
@@ -104,4 +109,5 @@ printed type — the making of the picture is visible in the picture.
    Type on scanned paper without fibre reads as a caption pasted on a photo. Generated pieces drift
    apart in style unless every prompt carries the same preamble (`creating-assets`).
 10. **What varies.** The story, the signal colour's meaning, which pieces exist, the pace, the
-    number of scenes, whether it has music.
+    number of scenes, whether it has music. (The showcase's own answers — silent, which pieces —
+    are in its storyboard, not here.)

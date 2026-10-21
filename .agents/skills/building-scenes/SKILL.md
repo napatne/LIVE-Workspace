@@ -10,7 +10,8 @@ description: Turns a storyboard and a folder of pictures into scenes that play -
 **You need first** a storyboard, the assets, the style rules, and — if the video has narration —
 the audio. Picture is cut to voice, not the other way round.
 
-**This produces** a composition registered in `src/Root.tsx` that plays in the preview.
+**This produces** compositions registered in the film's own registration file, which `src/Root.tsx`
+imports, that play in the preview.
 
 **Then go to** `viewing-and-rendering`.
 
@@ -43,6 +44,11 @@ Reaching for the second when the job is the first is how a film ends up as a sli
 Read `.agents/skills/remotion-best-practices/SKILL.md` and follow the relevant linked guidance.
 It is vendored from upstream and may be behind — `AGENTS.md` says how to check it.
 
+**Where the vendored guidance says to inline or hard-code durations, this workspace's rule wins:**
+derive every length and name it once (`AGENTS.md` → Remotion guidance). Upstream prefers inline
+numbers so Studio's drag-editing can write back to them; that editing is not used here, and a
+number typed in two places is how a film cuts off its own last frame.
+
 The rules that bind every scene here, from `AGENTS.md`: animation derives from `useCurrentFrame()`,
 never from CSS transitions or browser timing; static media is referenced with `staticFile()`;
 components stay small and reusable; type checking runs after meaningful changes.
@@ -57,8 +63,37 @@ components stay small and reusable; type checking runs after meaningful changes.
 4. **One scene at a time, registered on its own** so it can be watched without the rest.
 5. **Assemble the master last**, deriving its length from the scene table rather than typing it.
 
-**A scene length is a named constant at the top of its own file**, and the master derives its total
-from those. The two disagreeing is how a film ends up cutting off its own last frame.
+**A scene length is a named constant at the top of its own file — or, if the film has a score, in
+its `timeline.json`** — and the master derives its total from those. The two disagreeing is how a
+film ends up cutting off its own last frame.
+
+## A film with a score keeps its lengths in the timeline
+
+The score cannot read a constant inside a scene file. So when a film has music, its section lengths,
+transitions and hit points live in **one JSON file, `src/<film>/timeline.json`**, and both sides read
+it through the same resolver, `src/lib/timeline.mjs`: the scenes for their `durationInFrames` and
+local hit frames, the score for where every cut and hit falls. Change a length there and picture and
+music move together. Typed in a scene as well, they drift.
+
+- **The timeline replaces the per-scene constants; it does not sit beside them.** A scene reads
+  `TIMELINE.frames("<section>")` instead of declaring its own number.
+- **Do not name a section or a hit `end`**, and do not end a name in a hyphen and digits
+  (`scene-2`): `end` means the end of the film, and `-2` reads as an offset. The resolver refuses
+  both. Use words: `close`, `scene-two`.
+- **One person edits the timeline at a time.** It is shared by every scene and by the score.
+
+The file's shape, the position grammar and the master's code are in
+`scoring-music` → `reference/writing-a-score.md`. A film with no music needs none of this.
+
+## The frame's shape comes from the brief
+
+Width, height and frame rate are what the brief recorded, read from one place in the film's code —
+never a 1920×1080 copied from an example. Landscape 16:9 is the default; upright 9:16 and square
+are supported, and they are a different layout, not the wide one cropped. **Before building an
+upright or square film, read [`reference/upright.md`](reference/upright.md)** — its frame, the
+platform overlays that cover it, type sizes for a phone, and what to do when the shape changes
+after scenes exist. A film built on footage usually takes its frame rate from the footage —
+`working-with-footage` says how to check it.
 
 ## Pictures are props on a surface, not slides
 
@@ -79,11 +114,21 @@ when its beat ends.
 
 ## One registration file per film
 
-Every film registers its compositions in one file of its own — `src/<film>/Registrations.tsx` or
-similar — and `src/Root.tsx` only imports those files. `Root.tsx` is shared by every film in the
+Every film registers its compositions in one file of its own — `src/<film>/Registrations.tsx` —
+and `src/Root.tsx` only imports that file and places it. `Root.tsx` is shared by every film in the
 folder; three sessions appending to it in one copy left it with imports out of order and three
 films' worth of entries tangled together. With one file per film, two people adding films never
-edit the same lines.
+edit the same lines. `src/experiments/live-showcase/Registrations.tsx` and
+`src/interactive/demo/Registrations.tsx` are working examples.
+
+The film's folder is a top-level `<Folder>` named for the film; its scenes sit one level down. A
+film is a film whether it is an explainer, a promo or a cut of footage — there is no separate
+folder for explainers.
+
+**Register every scene before any parallel split**, each pointing at a stub component that renders
+nothing, and then leave the registration file alone until the merge. A worker then edits only their
+own scene file. Appending entries at a marker while others do the same is not safe — the reason is
+in `working-in-parallel`.
 
 ## Timing is tentative until it is built
 
@@ -117,9 +162,18 @@ could be picked up months later without anyone rediscovering the same problem.
 
 ## Reference
 
+**The code in `structure.md`, `captions.md` and `explainer-architecture.md` is a set of patterns
+to write per film, not code that exists.** There is no `src/explainers/` or `shared/` folder, and
+none of `planSections`, `useTheme`, `TitleCard` or `SectionScene` is in `src/`. Earlier builds
+that followed these files wrote 1,100–1,400 lines before their first frame; say so when someone
+asks what a video costs.
+
 - [`reference/structure.md`](reference/structure.md) — the script as data, the three length tiers,
-  turning a script into frames, deriving durations, the contracts between shared pieces,
-  assembling, section layout, title and end cards, motion.
+  turning a script into frames, deriving durations, the timeline for a scored film, the contracts
+  between shared pieces, assembling, section layout, title and end cards, motion.
+- [`reference/upright.md`](reference/upright.md) — upright (9:16) and square frames: platform
+  overlay zones, type sizes for a phone, caption placement, diagrams in a tall frame, and changing
+  shape after scenes exist.
 - [`reference/diagrams.md`](reference/diagrams.md) — choosing a picture by the shape of the
   explanation, what any figure must satisfy to be legible and accessible, fitting and measuring
   text, and the traps that break an animated diagram whatever its style. Its worked shapes are
@@ -127,7 +181,8 @@ could be picked up months later without anyone rediscovering the same problem.
 - [`reference/captions.md`](reference/captions.md) — where caption text comes from, chunking,
   timing, styling, leaving room, and SRT if asked.
 - [`reference/explainer-architecture.md`](reference/explainer-architecture.md) — the timing and
-  assembly utilities a tiered explainer needs, build order, and the PowerShell props trap.
-  Utilities to call; they carry no look.
+  assembly utilities a tiered explainer needs, build order, checking every figure without
+  re-bundling for each still, and the PowerShell props trap. Utilities to write; they carry no
+  look.
 - [`reference/building-a-scene.md`](reference/building-a-scene.md) — the worked example as built:
   its shared kit, the shape of a scene file, and how to check the work without breaking the others.

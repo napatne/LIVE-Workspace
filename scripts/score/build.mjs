@@ -10,17 +10,25 @@
 //      built for a film of the wrong length is out of sync from the first cut
 //   2. writes score.mid beside the score file - open it in MuseScore to read or
 //      change any part by hand
-//   3. renders it through the SoundFont with the timeline's ducks and silences
-//   4. levels it to one constant, and writes the WAV the film plays
-//   5. prints a cue table: every section, hit, duck and silence, with its frame,
-//      its time and where it falls on the beat grid
+//   3. renders it through the SoundFont
+//   4. compresses it, applies the timeline's ducks and silences, levels it to
+//      one constant, and writes the WAV the film plays - after copying any WAV
+//      already there to out/<project>/score-history/, so the last version that
+//      was played to someone is never lost
+//   5. prints a cue table: every section, hit, duck and silence (start and
+//      end), with its frame and its time, and where each hit falls on the
+//      beat grid. Only hits are checked against the grid: a section, a duck or
+//      a silence follows the picture, not the beat.
+//
+// The intermediate audio goes in out/.score-tmp/, one file per run, and is
+// removed whether the build succeeds or not.
 //
 // It never says the music is good. Whether it is, is the person's call.
 
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
-import { argv, exit } from "node:process";
+import { argv, exit, pid } from "node:process";
 import { pathToFileURL } from "node:url";
 import * as gm from "./lib/gm.mjs";
 import * as melody from "./lib/melody.mjs";
@@ -64,6 +72,10 @@ const inContent = basename(dirname(resolve(scorePath))) === "music" && basename(
 const midiOut = mod.output?.midi ?? join(dirname(scorePath), "score.mid");
 const wavOut = mod.output?.wav ?? (inContent ? join("public", "assets", project, "audio", "score.wav") : join(dirname(scorePath), "score.wav"));
 const lufs = mod.underVoice ? UNDER_VOICE_LUFS : MUSIC_ONLY_LUFS;
+// Previous WAVs are kept here. For a score outside content/, the folder the
+// score file sits in names it (scripts/score/example -> out/example/).
+const historyName = inContent ? project : basename(dirname(resolve(scorePath)));
+const historyDir = join("out", historyName, "score-history");
 
 // --- 1. The timeline against the composition -----------------------------
 if (composition) {
@@ -96,19 +108,37 @@ writeFileSync(midiOut, Buffer.from(midi));
 
 // --- 3. Render ------------------------------------------------------------------
 const started = Date.now();
-const audio = await renderMidi({ midi, seconds: timeline.duration, soundfont: SOUNDFONT, gain: gainCurve(timeline) });
+// No ducks yet: they go on after the compressor, in level(), so it cannot flatten them.
+const audio = await renderMidi({ midi, seconds: timeline.duration, soundfont: SOUNDFONT });
 const took = ((Date.now() - started) / 1000).toFixed(1);
 
 // --- 4. Level and write -------------------------------------------------------
 mkdirSync(dirname(wavOut), { recursive: true });
-const raw = join("out", ".score-raw.wav");
-mkdirSync("out", { recursive: true });
-writeFloatWav(raw, audio);
-const measured = level(raw, wavOut, lufs);
-rmSync(raw, { force: true });
+let keptAs = null;
+if (existsSync(wavOut)) {
+  mkdirSync(historyDir, { recursive: true });
+  // Local time, so the name matches the clock of the person who ran it.
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  const stamp = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}_${p(d.getHours())}-${p(d.getMinutes())}-${p(d.getSeconds())}`;
+  keptAs = join(historyDir, `score-${stamp}.wav`);
+  copyFileSync(wavOut, keptAs);
+}
+const tmpDir = join("out", ".score-tmp");
+mkdirSync(tmpDir, { recursive: true });
+const raw = join(tmpDir, `${historyName}-${pid}-${Date.now()}.wav`);
+let measured;
+try {
+  writeFloatWav(raw, audio);
+  measured = level(raw, wavOut, lufs, gainCurve(timeline));
+} finally {
+  rmSync(raw, { force: true });
+}
 
 // --- 5. Report ---------------------------------------------------------------
 const fmt = (s) => `${s.toFixed(2).padStart(6)} s`;
+// Only hits are checked against the beat grid. A section, a duck edge or a
+// silence follows the picture, so "off the grid" there is noise, not a fault.
 const onGrid = (s) => {
   const b = score.beatAt(s);
   const near = Math.round(b);
@@ -117,19 +147,28 @@ const onGrid = (s) => {
 };
 const rows = [
   ...timeline.sections.map((s) => ({ frame: s.start, what: `section ${s.id} (${s.frames} frames)` })),
-  ...Object.entries(timeline.hits).map(([h, f]) => ({ frame: f, what: `hit ${h}` })),
-  ...timeline.ducks.map((d) => ({ frame: d.from, what: `duck ${d.db} dB until frame ${d.to}` })),
-  ...timeline.silences.map((s) => ({ frame: s.from, what: `silence until frame ${s.to}` })),
+  ...Object.entries(timeline.hits).map(([h, f]) => ({ frame: f, what: `hit ${h}`, grid: true })),
+  ...timeline.ducks.flatMap((d) => [
+    { frame: d.from, what: `duck ${d.db} dB starts (until frame ${d.to})` },
+    { frame: d.to, what: `duck ${d.db} dB ends` },
+  ]),
+  ...timeline.silences.flatMap((s) => [
+    { frame: s.from, what: `silence starts (until frame ${s.to})` },
+    { frame: s.to, what: "silence ends" },
+  ]),
   ...score.cues.map((c) => ({ frame: Math.round(c.seconds * timeline.fps), what: `music: ${c.label}` })),
 ].sort((a, b) => a.frame - b.frame);
 
 console.log(`\nCue table — ${timeline.path}, ${score.bpm} BPM, beat 0 at ${fmt(score.beatOneSeconds).trim()}`);
+console.log("  (the beat column is filled for hits only)");
 for (const r of rows) {
-  console.log(`  frame ${String(r.frame).padStart(5)}  ${fmt(r.frame / timeline.fps)}  ${onGrid(r.frame / timeline.fps).padEnd(34)}  ${r.what}`);
+  const beat = r.grid ? onGrid(r.frame / timeline.fps) : "";
+  console.log(`  frame ${String(r.frame).padStart(5)}  ${fmt(r.frame / timeline.fps)}  ${beat.padEnd(34)}  ${r.what}`);
 }
 console.log(`\nwritten:`);
 console.log(`  ${relative(".", midiOut)} — the score, editable in MuseScore or any MIDI editor`);
 console.log(`  ${relative(".", wavOut)} — ${timeline.duration.toFixed(3)} s (${timeline.total} frames), ${measured.lufs} LUFS, true peak ${measured.truePeak} dBTP`);
-console.log(`  rendered in ${took} s; raw peak ${peakDb(audio).toFixed(1)} dBFS; fingerprint ${fingerprint(audio)} (the same score always gives the same fingerprint)`);
+console.log(`  rendered in ${took} s; raw render (before compressor and ducks) peak ${peakDb(audio).toFixed(1)} dBFS; fingerprint ${fingerprint(audio)} (the same score always gives the same fingerprint)`);
+if (keptAs) console.log(`  ${relative(".", keptAs)} — the WAV that was there before, kept`);
 if (inContent) console.log(`\nIn the film: <Audio src={staticFile("assets/${project}/audio/score.wav")} /> at frame 0 of the master.`);
 console.log("Whether it sounds right is for the person to say. Play it to them; do not describe it as good.\n");

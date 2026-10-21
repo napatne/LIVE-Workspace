@@ -12,16 +12,20 @@
  *   - everything else is the main line.
  *
  * The web page lays every segment out in one timeline (`"all"`) and *skips*
- * the detours that do not apply, by seeking over them. Studio and renders lay
- * out only the segments one set of answers would play, so one path is one
- * ordinary, reviewable video.
+ * the detours that do not apply, by seeking over them whenever the playhead
+ * enters one (`skipTarget`). Studio and renders lay out only the segments one
+ * set of answers would play, so one path is one ordinary, reviewable video -
+ * and the page plays exactly the segments that video shows.
  *
  * ## The policy
  *
  * 2 or 3 options a question, at most 3 questions, at most 2 of them able to
- * skip a detour, and every detour rejoins the main line. Small on purpose: a
- * film with these limits has a handful of paths, every one of which can be
- * rendered and watched; a branching tree cannot. `checkPolicy` throws on a film
+ * skip a detour, and every detour rejoins the main line. "Able to skip a
+ * detour" counts questions, not detours: a question with a detour for each of
+ * its options is one of the 2.
+ *
+ * Small on purpose: a film with these limits has a handful of paths, every one
+ * of which can be rendered and watched; a branching tree cannot. `checkPolicy` throws on a film
  * that breaks it, the moment the film is loaded.
  *
  * Rewinding before a question forgets its answer, and every answer after it,
@@ -45,7 +49,11 @@ export type Layout = { placed: Placed[]; total: number };
 export const MAX_CHOICES = 3;
 export const MIN_OPTIONS = 2;
 export const MAX_OPTIONS = 3;
-/** A "jump" is a choice that can skip a detour — the film's only branching. */
+/**
+ * A "jump" is a choice that has at least one detour depending on it — the
+ * film's only branching. It counts choices, not detours: one choice may have a
+ * detour for every option, and still counts once.
+ */
 export const MAX_JUMPS = 2;
 
 const plays = (spec: SegmentSpec, answers: Answers | "all") =>
@@ -92,23 +100,41 @@ export const choicePoints = (full: Layout): ChoicePoint[] => {
   return out;
 };
 
-/**
- * Where playback carries on once `choice` is answered: the start of the first
- * later segment that still plays. Equal to the choice's `end` when nothing is
- * skipped.
- */
-export const resumeFrame = (
-  full: Layout,
-  choice: string,
-  answers: Answers,
-): number => {
-  let passed = false;
-  for (const p of full.placed) {
-    if (passed && plays(p.spec, answers)) return p.from;
-    if (p.spec.ask && p.spec.ask.choice === choice) passed = true;
+/** The index in `full.placed` of the segment that holds `frame`, or -1. */
+export const segmentIndexAt = (full: Layout, frame: number): number => {
+  for (let i = 0; i < full.placed.length; i++) {
+    const p = full.placed[i];
+    if (frame >= p.from && frame < p.to) return i;
   }
-  return full.total;
+  return -1;
 };
+
+/**
+ * Where the page must seek when the playhead is inside a detour these answers
+ * do not play, or null when the segment under it plays: the start of the next
+ * segment that does. Checked on every frame, so it holds for any number of
+ * detours after a question - one per option, or several in a row - and for a
+ * scrub, in either direction, that lands inside one.
+ *
+ * Run it only once no question is pending: a detour of an unanswered question
+ * does not "play" either, and `pendingChoice` sends that playhead back to its
+ * question instead.
+ */
+export const skipTarget = (
+  full: Layout,
+  answers: Answers,
+  frame: number,
+): number | null => {
+  const at = segmentIndexAt(full, frame);
+  if (at < 0 || plays(full.placed[at].spec, answers)) return null;
+  for (let i = at + 1; i < full.placed.length; i++) {
+    if (plays(full.placed[i].spec, answers)) return full.placed[i].from;
+  }
+  return full.total - 1;
+};
+
+/** True when `spec` plays for these answers - a detour of an unanswered choice does not. */
+export const segmentPlays = (spec: SegmentSpec, answers: Answers): boolean => plays(spec, answers);
 
 /**
  * The rewind rule. After the playhead lands on `frame`, an answer survives only
@@ -190,6 +216,13 @@ export const checkPolicy = (specs: readonly SegmentSpec[]): void => {
       }
       jumps.add(choice);
     }
+  }
+
+  const last = specs[specs.length - 1];
+  if (last?.onlyIf) {
+    throw new Error(
+      `Detour "${last.id}" is the last segment; every detour must rejoin the main line, so end on a segment every path plays`,
+    );
   }
 
   if (choices > MAX_CHOICES) {

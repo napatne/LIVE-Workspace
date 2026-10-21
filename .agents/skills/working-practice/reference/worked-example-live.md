@@ -4,8 +4,9 @@ Five things that broke while making the LIVE film: what happened, what the direc
 and what it took to fix. Worth reading before you start rather than after. They are in rough order
 of how much they cost.
 
-The quotes are the director's own, shortened, with spelling corrected where it got in the way; the
-originals are in the session logs linked under each one. The film runs at 30 frames a second, so a
+The quotes are the director's own, shortened, with spelling corrected where it got in the way. The
+session logs they came from were not kept when the repository was published; what they taught is
+here. The film runs at 30 frames a second, so a
 count like 88 frames is about three seconds.
 
 ---
@@ -38,7 +39,6 @@ rest, and each join now sits on frozen frames so it buries nothing.
 
 *Feeds the habit: watch it before you believe it.*
 
-Full detail: `agent-logs/023`
 
 ---
 
@@ -58,12 +58,12 @@ worse for it.
 
 **What changed.** The cut was reverted. The target itself had moved four times by then — 30–40
 seconds, then 50–60, then lifted to 60–70 — and three of those four are dead. The film now runs
-about 70 seconds because no remaining second is wasted on screen.
+as long as it runs because no remaining second is wasted on screen; `npx remotion compositions`
+reports the length.
 
 *Feeds the habit: never let a number decide the edit. If your assistant starts reporting your video
 to you as tables of numbers, it has stopped watching it.*
 
-Full detail: `agent-logs/023`
 
 ---
 
@@ -91,7 +91,6 @@ feels like.
 
 *Feeds the habit: ask why before asking for a fix.*
 
-Full detail: `agent-logs/019`
 
 ---
 
@@ -113,7 +112,6 @@ the five, because looking at it came before rendering it.
 *Feeds the habit: make the assistant show its arithmetic. Positions and sizes are where it is most
 confidently wrong, and easiest for you to catch.*
 
-Full detail: `agent-logs/019`
 
 ---
 
@@ -143,14 +141,13 @@ conflicts with the rule about keeping text sparse, and it wins. It added nine se
 
 *Feeds the habit: fix the plan, not the frame.*
 
-Full detail: `agent-logs/024`, and
-[rule 6 in the shot list](../../../../content/live-showcase/docs/storyboard.md)
+See also: [rule 6 in the shot list](../../../../content/live-showcase/docs/storyboard.md)
 
 ---
 
 ## What this cost, in total
 
-Seventy seconds of finished video. Seven recorded working sessions over two days, plus one that
+About a minute of finished video. Seven recorded working sessions over two days, plus one that
 nobody wrote down and which is therefore lost. Four target lengths, three of them abandoned. One
 complete cut rejected and rebuilt. One scene's joke rewritten after the film was otherwise
 finished.

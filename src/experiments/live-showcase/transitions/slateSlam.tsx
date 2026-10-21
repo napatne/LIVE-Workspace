@@ -12,7 +12,8 @@ import { SlateBackdrop, SlateForeground } from "../SlateScene";
  * and the prop lives in `../Clapboard.tsx`. They were pulled out of here on
  * 2026-09-02 when the director asked for the clapboard to be *"its own scene
  * not part of the style test"*. It is registered on its own as the
- * `LiveShowcaseSlate` composition in `Root.tsx`, alongside `LiveShowcaseSceneOne`
+ * `LiveShowcaseSlate` composition in `Root.tsx` (in `../Registrations.tsx`
+ * since 2026-10-21), alongside `LiveShowcaseSceneOne`
  * and `LiveShowcaseSceneTwo` — three separate scenes, each scrubbable alone.
  *
  * **Why it is still a `TransitionPresentation` and not a plain sequence.** The

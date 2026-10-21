@@ -63,7 +63,8 @@ Regenerate the stubs with `node scripts/sync-skills.mjs`.
 | `asu-visual-style` | An ASU-branded video is wanted, or any colour, type, logo or caption decision. **Its accessibility file applies whichever style was chosen** |
 | `creating-assets` | Scenes need pictures, or the ones generated came back wrong |
 | `building-scenes` | Writing or changing scene code |
-| `adding-narration` | The video needs a voice, or voice and picture have drifted |
+| `adding-narration` | The video needs a voice — generated, or recorded by the person — or voice and picture have drifted |
+| `working-with-footage` | The person brings video clips: a highlight reel, titles or name bars over their footage, a slowed moment, a clip someone else posted |
 | `scoring-music` | The video needs music or sound effects, someone names a song or a mood, or music and picture have drifted |
 | `making-interactive-video` | The viewer should choose something — a question, a branch, a quiz — or a click-through page is wanted |
 | `viewing-and-rendering` | Watching, checking a frame, rendering, measuring a render, or finishing it for delivery |
@@ -89,10 +90,12 @@ A tool offered at the wrong moment is a tool not used. Each of these belongs to 
 | A session starts | `node scripts/session-start.mjs` | Where the work stands: branch, uncommitted files, the last log's handoff, open briefs |
 | A new machine, or something will not run | `node scripts/check-setup.mjs` | Looks before anything is installed: Node (and how it was installed), packages, FFmpeg's filters, disk — and this machine's fix for each |
 | Narration is generated | `node scripts/tts-generate.mjs`, then `node scripts/tts-verify.mjs` | Speech from the script, then a transcript check for dropped lines |
-| Narration or effects are cut | `node scripts/build-audio.mjs` | Trims, fades and levels audio cues |
+| Footage arrives | `node scripts/probe-footage.mjs <file-or-dir> --film-fps <n>` | Length, frame rate (and whether it varies), shape and sound of each clip, against the film's frame rate |
+| A clip needs slowing or speeding | `node scripts/retime-plate.mjs` — see `working-with-footage` | Re-times a clip and prints the frame mapping in the film's frames; drops the clip's sound and says so |
+| Narration or effects are cut | `node scripts/build-audio.mjs --cues <file> --src <dir> --out <dir>` | Trims, fades and levels audio cues, for any film |
 | The scenes exist and music was chosen | `node scripts/score/…` — see `scoring-music` | A score written against the film's own timeline |
-| A render exists | `node scripts/check-render.mjs <file> --composition <Id>` | Measures size, length, black, frozen, silence, loudness; writes a contact sheet |
-| It is going to someone | `node scripts/finish-video.mjs <file>` | Standard colour range, one delivery loudness |
+| A render exists | `node scripts/check-render.mjs <file> --composition <Id>` | Measures size, length of picture and sound, black, frozen, silence, loudness; writes a contact sheet |
+| It is going to someone | `node scripts/finish-video.mjs <file>` (`--web` for a smaller file) | Standard colour range, one delivery loudness |
 | The skills were edited | `node scripts/sync-skills.mjs` | Validates every skill and regenerates the stubs |
 
 ## Nobody decides silently
@@ -104,9 +107,27 @@ never makes the choice invisible. The decisions nobody thinks to raise — music
 metaphor, the pace, whose world the pictures show — are raised at the step where they arrive.
 `building-a-video` → `reference/decisions.md` lists them all, with the tool for each.
 
+## Rights are the person's call
+
+A picture found online, a meme, a song they own on CD, a clip someone else posted: whether to use
+something that belongs to someone else is **theirs to decide, and the responsibility is theirs**.
+The assistant's part is to flag it — once, plainly: whose it is, and the one practical consequence
+if there is one (platforms detect copyrighted songs and mute or take down videos) — offer the free
+alternative (draw it, write an original in that feel), then do what they decide and record it in
+the brief as *theirs*. No refusing, no lecturing, no raising it again mid-build; the delivery check
+in `viewing-and-rendering` names it once more if the film is going public.
+
+Two limits stay:
+
+- **Nothing is pulled off a social or streaming platform from here** — TikTok, Instagram, X,
+  YouTube, streaming services. The person brings the file.
+- **Content that is harmful in itself is refused**, whoever asks and whatever rights they hold:
+  sexual content involving minors, intimate images of someone without their consent, and material
+  made to harass, defame or impersonate a real person.
+
 ## The worked example
 
-A 70-second silent paper-collage film whose subject is this repository. It is what the skills were
+A silent paper-collage film, about a minute long, whose subject is this repository. It is what the skills were
 written from, and it is registered as `LiveShowcaseFilm`.
 
 **Silent and paper collage are this film's choices, not the workspace's.** New films can have a voice
@@ -124,7 +145,7 @@ Its length is not recorded here — `npx remotion compositions` reports it. **A 
 document is a duration nobody re-checks**, and the documents for this film carried three wrong ones
 before the numbers came out of the prose entirely.
 
-`content/live-showcase/docs/README.md` says which of its four documents answers what. Two other
+`content/live-showcase/docs/README.md` says which of its documents answers what. Two other
 films were made in this repository and were removed, so that what ships is one film and the tools
 and practice that made it.
 
@@ -156,11 +177,32 @@ repository.
 
 So on first use in a fresh clone, check it against the source before trusting it on anything
 version-sensitive: an API name, a package version, a recommended pattern. Fetch the upstream file,
-diff it against the local one, and say what differs rather than assuming either side is right. If
-upstream has moved, prefer upstream and say the local copy is behind.
+diff it against the local one, and say what differs rather than assuming either side is right.
+Compare both against the Remotion **installed here** (`node_modules/remotion/package.json`) — the
+vendored copy, upstream and the installed packages can be three different versions, and an API is
+only usable if the installed version has it. Normalise line endings before comparing a hash with
+`skills-lock.json`; `node scripts/sync-skills.mjs --check` does. If upstream has moved on an API
+question, prefer upstream and say the local copy is behind.
 
 This is a read-and-compare step, not an update step. Replacing the vendored copy changes what every
 future session reads, so propose it rather than doing it.
+
+**Where the vendored guidance and this workspace disagree on how to work, this workspace wins.** The
+vendored skill is written for a general Remotion project; this one has rules it does not know. The
+known conflicts, each of which a session has walked into:
+
+- **Durations.** It says to inline or hard-code `durationInFrames`, `from` and `trimBefore`, and not to
+  compute them. Here lengths are derived and named once (`building-scenes`).
+- **Paid voices.** Its voiceover page says to recommend ElevenLabs and ask for a key. Here free tools
+  come first and nothing paid is called without approval (Cost rules, `adding-narration`).
+- **Remote sound effects.** Its sound-effect page plays files from `remotion.media`. Here effects are
+  written into the score or come from the person (`scoring-music`).
+- **Studio and rendering.** Newer upstream versions say to open Studio first and keep it open, and not
+  to render unless asked. Here the preview is offered, not started, and a render is how work is
+  measured (`viewing-and-rendering`).
+
+On API facts — what a prop is called, what unit it takes, whether a feature exists — the vendored
+guidance is a claim like any other document: check it against the installed package.
 
 ## Development rules
 
