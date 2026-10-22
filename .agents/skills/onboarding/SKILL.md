@@ -1,6 +1,6 @@
 ---
 name: onboarding
-description: Gets a newcomer from nothing to ready - checks and installs what the workspace needs, then offers a short tour of what it is and what it can make, and walks them to their first video. Use at first contact - when someone has just opened, cloned or asked you to set up this folder, says hello, asks what this is or what it can do, asks where to start, or opens with a question no other skill clearly covers.
+description: Gets a newcomer from nothing to ready - checks and installs what the workspace needs, then offers a short tour of what it is and what it can make, and walks them to their first video. Use at first contact - when someone has just opened, cloned or asked you to set up this folder, says hello, asks what this is or what it can do, asks where to start, opens with a question no other skill clearly covers, or opens by asking for a video - a first message in this folder always comes here first.
 ---
 
 # Onboarding — introducing this workspace to a person
@@ -45,10 +45,11 @@ Once it can build, **one short message**: what this is in one sentence, and a ch
 - **Tour** → the short tour (below), one point at a time. The full route only if they ask for
   more.
 - **Straight to a video** → the limits in two lines (*What it cannot do*, below — never skipped),
-  then `building-a-video`. Tell `building-a-video` they took the short route: its interview then
-  batches the remaining first questions into one message.
-- **They already said what they want** — *"make me a video about X"* — skip the question; give the
-  limits in two lines and go.
+  then `building-a-video`, which opens with a short, scannable outline of how it goes.
+- **They already said what they want** — *"make me a video about X"* — **still ask**, in one line
+  that takes their request as given: *"Happy to make that. Before we start — would you like a quick
+  tour of how this works, or go straight to the video?"* It costs them one word. Skipping it is how
+  testers went a whole session without hearing what this can do.
 - **They ask to see the example film** — *"show me what it made"*, *"play the example"* — go to
   `viewing-and-rendering` and show them the worked example. Give the limits in two lines when they
   turn to making their own.
@@ -70,9 +71,11 @@ long message that explains the whole workspace correctly and is not read.
 4. **No file paths, commands or jargon in the early points.** Not *composition*, *fps*, *render*,
    *staticFile*, *repo*. Say *video*, *scene*, *length*, *picture*, *folder*. Paths arrive at
    "Where things live" and nowhere before it.
-5. **Do not announce the structure.** No "there are eight things to cover", no "step 3 of 8", no
-   "welcome to LIVE". You do not yet know how many points you will use, and promising a number you
-   then abandon is worse than saying nothing.
+5. **Do not announce the tour's structure.** No "there are eight things to cover", no "step 3 of
+   8", no "welcome to LIVE". You do not yet know how many points you will use, and promising a
+   number you then abandon is worse than saying nothing. *Making a video is the opposite:*
+   `building-a-video` opens with an outline of its stages, because there the stages are fixed and
+   knowing them is what lets someone answer at their own pace.
 6. **Do not read this file aloud.** The wording here is the point being made, not a script to
    recite. Say it the way you talk.
 7. **They can stop at any time, and that is a success** — not an abandoned onboarding.
@@ -92,9 +95,9 @@ long message that explains the whole workspace correctly and is not read.
 Then read what comes back and adjust. You are choosing the route as you go, not working down a
 fixed list:
 
-**Go shorter** when they arrive with a goal already — *"make me a video about X"* — or when two
-replies in a row are one or two words with no question in them (*ok*, *got it*, *sure*, *next*).
-Compress what is left to the essentials and move.
+**Go shorter** when they chose the tour but arrived with a goal already — *"make me a video about
+X"* — or when two replies in a row are one or two words with no question in them (*ok*, *got it*,
+*sure*, *next*). Compress what is left to the essentials and move.
 
 **Skip ahead** the moment they ask for it. *"Just make the video"*, *"skip this"*, *"I've used this
 before"* — go. Do not finish the point you were on.

@@ -1,6 +1,6 @@
 ---
 name: building-a-video
-description: Takes a video from a one-sentence idea to a finished file - asking the questions that shape it (story, words, music, look, pictures), saying who decides each one, and calling the other skills and tools at the step where each is needed. Use when someone wants a video made, asks how to start one, names a subject, accepts an offer to create one, says "you decide", or asks what this workspace can make for them. Opens by offering stock subjects or taking their own.
+description: Takes a video from a one-sentence idea to a finished file - asking the questions that shape it (story, words, music, look, pictures), saying who decides each one, and calling the other skills and tools at the step where each is needed. Use when someone wants a video made, asks how to start one, names a subject, accepts an offer to create one, says "you decide", or asks what this workspace can make for them. Opens with a short outline of the stages and what a video can include, then offers stock subjects or takes their own. At first contact in a fresh folder, onboarding runs first.
 ---
 
 # Building a video
@@ -8,7 +8,8 @@ description: Takes a video from a one-sentence idea to a finished file - asking 
 **Use this when** someone wants a video made, whether they arrived through `onboarding` or walked
 in cold and said so.
 
-**You need first** a working install. A subject is not required — establishing one is this skill's
+**You need first** a working install, and — if this is their first message in this folder —
+`onboarding`, which asks whether they want a tour first. A subject is not required — establishing one is this skill's
 first move.
 
 **This produces** a finished, rendered video, plus the brief, storyboard, script and assets it was
@@ -18,7 +19,49 @@ built from.
 
 ---
 
-## Open with the subject
+## Open with an outline of how it goes
+
+**Before the first question, show them the road** — one message, in markdown: a short numbered list
+of the stages, a bullet list of what the video can include, where the file ends up, and one
+question. **Scannable, never a paragraph.** People in testing were walked into questions without
+knowing how many were coming or what was possible, and never heard about half of what this makes.
+
+```markdown
+Here's how we'll make it:
+
+1. **A few questions** — subject, audience, length, voice, music, look, pictures. About seven,
+   and every one has a default if you'd rather I decide.
+2. **The story** — a short paragraph for your OK, before anything is built.
+3. **The look** — I'll suggest three styles; you pick one.
+4. **One scene first** — I build it and show you before doing the rest.
+5. **The rest, then the file** — you watch, we adjust, I save the finished video.
+
+**It can also include:**
+- a voice — generated, or your own recording
+- music made for it, or a track you have
+- questions the viewer answers as it plays (an interactive version)
+- your own photos or video clips
+- ASU's built-in look, or your own brand colours
+- wide for screens, or upright for phones
+
+The finished video saves to the `out` folder inside LIVE — or a copy can go to your Desktop,
+Documents, or anywhere you like.
+
+**Shall I ask the questions one at a time, or all together in one list?**
+```
+
+Say it in your own words and **trim it to what is still open**: if their message already gave the
+subject, the length and the shape, do not list those as coming. Keep it to this size — the outline
+is a map, not the tour. Offering ASU's look to everyone is telling them it exists; it is not
+assuming they want it (see *Ask; do not infer*, below).
+
+**Their answer sets the pace.** *All together* → the remaining step 1 questions in one numbered
+message with lettered options and defaults
+([`reference/interview.md`](reference/interview.md) → *One at a time, or all together*). *One at a
+time*, or no preference → one per message. Either way the two gates — the story at step 3 and the
+first scene at step 9 — get their own message and their own yes.
+
+## Then the subject
 
 *What would you like to make?* Offer the three subjects that are ready to go, from
 [`topics/`](topics/), as options for a standing start, and make clear that their own subject is
@@ -27,16 +70,15 @@ work. Offer them as subjects — do not explain where their scripts come from.
 
 Two things can come before it. **A limit their message runs into** — footage, under thirty
 seconds, an upright shape — is answered first ([`reference/interview.md`](reference/interview.md)
-→ step 0.5). And **how much commentary they want** is not a question: one closing line of your
-first reply says you will build quietly and show things as they are ready, unless they would like a
-running commentary.
+→ step 0.5). And **how much commentary they want** is not a question: one closing line says you
+will build quietly and show things as they are ready, unless they would like a running commentary.
 
 ## The interview
 
-Seven questions, and not all at once. Five come at step 1, before the story exists; the look comes
-at step 4, once the story is agreed; the pictures at step 6. Every one is cheap to decide at its
-step and expensive to change after the film exists, and **every one has a default — "you decide" is
-always a valid answer.**
+Seven questions about the film, plus one practical one — where the finished file goes. Five of the
+seven come at step 1, before the story exists; the look comes at step 4, once the story is agreed;
+the pictures at step 6. Every one is cheap to decide at its step and expensive to change after the
+film exists, and **every one has a default — "you decide" is always a valid answer.**
 
 | Question | Step | Why it has to be asked |
 | --- | --- | --- |
@@ -47,12 +89,14 @@ always a valid answer.**
 | **Music under it?** | 1 | An original score made here, a track they own, the clips' own sound, or none. Silence is a choice too, and it changes how every scene is paced |
 | **What should it look like?** | 4 | Three styles proposed and one recommended, a brand (ASU's or theirs), or their own description |
 | **Where do the pictures come from?** | 6 | Drawn here in code (free), supplied by them, or prompts written for them to run |
+| *Where should the finished file go?* | 1 | `out/` inside LIVE by default; a copy to their Desktop, Documents or another folder if they say. Recorded in the brief, used at step 13 |
 
 Expect more turns than questions — the sketch offer, the story, the script, the picture list and
-the plan each take one. **Someone who has signalled they want fewer turns** — three or more answers
-already in their opening message, or the short route through `onboarding` — gets the remaining
-step 1 questions as one numbered message. The gates at steps 3 and 9 are never batched.
-[`reference/interview.md`](reference/interview.md) → *The fast route* has the shape.
+the plan each take one. **Whether the questions come one at a time or all together is their
+choice, asked in the outline** — and someone whose opening message already answered three or more
+gets the rest as one numbered message without being asked. The gates at steps 3 and 9 are never
+batched. [`reference/interview.md`](reference/interview.md) → *One at a time, or all together* has
+the shape.
 
 **Ask; do not infer.** Not narration from the subject, not the audience from the institution, not
 music from the fact that the last film had some — and not the style from an email address. **An
@@ -123,8 +167,8 @@ when it would be guessing, and not after, when the decision it serves has alread
 default.
 
 1. **Write the idea in one sentence.** It forces a decision about what the video is about. The
-   five step 1 questions get you there — subject, audience, length, voice, music. Start the brief
-   (`content/<project>/docs/brief.md`) with it.
+   five step 1 questions get you there — subject, audience, length, voice, music — plus where the
+   finished file should go. Start the brief (`content/<project>/docs/brief.md`) with it.
 2. **Sketch it on paper.** One box per scene, by hand, rough on purpose. Deciding the order of
    ideas, not the artwork. They can do this or it can be worked out from their answers — but a
    sketch of their own is the fastest route to the film they actually pictured, and it costs ten
@@ -168,7 +212,8 @@ default.
 13. **Render, measure, finish** → `viewing-and-rendering`. `scripts/check-render.mjs` reports what
     can be measured — size, length, black or frozen stretches, silence, loudness — before anyone
     watches; `scripts/finish-video.mjs` brings the file to the delivery standard. Then hand it
-    over, and they judge it.
+    over — copied to the folder they chose at step 1, if it was not `out/` — tell them exactly where
+    it is, and they judge it.
 
 ## Step 9 is the cheapest review in the project
 

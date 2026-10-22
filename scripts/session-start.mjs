@@ -141,8 +141,10 @@ if (returning) {
   say("  reference/interview.md → If they come back later).");
 } else {
   say(`  A fresh copy. A first message here is a newcomer's: the onboarding skill${installed ? "" : ", once installed"} -`);
-  say("  offer a quick tour or going straight to a video, and let them choose.");
+  say("  offer a quick tour or going straight to a video, and let them choose - even when their");
+  say("  first message already asks for a video.");
 }
-say("  One question per message. Every decision is the person's, or yours said out loud and");
+say("  A video starts with a short outline of the stages, then questions one at a time or all");
+say("  together, as they prefer. Every decision is the person's, or yours said out loud and");
 say("  written in the brief (AGENTS.md → Nobody decides silently).");
 console.log(out.join("\n"));

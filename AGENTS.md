@@ -2,15 +2,19 @@
 
 ## STOP — first contact
 
-**If this is the first thing you have been asked in this folder and it is any of these — a
-greeting, "what is this", "what can this do", "where do I start", "help", "set this up", a pasted
-link, or anything you cannot confidently route to another skill — invoke the `onboarding` skill and
-follow it. Before you answer. No exceptions, no summarising your way past it.**
+**If this is the first thing you have been asked in this folder — whatever it is — invoke the
+`onboarding` skill and follow it. Before you answer. That includes a request that already names a
+video: *"make me a video about X"* still gets onboarding first, because it is the only place the
+person is offered a tour and told what this can do. A greeting, "what is this", "help", "set this
+up", a pasted link, a request for a video — all of them. No exceptions, no summarising your way
+past it.**
 
 **Its order is: make sure it can build, then offer the tour.** It checks Node, the project's
 packages and FFmpeg first and installs what is missing itself — asking once for each, never handing
 the person a command — and only then asks whether they want a quick tour or to go straight to
-making a video. The tour is offered, not imposed.
+making a video. **The question is always asked, even when they opened with what they want** — the
+answer takes one word, and skipping it is how people in testing never learned what they could ask
+for. The tour is offered, not imposed.
 
 **If the folder already has work in it** — `scripts/session-start.mjs` lists the last session's
 handoff and any film briefs — this is a returning person, not a newcomer: say where things stood in

@@ -164,6 +164,11 @@ node scripts/finish-video.mjs out/my-video.mp4 out/my-video-final.mp4
 node scripts/finish-video.mjs out/my-video.mp4 out/my-video-web.mp4 --web   # smaller file
 ```
 
+**Then put it where they asked.** The brief records where the finished file goes
+(`building-a-video` → step 1e). If it names a folder other than `out/` — their Desktop, Documents,
+anywhere — copy the finished file there, never over a file of the same name (add a version number
+instead), and tell them both places by full path. Renders and drafts stay in `out/`.
+
 What a render does not do on its own, all of it noticed only on someone else's screen:
 
 - **Colour range.** A render made from JPEG frames comes out tagged full-range (`yuvj420p`),

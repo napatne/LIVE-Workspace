@@ -1,6 +1,6 @@
 ---
 name: building-a-video
-description: Takes a video from a one-sentence idea to a finished file - asking the questions that shape it (story, words, music, look, pictures), saying who decides each one, and calling the other skills and tools at the step where each is needed. Use when someone wants a video made, asks how to start one, names a subject, accepts an offer to create one, says "you decide", or asks what this workspace can make for them. Opens by offering stock subjects or taking their own.
+description: Takes a video from a one-sentence idea to a finished file - asking the questions that shape it (story, words, music, look, pictures), saying who decides each one, and calling the other skills and tools at the step where each is needed. Use when someone wants a video made, asks how to start one, names a subject, accepts an offer to create one, says "you decide", or asks what this workspace can make for them. Opens with a short outline of the stages and what a video can include, then offers stock subjects or takes their own. At first contact in a fresh folder, onboarding runs first.
 ---
 
 The skill is at `.agents/skills/building-a-video/`. Read `.agents/skills/building-a-video/SKILL.md` now, and

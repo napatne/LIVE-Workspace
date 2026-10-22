@@ -12,14 +12,16 @@ Just open this folder in Claude Code or Codex and say **"create a video for me."
 
 ## Contents
 
-- [The flow](#the-flow) — the steps, the gates, and the fast route
+- [The flow](#the-flow) — the steps, the gates, the opening outline, and one-at-a-time or all
+  together
 - [When to start](#when-to-start) — the setup check, and how much commentary they want
 - [Step 0 — Read what they already told you](#step-0--read-what-they-already-told-you)
 - [Step 0.5 — Can this be built at all?](#step-05--can-this-be-built-at-all) — footage, a recording
   of their own voice, under 30 seconds, upright, and what to do when several apply
 - [Rules for the whole conversation](#rules-for-the-whole-conversation)
 - [Step 1 — The idea](#step-1--the-idea): [1a Topic and audience](#1a--topic-and-audience) ·
-  [1b Length](#1b--length) · [1c Voice](#1c--voice) · [1d Music](#1d--music)
+  [1b Length](#1b--length) · [1c Voice](#1c--voice) · [1d Music](#1d--music) ·
+  [1e Where the finished file goes](#1e--where-the-finished-file-goes)
 - [Step 2 — Sketch it on paper](#step-2--sketch-it-on-paper)
 - [Step 3 — The story in words](#step-3--the-story-in-words) — the first gate, the interactive
   branch, and the music's feel
@@ -59,9 +61,9 @@ Just open this folder in Claude Code or Codex and say **"create a video for me."
 
 ## The flow
 
-The steps are `building-a-video`'s, in its order. Seven questions in all: five about the idea
-before the story exists, then the look once the story is agreed, then where the pictures come
-from.
+The steps are `building-a-video`'s, in its order. Seven questions about the film — five about the
+idea before the story exists, then the look once the story is agreed, then where the pictures come
+from — plus one practical question at step 1: where the finished file goes.
 
 ```text
 0. Read their message → 0.5 Can it be built? →
@@ -86,22 +88,34 @@ Most people who open this project do not know what video they want. They will ty
 vague and wait to be led. **Leading them is your job.** Every question has a default, and
 "I don't know, you decide" is always a valid answer.
 
-### The fast route
+### The opening outline
 
-**Some people want fewer turns, and say so.** Two signs:
+**The first message of the interview is a map, not a question about the film.** In markdown: the
+stages as a short numbered list, what the video can include as bullets — a voice (generated or
+their own), music, questions the viewer answers as it plays, their own photos or clips, ASU's
+built-in look or their own brand, wide or upright — where the finished file ends up, and one
+question: *one at a time, or all together?* The template is in `building-a-video/SKILL.md` →
+*Open with an outline of how it goes*. Trim it to what is still open, and keep it scannable —
+never a paragraph.
 
-- their opening message already answered **three or more** of the step 1 questions (topic,
-  audience, length, voice, music) — or carried a shape, a length and a subject together; or
-- they took the short route in `onboarding` — *"skip the tour"*, *"just make the video"*.
+### One at a time, or all together
 
-Then **the remaining step 1 questions go in one message**, numbered, with lettered options so a
-reply like `2b` is unambiguous. Defaults are stated in it, so silence on any one is an answer:
+**They choose, in answer to the outline.** *One at a time*, or no preference → one question per
+message, in step order. *All together* → **the remaining step 1 questions go in one message**,
+numbered, with lettered options so a reply like `2b` is unambiguous. Defaults are stated in it, so
+silence on any one is an answer:
 
-> Got it — hash tables, 45 seconds, upright for Reels. Three quick ones, all with a default:
+> Got it — hash tables, 45 seconds, upright for Reels. The rest, all with a default:
 >
 > 1. Who is it for? *(default: people new to the subject)*
 > 2. A voice? a) no, words on screen *(default)* · b) a generated voice · c) your own recording
 > 3. Music? a) an original piece made here *(default)* · b) a track you have · c) none
+> 4. Where should the finished video go? a) the `out` folder in LIVE *(default)* · b) your
+>    Desktop · c) Documents · d) somewhere else
+
+**Skip the question when the answer is obvious.** An opening message that already answered three
+or more of the step 1 questions — or carried a shape, a length and a subject together — gets the
+rest as one numbered message without being asked.
 
 After the story is approved, the look and the pictures may go together in one message the same
 way. **The gates never batch:** the story at step 3 and the first scene at step 9 each get their
@@ -192,6 +206,12 @@ commentary line rides on whichever message is your first.
 **Do this before you ask anything.** Go through their message and take every answer it
 already contains. Then ask only the gaps, in step order.
 
+**The table applies to every message, not only the first.** A cue that arrives mid-interview —
+*"oh, I have a clip of it"*, *"could it quiz them at the end?"*, *"it's for Reels"*, *"put it on
+my Desktop"* — routes exactly as it would have at the start: to step 0.5 or the skill it names.
+Reopen any step it changes, say so in one line, and add a row to the brief. Intent moves as people
+see the thing take shape; the routing has to move with it.
+
 | They wrote | You now know | Skip |
 | --- | --- | --- |
 | "on photosynthesis", "about the water cycle", "explaining supply and demand", "a promo for our open day" | Topic | 1a |
@@ -202,6 +222,9 @@ already contains. Then ask only the gaps, in step order.
 | "with music", "some background music", "lofi", "no music", a style of music | Music | 1d |
 | **A named song** — "put Mr Brightside on it" | **Their call, flagged once** — see 1d, *A song they name* | Nothing — ask 1d |
 | "I'll send images", "I have pictures", "use my photos", "you make the visuals" | Pictures | Step 6 |
+| "a quiz", "ask them a question", "let them choose", "interactive", "check their understanding" | **An interactive film** — decided with the story | Nothing — raise it at step 3, *If the viewer chooses something* (`making-interactive-video`) |
+| "in ASU colours", "ASU theme", "maroon and gold", "on brand for ASU" | The look — **ASU's, their choice** | The look question at step 4 — confirm it there |
+| "save it to my Desktop", "put it in Documents", "send it to this folder" | Where the finished file goes | 1e |
 | "grab some pictures off Google", "find a photo of the stadium" | **Their call** — see step 6, *Pictures found online* | Nothing — ask step 6 |
 | A specific brief — "the four stages", "just the basics", "focus on evaporation" | What it should explain | The brief question |
 | "a quiz", "let them choose", "check their understanding", "interactive" | It is interactive | Nothing — the branch is decided at step 3 |
@@ -242,7 +265,7 @@ how a misreading gets caught at the start instead of after a render.
 | "create a 60 sec video for me" | Length | **Topic**, audience, voice, music |
 | "create a video on the water cycle for me" | Topic | Audience, what to explain, length, voice, music |
 | "a 2 min video on photosynthesis" | Topic, length | Audience (as a confirmation), voice, music |
-| "a 90 second video on the water cycle for school students, no voice, I'll send images" | Topic, length, audience, voice, pictures | Music only — and the fast route applies |
+| "a 90 second video on the water cycle for school students, no voice, I'll send images" | Topic, length, audience, voice, pictures | Music only — and the rest go as one numbered message |
 | "make me a short video, no voice" | Length (→30s), voice | Topic, audience, music |
 
 **The story at step 3 and the first scene at step 9 are never skipped**, however much they told
@@ -399,9 +422,10 @@ ask them one question rather than refusing.
    the topic, but do not explain where their scripts come from or call them packs, and do not
    narrate your own machinery. The person does not care how it works — they want a video.
    **Every extra clause is friction.**
-2. **One question at a time.** Wait for the answer. Never send the whole interview at once.
-   **The one exception is the fast route** (see *The flow*): when they have signalled they want
-   fewer turns, the remaining step 1 questions go as one numbered message. The gates never batch.
+2. **One question at a time — unless they chose all together.** The outline asks which they
+   prefer (see *The flow*). On *all together*, the remaining step 1 questions go as one numbered
+   message; otherwise wait for each answer. Never send the whole interview at once either way,
+   and the gates never batch.
 3. **Number the options** so they can just reply `1`, `2`, or `3`.
 4. **Every question has a default.** If they say "I don't know", "you decide", or go quiet —
    pick the sensible option, **tell them what you picked and why, in one line**, and keep
@@ -432,7 +456,8 @@ ask them one question rather than refusing.
 
 `building-a-video` step 1: **the idea in one sentence.** Five questions get you there — topic,
 audience, length, voice, music — and the sentence opens the brief
-(`content/<project>/docs/brief.md`).
+(`content/<project>/docs/brief.md`). One practical question rides along: where the finished file
+goes (*1e*).
 
 ### 1a — Topic and audience
 
@@ -860,6 +885,22 @@ silent, and carry on with what they chose.
 
 ---
 
+### 1e — Where the finished file goes
+
+**Ask once, with the default stated** — it is the question people in testing wished they had been
+asked:
+
+> When it's done, the video saves to the **out** folder inside LIVE. Would you like a copy
+> somewhere easier to find — your Desktop, Documents, or another folder?
+
+- **Default: `out/` only.** Renders and drafts always stay in `out/`; this is about where the
+  *finished* file is copied.
+- **A folder they name** → record it in the brief (*Finished file goes to*), resolve it to a full
+  path on their machine, and copy the finished file there at step 13. Say the full path back
+  when you do.
+- **Never move or delete anything already in that folder.** If a file of the same name is there,
+  add a version number rather than overwrite it.
+
 ## Step 2 — Sketch it on paper
 
 **Offer it, once, in one line.** One box per scene, by hand, rough on purpose — the order of the
@@ -874,7 +915,8 @@ ideas, not the artwork:
 - **They'd rather not, or "you decide"** → work it out from their answers and say so. Do not
   ask twice.
 - **Topics 1–3** → skip it; the script already sets the order.
-- **On the fast route** → fold the offer into the step 1 batch rather than spending a turn on it.
+- **If they chose all together** → fold the offer into the step 1 batch rather than spending a
+  turn on it.
 
 ---
 
@@ -895,9 +937,28 @@ at the length they chose. Don't rewrite it first.
 Show it **as plain text, in the chat** — the actual words. Not a file path, not a summary, and not
 the section headings or timings.
 
+**Under the story, show what the film is made of** — a short markdown checklist of the parts
+already chosen, so they can see what is in, and what they never picked:
+
+```markdown
+**So the film is:**
+- about 60 seconds, wide
+- words on screen, no voice
+- an original piece of music, calm
+- pictures drawn here
+- ASU's look *(to choose at the next step)*
+```
+
+If the questions went all together, or they said *"just make it"*, add one line after the
+checklist naming what is still possible and not chosen — *"It could also ask the viewer a
+question as it plays, or use your own voice — say if you want either."* Cutting the interview
+short must not also cut out hearing what the film could be.
+
 > Here's the story — have a quick read, it's much easier to change now than after it's built.
 >
 > *[the story, or the full script for topics 1–3]*
+>
+> *[the checklist]*
 >
 > Shall I go ahead, or would you like to change anything?
 
@@ -1373,10 +1434,11 @@ them roughly how long the render will take before you start it (see *Dated facts
 
 When it's finished, tell them:
 
-- **Where it is, in words they can follow** — finding a file is the step people get stuck on:
+- **Where it is, in words they can follow** — finding a file is the step people get stuck on.
+  If they chose a folder at *1e*, copy the finished file there first and name both places:
 
-  > It's ready — it's saved as `photosynthesis.mp4` in the **out** folder, inside the project
-  > folder you downloaded. Double-click it to play.
+  > It's ready — it's saved as `photosynthesis.mp4` on your **Desktop**, and the original is in
+  > the **out** folder inside LIVE. Double-click it to play.
 
   If they want to scrub through it, offer the preview (step 9) rather than starting it unasked.
 - **How long it actually came out**, and what size and shape.

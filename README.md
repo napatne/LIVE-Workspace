@@ -32,7 +32,7 @@ It picks up where you left off — it keeps a short record of every decision, an
 | Say | What happens |
 | --- | --- |
 | *"What is this?"* | A short tour, one point at a time |
-| *"Make me a video about X."* | It asks what it needs — one question at a time — and builds it |
+| *"Make me a video about X."* | It offers a quick tour first, then shows the steps ahead and what the video can include, asks what it needs — one at a time or all at once — and builds it |
 | *"Show me the example film."* | It opens the short film this folder made about itself in the preview, or saves it as a video file you can play |
 | *"Nothing runs."* | It checks and repairs Node, the packages and FFmpeg |
 

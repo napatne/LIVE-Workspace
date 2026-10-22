@@ -1,6 +1,6 @@
 ---
 name: asu-visual-style
-description: ASU brand colours, typography, logo rules and accessibility standards for video and images, with every value cited and dated. Use before choosing any colour, font, type size or caption style, before placing a logo, and before deciding whether a visual needs describing - and read its accessibility file whichever visual style was chosen.
+description: ASU brand colours, typography, logo rules and accessibility standards for video and images, with every value cited and dated. Use when someone asks for ASU colours, the ASU theme, maroon and gold, Sun Devil branding or an ASU logo; before choosing any colour, font, type size or caption style; before placing a logo; and before deciding whether a visual needs describing - and read its accessibility file whichever visual style was chosen.
 ---
 
 The skill is at `.agents/skills/asu-visual-style/`. Read `.agents/skills/asu-visual-style/SKILL.md` now, and
